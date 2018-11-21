@@ -1,0 +1,8 @@
+c:\users\nithin\documents\visual studio 2015\Projects\Xync\Xync\bin\Debug\Xync.exe.config
+c:\users\nithin\documents\visual studio 2015\Projects\Xync\Xync\obj\Debug\Xync.csprojResolveAssemblyReference.cache
+c:\users\nithin\documents\visual studio 2015\Projects\Xync\Xync\bin\Debug\Xync.exe
+c:\users\nithin\documents\visual studio 2015\Projects\Xync\Xync\bin\Debug\Xync.pdb
+c:\users\nithin\documents\visual studio 2015\Projects\Xync\Xync\bin\Debug\Xync.Abstracts.dll
+c:\users\nithin\documents\visual studio 2015\Projects\Xync\Xync\bin\Debug\Xync.Abstracts.pdb
+c:\users\nithin\documents\visual studio 2015\Projects\Xync\Xync\obj\Debug\Xync.exe
+c:\users\nithin\documents\visual studio 2015\Projects\Xync\Xync\obj\Debug\Xync.pdb
