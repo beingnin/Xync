@@ -15,7 +15,8 @@ namespace Xync.SqlServer
         [XmlIgnore]
         private TDocumentModel _docModel = default(TDocumentModel);
         [XmlIgnore]
-        public TDocumentModel DocumentModel {
+        public TDocumentModel DocumentModel
+        {
             get
             {
                 return _docModel;
@@ -34,7 +35,7 @@ namespace Xync.SqlServer
             {
                 if (this.Attributes != null && this.Attributes.Count != 0)
                 {
-                   return this.Attributes.Where(x => x.Name.Equals(col, StringComparison.OrdinalIgnoreCase)).First();
+                    return this.Attributes.Where(x => x.Name.Equals(col, StringComparison.OrdinalIgnoreCase)).First();
                 }
                 else
                 {
@@ -61,8 +62,8 @@ namespace Xync.SqlServer
         public void RowChanged()
         {
             //fetching the changes
-            string[] columns = new string[4] { "empId", "DOB","FirstName","LastName" };
-            object[] values = new object[4] { 25, DateTime.Now,"Nithin","Chandran" };
+            string[] columns = new string[5] { "empId", "DOB", "FirstName", "LastName", "DepId" };
+            object[] values = new object[5] { 25, DateTime.Now, "Nithin", "Chandran", 33 };
 
             //fetch collection if any
             _docModel = default(TDocumentModel);//get current data from mongo db here
@@ -96,22 +97,63 @@ namespace Xync.SqlServer
                 {
                     foreach (Map map in attr.Maps)
                     {
-                        string key = map.DocumentProperty.Key;
-                        object newMappedValue = attr.Value;
-                        //run if any logic for manipulating result by value
-                        if (map.ManipulateByValue != null)
+                        string[] keys = map.DocumentProperty.Key.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                        int pendingAttr = keys.Length;
+                        StringBuilder concatanatedProp = new StringBuilder(string.Empty);
+                        for (int i = 0; i < keys.Length; i++)
                         {
-                            newMappedValue = map.ManipulateByValue(attr.Value);
+                            string k = keys[i];
+                            if (i != 0)
+                            {
+                                concatanatedProp.Append(".").Append(k);
+                            }
+                            else
+                            {
+                                concatanatedProp.Append(k);
+
+                            }
+                            if (pendingAttr > 1)
+                            {
+
+                                Type propType = this.DocumentModelType.GetProperty(concatanatedProp.ToString()).PropertyType;
+                                object propInstance = Activator.CreateInstance(propType);
+                                this.DocumentModelType.GetProperty(concatanatedProp.ToString()).SetValue(model, propInstance);
+                            }
+                            else
+                            {
+                                object newMappedValue = attr.Value;
+                                //run if any logic for manipulating result by value
+                                if (map.ManipulateByValue != null)
+                                {
+                                    newMappedValue = map.ManipulateByValue(attr.Value);
+                                }
+                                //run if any logic for manipulating result by row
+                                if (map.ManipulateByRow != null)
+                                {
+                                    newMappedValue = map.ManipulateByRow(this);
+                                }
+                                this.DocumentModelType.GetProperty(concatanatedProp.ToString()).SetValue(model, newMappedValue);
+                            }
+                            --pendingAttr;
                         }
-                        //run if any logic for manipulating result by row
-                        if (map.ManipulateByRow != null)
-                        {
-                            newMappedValue = map.ManipulateByRow(this);
-                        }
-                        model.GetType().GetProperty(key).SetValue(model, newMappedValue);
+
+                        //old logic
+                        //string key = map.DocumentProperty.Key;
+                        //object newMappedValue = attr.Value;
+                        ////run if any logic for manipulating result by value
+                        //if (map.ManipulateByValue != null)
+                        //{
+                        //    newMappedValue = map.ManipulateByValue(attr.Value);
+                        //}
+                        ////run if any logic for manipulating result by row
+                        //if (map.ManipulateByRow != null)
+                        //{
+                        //    newMappedValue = map.ManipulateByRow(this);
+                        //}
+                        //model.GetType().GetProperty(key).SetValue(model, newMappedValue);
                     }
                 }
-                attr.hasChange=false;
+                attr.hasChange = false;
             }
             return model;
         }

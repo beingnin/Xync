@@ -45,6 +45,23 @@ namespace Xync
                     },
                     new SqlServerColumn()
                     {
+                        DbType=typeof(long),
+                        Name="DepId",
+                        Maps=new List<Map>()
+                        {
+                            new Map()
+                            {
+                                DocumentProperty=new    MongoDocumentProperty()
+                                {
+                                    DbType=typeof(long),
+                                    Name="Department.DepId",
+                                    Key="Department.DepId"
+                                }
+                            }
+                        }
+                    },
+                    new SqlServerColumn()
+                    {
                         DbType=typeof(string),
                         Name="FirstName",
                         Maps=new List<Map>()
@@ -204,5 +221,13 @@ namespace Xync
         public string DOBString { get; set; }
         [XmlAttribute]
         public short Designation { get; set; }
+        public Department Department { get; set; }
+    }
+    public class Department
+    {
+        public int DepId { get; set; }
+        public string DepName { get; set; }
+        public DateTime CreatedDate { get; set; }
+
     }
 }
