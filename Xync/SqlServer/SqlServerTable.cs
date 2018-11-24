@@ -63,11 +63,11 @@ namespace Xync.SqlServer
         public void RowChanged()
         {
             //fetching the changes
-            string[] columns = new string[6] { "DepId", "BranchId", "empId", "DOB", "FirstName", "LastName", };
-            object[] values = new object[6] { 33, 55 ,25, DateTime.Now, "Nithin", "Chandran",};
+            string[] columns = new string[7] { "DepId", "BranchId", "empId", "DOB", "FirstName", "LastName", "LocationId",};
+            object[] values = new object[7] { 33, 99 ,36, DateTime.Now, "Nithin", "Chandran",25,};
 
             //fetch collection if any
-            _docModel = default(TDocumentModel);//get current data from mongo db here
+            _docModel = GetFromMongo(null);
             //set current values in attributes
 
             for (int i = 0; i < columns.Length; i++)
@@ -91,7 +91,7 @@ namespace Xync.SqlServer
         }
         public TDocumentModel CreateModel(IRelationalTable<TDocumentModel> tbl)
         {
-            TDocumentModel model = (TDocumentModel)Activator.CreateInstance(this.DocumentModelType);
+            TDocumentModel model = this._docModel;
             foreach (var attr in tbl.Attributes)
             {
                 if (attr.hasChange)
@@ -170,6 +170,14 @@ namespace Xync.SqlServer
                 attr.hasChange = false;
             }
             return model;
+        }
+        public TDocumentModel GetFromMongo(object identifier)
+        {
+            //get doc from collection
+
+            var ser =new System.Web.Script.Serialization.JavaScriptSerializer();
+            TDocumentModel doc = ser.Deserialize<TDocumentModel>("{\"Department\":{\"Branch\":{\"BranchId\":0,\"BranchName\":null,\"Location\":{\"LocationId\":0,\"Name\":\"America\"}},\"DepId\":33,\"DepName\":null,\"CreatedDate\":\"\\/Date(-62135596800000)\\/\"},\"EmpId\":25,\"Name\":\"Nithin Chandran\",\"FirstName\":\"Nithin\",\"LastName\":\"Chandran\",\"DOBString\":\"24-11-2019\",\"DOB\":\"\\/Date(1574611014553)\\/\",\"Designation\":0}");
+            return doc;
         }
 
 

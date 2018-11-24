@@ -30,6 +30,7 @@ namespace Xync.Utils
                     return null;
                 }
                 obj = info.GetValue(obj);
+                type = obj.GetType();
             }
             return obj;
         }

@@ -43,6 +43,40 @@ namespace Xync
                             }
                         }
                     },
+                      new SqlServerColumn()
+                    {
+                        DbType=typeof(long),
+                        Name="LocationId",
+                        Maps=new List<Map>()
+                        {
+                            new Map()
+                            {
+                                DocumentProperty=new MongoDocumentProperty()
+                                {
+                                    DbType=typeof(long),
+                                    Name="Department.Branch.Location.LocationId",
+                                    Key="Department.Branch.Location.LocationId"
+                                }
+                            }
+                        }
+                    },
+                      new SqlServerColumn()
+                    {
+                        DbType=typeof(long),
+                        Name="Name",
+                        Maps=new List<Map>()
+                        {
+                            new Map()
+                            {
+                                DocumentProperty=new MongoDocumentProperty()
+                                {
+                                    DbType=typeof(long),
+                                    Name="Department.Branch.Location.Name",
+                                    Key="Department.Branch.Location.Name"
+                                }
+                            }
+                        }
+                    },
                                         new SqlServerColumn()
                     {
                         DbType=typeof(long),
@@ -254,5 +288,11 @@ namespace Xync
     {
         public int BranchId { get; set; }
         public string BranchName { get; set; }
+        public Location Location { get; set; }
+    }
+    public class Location
+    {
+        public int LocationId { get; set; }
+        public string Name { get; set; }
     }
 }
