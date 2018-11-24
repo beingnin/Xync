@@ -14,3 +14,5 @@ E:\Projects\Xync\Xync\bin\Debug\Xync.exe
 E:\Projects\Xync\Xync\bin\Debug\Xync.pdb
 E:\Projects\Xync\Xync\bin\Debug\Xync.Abstracts.dll
 E:\Projects\Xync\Xync\bin\Debug\Xync.Abstracts.pdb
+E:\Projects\Xync\Xync\bin\Debug\Xync.Utils.dll
+E:\Projects\Xync\Xync\bin\Debug\Xync.Utils.pdb

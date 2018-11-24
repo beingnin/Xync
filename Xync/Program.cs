@@ -26,6 +26,41 @@ namespace Xync
                 Name = "Employees",
                 Attributes = new List<IRelationalAttribute>()
                 {
+                     new SqlServerColumn()
+                    {
+                        DbType=typeof(long),
+                        Name="BranchId",
+                        Maps=new List<Map>()
+                        {
+                            new Map()
+                            {
+                                DocumentProperty=new MongoDocumentProperty()
+                                {
+                                    DbType=typeof(long),
+                                    Name="Department.Branch.BranchId",
+                                    Key="Department.Branch.BranchId"
+                                }
+                            }
+                        }
+                    },
+                                        new SqlServerColumn()
+                    {
+                        DbType=typeof(long),
+                        Name="DepId",
+                        Maps=new List<Map>()
+                        {
+                            new Map()
+                            {
+                                DocumentProperty=new MongoDocumentProperty()
+                                {
+                                    DbType=typeof(long),
+                                    Name="Department.DepId",
+                                    Key="Department.DepId"
+                                }
+                            }
+                        }
+                    },
+                                       
                     new SqlServerColumn()
                     {
                         DbType=typeof(long),
@@ -43,23 +78,7 @@ namespace Xync
                             }
                         }
                     },
-                    new SqlServerColumn()
-                    {
-                        DbType=typeof(long),
-                        Name="DepId",
-                        Maps=new List<Map>()
-                        {
-                            new Map()
-                            {
-                                DocumentProperty=new    MongoDocumentProperty()
-                                {
-                                    DbType=typeof(long),
-                                    Name="Department.DepId",
-                                    Key="Department.DepId"
-                                }
-                            }
-                        }
-                    },
+
                     new SqlServerColumn()
                     {
                         DbType=typeof(string),
@@ -228,6 +247,12 @@ namespace Xync
         public int DepId { get; set; }
         public string DepName { get; set; }
         public DateTime CreatedDate { get; set; }
+        public Branch Branch { get; set; }
 
+    }
+    public class Branch
+    {
+        public int BranchId { get; set; }
+        public string BranchName { get; set; }
     }
 }

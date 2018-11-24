@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xync.Abstracts;
 using System.Xml.Serialization;
+using Xync.Utils;
 
 namespace Xync.SqlServer
 {
@@ -62,8 +63,8 @@ namespace Xync.SqlServer
         public void RowChanged()
         {
             //fetching the changes
-            string[] columns = new string[5] { "empId", "DOB", "FirstName", "LastName", "DepId" };
-            object[] values = new object[5] { 25, DateTime.Now, "Nithin", "Chandran", 33 };
+            string[] columns = new string[6] { "DepId", "BranchId", "empId", "DOB", "FirstName", "LastName", };
+            object[] values = new object[6] { 33, 55 ,25, DateTime.Now, "Nithin", "Chandran",};
 
             //fetch collection if any
             _docModel = default(TDocumentModel);//get current data from mongo db here
@@ -115,9 +116,21 @@ namespace Xync.SqlServer
                             if (pendingAttr > 1)
                             {
 
-                                Type propType = this.DocumentModelType.GetProperty(concatanatedProp.ToString()).PropertyType;
-                                object propInstance = Activator.CreateInstance(propType);
-                                this.DocumentModelType.GetProperty(concatanatedProp.ToString()).SetValue(model, propInstance);
+                                //Type propType = this.DocumentModelType.GetProperty(concatanatedProp.ToString()).PropertyType;
+                                Type propType = model.GetNestedType(concatanatedProp.ToString());
+                                //var currentValue = this.DocumentModelType.GetProperty(concatanatedProp.ToString()).GetValue(model);
+
+                                object propInstance = model.GetNestedValue(concatanatedProp.ToString());
+                                if (propInstance == null)
+                                {
+                                    propInstance = Activator.CreateInstance(propType);
+
+                                }
+                                //model.GetNestedProperty(concatanatedProp.ToString()).SetValue(model,propInstance);
+
+
+                                model.SetNestedValue(concatanatedProp.ToString(), propInstance);
+                                //this.DocumentModelType.GetProperty(concatanatedProp.ToString()).SetValue(model, propInstance);
                             }
                             else
                             {
@@ -132,7 +145,8 @@ namespace Xync.SqlServer
                                 {
                                     newMappedValue = map.ManipulateByRow(this);
                                 }
-                                this.DocumentModelType.GetProperty(concatanatedProp.ToString()).SetValue(model, newMappedValue);
+                                model.SetNestedValue(concatanatedProp.ToString(),newMappedValue);
+                                //this.DocumentModelType.GetProperty(concatanatedProp.ToString()).SetValue(model, newMappedValue);
                             }
                             --pendingAttr;
                         }
