@@ -72,32 +72,40 @@ namespace Xync.Utils
         }
         public static void SetNestedValue(this object obj, string key, object value)
         {
-            if (obj == null)
+            try
             {
-                return;
-            }
-            string[] keys = key.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-            Type type = obj.GetType();
-            PropertyInfo info = null;
-
-            for (int i = 0; i < keys.Length; i++)
-            {
-                string k = keys[i];
-                info = type.GetProperty(k);
-                type = info.PropertyType;
-                //obj=department
-                if (i == keys.Length - 1)
+                if (obj == null)
                 {
-                    info.SetValue(obj, value);
                     return;
+                }
+                string[] keys = key.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                Type type = obj.GetType();
+                PropertyInfo info = null;
 
-                }
-                else
+                for (int i = 0; i < keys.Length; i++)
                 {
-                    object currentValue = info.GetValue(obj);
-                    info.SetValue(obj, currentValue);
-                    obj = currentValue;
+                    string k = keys[i];
+                    info = type.GetProperty(k);
+                    type = info.PropertyType;
+                    //obj=department
+                    if (i == keys.Length - 1)
+                    {
+                        info.SetValue(obj, value);
+                        return;
+
+                    }
+                    else
+                    {
+                        object currentValue = info.GetValue(obj);
+                        info.SetValue(obj, currentValue);
+                        obj = currentValue;
+                    }
                 }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
 
         }

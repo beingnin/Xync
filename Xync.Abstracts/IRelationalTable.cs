@@ -6,18 +6,14 @@ using System.Threading.Tasks;
 
 namespace Xync.Abstracts
 {
-    public interface IRelationalTable<TDocumentModel>
+    public interface IRelationalTable<TDocumentModel>:ITable
     {
-        TDocumentModel DocumentModel { get;  }
         Type DocumentModelType { get;  }
-        long ObjectId { get; set; }
-        string Name { get; set; }
-        string Schema { get; set; }
-        string DB { get; set; }
-        List<IRelationalAttribute> Attributes { get; set; }
-        void Listen();
-        event RowChangedEventHandler OnRowChange;
-        TDocumentModel CreateModel(IRelationalTable<TDocumentModel> tbl);
+        TDocumentModel DocumentModel { get; }
+       
+        TDocumentModel GetFromMongo(object identifier);
+        TDocumentModel CreateModel();
+        
     }
-    public delegate void RowChangedEventHandler(object sender, EventArgs e);
+    
 }

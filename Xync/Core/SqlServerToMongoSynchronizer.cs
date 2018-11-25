@@ -3,39 +3,80 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using Xync.Abstracts;
 using Xync.Abstracts.Core;
 
 namespace Xync.Core
 {
-    public class SqlServerToMongoSynchronizer<TMongoModel> : ISynchronizer<TMongoModel> where TMongoModel : class
+    public class SqlServerToMongoSynchronizer : Synchronizer
     {
         public SqlServerToMongoSynchronizer()
         {
 
         }
 
-        private TMongoModel _docModel = null;
-        public TMongoModel DocumentModel
-        {
-            get
-            {
-                return _docModel;
-            }
-            set
-            {
-                _docModel = value;
-            }
-        }
+        public override string ConnectionString { get; set; }
 
-        public TMongoModel CreateDocumentModel(IRelationalTable<TMongoModel> table)
+
+        public override int Listen(string tblName)
         {
             throw new NotImplementedException();
         }
 
-        public TMongoModel GetFromDocumentDb<Tkey, Tvalue>(Tkey key, Tvalue value)
+        public override int ListenAll(bool forced = false)
         {
-            throw new NotImplementedException();
+            //remove if any timer going on
+            //fetch changes via cdc/tc
+
+
+
+            int totalChanges = 0;
+            var activeMonitors = Monitors.Where(x => !x.DNT).ToList();
+            if (activeMonitors != null && activeMonitors.Count != 0)
+            {
+
+
+
+
+                for (int i = 0; i < activeMonitors.Count; i++)
+                {
+                   ITable table = activeMonitors[i];
+
+                    //stimulating changes
+                    table.HasChange = true;
+                    string[] columns = new string[7] { "DepId", "BranchId", "empId", "DOB", "FirstName", "LastName", "LocationId", };
+                    object[] values = new object[7] { 33, 99, 36, DateTime.Now, "Nithin", "Chandran", 25, };
+
+                    //fetch collection if any
+                    table.GetType().GetMethod("GetFromMongo").Invoke(table, new object[] { null });
+                    //table.GetFromMongo(null);
+                    //set current values in attributes
+
+                    for (int j   = 0; j < columns.Length; j++)
+                    {
+                        IRelationalAttribute attr = table[columns[j]];
+                        attr.Value = values[j];
+                        attr.hasChange = true;
+                    }
+                    //stimulation ends
+
+
+                    if (!table.DNT)
+                    {
+                        if (table.HasChange)
+                        {
+                          var result = table.GetType().GetMethod("CreateModel").Invoke(table,null);
+                            var serializer = new JavaScriptSerializer();
+                            Console.WriteLine(serializer.Serialize(result));
+                            //table.CreateModel();
+                        }
+
+                    }
+                }
+            }
+
+            return 1;
         }
     }
 }

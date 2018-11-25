@@ -41,10 +41,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ISynchronizer.cs" />
+    <Compile Include="Core\Synchronizer.cs" />
     <Compile Include="IDocumentCollection.cs" />
     <Compile Include="IDocumentProperty.cs" />
     <Compile Include="IRelationalAttribute.cs" />
     <Compile Include="IRelationalTable.cs" />
+    <Compile Include="ITable.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

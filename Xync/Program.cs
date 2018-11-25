@@ -232,19 +232,12 @@ namespace Xync
 
             #endregion
 
-            var serializer = new JavaScriptSerializer();
-            employees.Listen();
-            Console.WriteLine(serializer.Serialize(employees.DocumentModel));
+           
+            SqlServerToMongoSynchronizer.Monitors.Add(employees);
+            var monitor = new SqlServerToMongoSynchronizer().ListenAll();
 
-            var xmlserializer = new XmlSerializer(typeof(SqlServerTable<EmployeesMDO>));
-            XmlDocument xmlDoc = new XmlDocument();
-            using (MemoryStream str = new MemoryStream())
-            {
-                xmlserializer.Serialize(str, employees);
-                str.Position = 0;
-                xmlDoc.Load(str);
-                xmlDoc.Save(@"C:\Users\Public\mdo.xml");
-            }
+           
+
 
             Console.ReadKey();
 

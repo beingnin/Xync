@@ -3,3 +3,8 @@ c:\Users\Nithin\documents\visual studio 2015\Projects\Xync\Xync.Abstracts\bin\De
 c:\Users\Nithin\documents\visual studio 2015\Projects\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.csprojResolveAssemblyReference.cache
 c:\Users\Nithin\documents\visual studio 2015\Projects\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.dll
 c:\Users\Nithin\documents\visual studio 2015\Projects\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.pdb
+E:\Projects\Xync\Xync.Abstracts\bin\Debug\Xync.Abstracts.dll
+E:\Projects\Xync\Xync.Abstracts\bin\Debug\Xync.Abstracts.pdb
+E:\Projects\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.csprojResolveAssemblyReference.cache
+E:\Projects\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.dll
+E:\Projects\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.pdb

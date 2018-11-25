@@ -7,11 +7,10 @@ using Xync.Abstracts;
 
 namespace Xync.Abstracts.Core
 {
-    public interface ISynchronizer<TDocumentModel> where TDocumentModel : class
+    public interface ISynchronizer 
     {
-        TDocumentModel DocumentModel { get; set; }
-        TDocumentModel CreateDocumentModel(Abstracts.IRelationalTable<TDocumentModel> table);
-        TDocumentModel GetFromDocumentDb<Tkey,Tvalue>(Tkey key,Tvalue value);
-
+        string ConnectionString { get; set; }
     }
+    
+
 }
