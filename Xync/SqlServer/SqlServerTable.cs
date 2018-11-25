@@ -90,7 +90,8 @@ namespace Xync.SqlServer
             try
             {
                 var tbl = this;
-                TDocumentModel model = this._docModel;
+                
+                TDocumentModel model = tbl._docModel;
                 foreach (var attr in tbl.Attributes)
                 {
                     if (attr.hasChange)
@@ -162,8 +163,7 @@ namespace Xync.SqlServer
         public TDocumentModel GetFromMongo(object identifier)
         {
             //get doc from collection
-
-            var ser = new System.Web.Script.Serialization.JavaScriptSerializer();
+                        var ser = new System.Web.Script.Serialization.JavaScriptSerializer();
             TDocumentModel doc = ser.Deserialize<TDocumentModel>("{\"Department\":{\"Branch\":{\"BranchId\":0,\"BranchName\":null,\"Location\":{\"LocationId\":0,\"Name\":\"America\"}},\"DepId\":33,\"DepName\":null,\"CreatedDate\":\"\\/Date(-62135596800000)\\/\"},\"EmpId\":25,\"Name\":\"Nithin Chandran\",\"FirstName\":\"Nithin\",\"LastName\":\"Chandran\",\"DOBString\":\"24-11-2019\",\"DOB\":\"\\/Date(1574611014553)\\/\",\"Designation\":0}");
             return this._docModel = doc;
         }

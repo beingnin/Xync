@@ -45,6 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\SqlServerToMongoSynchronizer.cs" />
+    <Compile Include="Mappings\Main.cs" />
+    <Compile Include="MDO\Employee.cs" />
+    <Compile Include="MDO\Product.cs" />
     <Compile Include="Mongo\IMongoCollection.cs" />
     <Compile Include="Mongo\MongoDocumentProperty.cs" />
     <Compile Include="Program.cs" />
