@@ -8,7 +8,7 @@ namespace Xync.Abstracts.Core
 {
     public abstract class Synchronizer : ISynchronizer
     {
-        public abstract string ConnectionString { get; set; }
+        public abstract string ConnectionString { get;  }
         public static List<ITable> Monitors { get; set; } = new List<ITable>();
         public abstract int ListenAll(bool forced = false);
         public abstract int Listen(string tblName);

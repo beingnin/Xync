@@ -8,3 +8,9 @@ E:\Projects\Xync\Xync.Abstracts\bin\Debug\Xync.Abstracts.pdb
 E:\Projects\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.csprojResolveAssemblyReference.cache
 E:\Projects\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.dll
 E:\Projects\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.pdb
+D:\Nithin\Sources\GH\Xync\Xync.Abstracts\bin\Debug\Xync.Abstracts.dll
+D:\Nithin\Sources\GH\Xync\Xync.Abstracts\bin\Debug\Xync.Abstracts.pdb
+D:\Nithin\Sources\GH\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.csprojAssemblyReference.cache
+D:\Nithin\Sources\GH\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.csproj.CoreCompileInputs.cache
+D:\Nithin\Sources\GH\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.dll
+D:\Nithin\Sources\GH\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.pdb

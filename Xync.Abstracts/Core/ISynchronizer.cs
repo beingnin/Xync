@@ -9,7 +9,7 @@ namespace Xync.Abstracts.Core
 {
     public interface ISynchronizer 
     {
-        string ConnectionString { get; set; }
+        string ConnectionString { get;  }
     }
     
 

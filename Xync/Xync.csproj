@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,8 +45,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\SqlServerPoller.cs" />
+    <Compile Include="Core\Setup.cs" />
     <Compile Include="Core\SqlServerToMongoSynchronizer.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Mappings\Main.cs" />
+    <Compile Include="MDO\EGATE\Case.cs" />
+    <Compile Include="MDO\EGATE\CaseType.cs" />
+    <Compile Include="MDO\EGATE\Comment.cs" />
+    <Compile Include="MDO\EGATE\Document.cs" />
+    <Compile Include="MDO\EGATE\DocumentType.cs" />
+    <Compile Include="MDO\EGATE\Folder.cs" />
+    <Compile Include="MDO\EGATE\History.cs" />
+    <Compile Include="MDO\EGATE\HistoryTemplate.cs" />
+    <Compile Include="MDO\EGATE\Member.cs" />
+    <Compile Include="MDO\EGATE\MemberType.cs" />
+    <Compile Include="MDO\EGATE\Message.cs" />
+    <Compile Include="MDO\EGATE\Permission.cs" />
+    <Compile Include="MDO\EGATE\Priority.cs" />
+    <Compile Include="MDO\EGATE\Reminder.cs" />
+    <Compile Include="MDO\EGATE\Status.cs" />
+    <Compile Include="MDO\EGATE\TemplateCode.cs" />
+    <Compile Include="MDO\EGATE\ToDo.cs" />
     <Compile Include="MDO\Employee.cs" />
     <Compile Include="MDO\Product.cs" />
     <Compile Include="Mongo\IMongoCollection.cs" />

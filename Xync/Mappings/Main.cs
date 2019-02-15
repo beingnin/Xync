@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Xync.Abstracts;
 using Xync.MDO;
+using Xync.MDO.EGATE;
 using Xync.Mongo;
 using Xync.SqlServer;
 
 namespace Xync.Mappings
 {
-   public static  class Main
+    public static class Main
     {
         #region employee-mapping
         public static IRelationalTable<EmployeesMDO> employees = new SqlServerTable<EmployeesMDO>()
@@ -229,7 +230,7 @@ namespace Xync.Mappings
         {
             DB = "Xynx",
             Name = "Employees",
-            Attributes=new List<IRelationalAttribute>
+            Attributes = new List<IRelationalAttribute>
             {
                 new SqlServerColumn()
                     {
@@ -346,5 +347,96 @@ namespace Xync.Mappings
             }
         };
         #endregion product-mapping
+        public static IRelationalTable<Folder> Folders = new SqlServerTable<Folder>
+        {
+            Schema = "CM",
+            Name = "Folders",
+            Attributes = new List<IRelationalAttribute>
+            {
+                new SqlServerColumn()
+                {
+                    DbType=typeof(int),
+                    Name="FolderId"
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(int),
+                    Name="ParentId"
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(string),
+                    Name="FolderName"
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(long),
+                    Name="CaseId"
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(string),
+                    Name="FolderPath"
+                }
+            }
+        };
+        public static IRelationalTable<Document> Documents = new SqlServerTable<Document>
+        {
+            Schema = "CM",
+            Name="Attachments",
+            Attributes=new List<IRelationalAttribute>
+            {
+                new SqlServerColumn()
+                {
+                    DbType=typeof(int),
+                    Name="AttachmentID",
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(long),
+                    Name="CaseID",
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(bool),
+                    Name="IsUserDefined",
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(string),
+                    Name="AttachmentPath",
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(int),
+                    Name="DocumentTypeId",
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(bool),
+                    Name="IsOutput",
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(int),
+                    Name="FolderID",
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(string),
+                    Name="Descriptions",
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(string),
+                    Name="AttachmentName",
+                },
+                new SqlServerColumn()
+                {
+                    DbType=typeof(string),
+                    Name="Extension",
+                }
+            }
+        };
     }
 }
