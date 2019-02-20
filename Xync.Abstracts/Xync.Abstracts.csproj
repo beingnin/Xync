@@ -43,6 +43,7 @@
     <Compile Include="Core\IPoller.cs" />
     <Compile Include="Core\ISetup.cs" />
     <Compile Include="Core\ISynchronizer.cs" />
+    <Compile Include="Core\ITrack.cs" />
     <Compile Include="Core\Synchronizer.cs" />
     <Compile Include="IDocumentCollection.cs" />
     <Compile Include="IDocumentProperty.cs" />

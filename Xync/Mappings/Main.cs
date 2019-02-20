@@ -356,7 +356,18 @@ namespace Xync.Mappings
                 new SqlServerColumn()
                 {
                     DbType=typeof(int),
-                    Name="FolderId"
+                    Name="FolderId",
+                    Maps=new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                DbType=typeof(int),
+                                Name="FolderId",
+                            }
+                        }
+                    }
                 },
                 new SqlServerColumn()
                 {
@@ -390,6 +401,19 @@ namespace Xync.Mappings
                 {
                     DbType=typeof(int),
                     Name="AttachmentID",
+                    Maps=new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="Id",
+                                DbType=typeof(int),
+                                Key="Id"
+                            }
+
+                        }
+                    }
                 },
                 new SqlServerColumn()
                 {

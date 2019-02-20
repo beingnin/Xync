@@ -12,7 +12,7 @@ namespace Xync.Core
 {
     internal class SqlServerPoller : IPoller
     {
-        const string _QRY_HAS_CHANGE = "select distinct [name]  from [{#schema#}].[Consolidated_Tracks] where changed=1 and synced=0";
+        const string _QRY_HAS_CHANGE = "select distinct [cdc_name],[cdc_schema],[table_name],[table_schema] from [{#schema#}].[Consolidated_Tracks] where changed=1 and synced=0";
         private const string _schema = "XYNC";
         static string _query = _QRY_HAS_CHANGE.Replace("{#schema#}", _schema);
         public static double Interval = 5000;
@@ -33,22 +33,22 @@ namespace Xync.Core
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             //stop timer
+
             timer.Stop();
             timer.Dispose();
-            IEnumerable<string> changedTables = Poll();
+            IEnumerable<ITrack> changedTables = Poll();
             if (changedTables != null && changedTables.Count() > 0)//change occured
             {
+                OnChange(changedTables);
+                
 
-                foreach (var table in changedTables)
-                {
-                    Console.WriteLine("changed : " + table);
-                }
             }
+
             //after done syncing listen again
             this.Listen();
 
         }
-        private IEnumerable<string> Poll()
+        private IEnumerable<ITrack> Poll()
         {
             SqlCommand cmd = new SqlCommand(_query, _sqlConnection);
             DataTable dt = new DataTable();
@@ -58,12 +58,22 @@ namespace Xync.Core
             {
                 foreach (DataRow row in dt.Rows)
                 {
-                    yield return Convert.ToString(row["name"]);
+                    yield return new Track
+                    {
+                       CDCTable= Convert.ToString(row["cdc_name"]),
+                       CDCSchema= Convert.ToString(row["cdc_schema"]),
+                       TableName= Convert.ToString(row["table_name"]),
+                       TableSchema = Convert.ToString(row["table_schema"]),
+                    };
 
                 }
             }
             yield break;
         }
-
+        public event EventHandler ChangeDetected;
+        private void OnChange(IEnumerable<ITrack> changedTables)
+        {
+            ChangeDetected?.Invoke(this, new ChangeDetectedEventArgs(changedTables));
+        }
     }
 }

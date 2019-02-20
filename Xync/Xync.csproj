@@ -45,9 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\ChangeDetectedEventArgs.cs" />
     <Compile Include="Core\SqlServerPoller.cs" />
     <Compile Include="Core\Setup.cs" />
     <Compile Include="Core\SqlServerToMongoSynchronizer.cs" />
+    <Compile Include="Core\Track.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Mappings\Main.cs" />
     <Compile Include="MDO\EGATE\Case.cs" />

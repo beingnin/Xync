@@ -28,7 +28,7 @@ namespace Xync.SqlServer
             {
                 if (this.Attributes != null && this.Attributes.Count != 0)
                 {
-                    return this.Attributes.Where(x => x.Name.Equals(col, StringComparison.OrdinalIgnoreCase)).First();
+                    return this.Attributes.Where(x => x.Name.Equals(col, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                 }
                 else
                 {
@@ -94,7 +94,7 @@ namespace Xync.SqlServer
                 TDocumentModel model = tbl._docModel;
                 foreach (var attr in tbl.Attributes)
                 {
-                    if (attr.hasChange)
+                    if (attr.hasChange&& attr.Maps!=null && attr.Maps.Count!=0)
                     {
                         foreach (Map map in attr.Maps)
                         {

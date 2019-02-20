@@ -9,5 +9,6 @@ namespace Xync.Abstracts.Core
     public interface IPoller
     {
         void Listen();
+        event EventHandler ChangeDetected;
     }
 }

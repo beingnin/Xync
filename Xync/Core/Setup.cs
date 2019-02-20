@@ -20,8 +20,8 @@ namespace Xync.Core
         const string _QRY_ENABLE_CDC_IN_DB = "use {#catalog#};exec sys.sp_cdc_enable_db";
         const string _QRY_ENABLE_CDC_IN_TABLE = "exec sys.sp_cdc_enable_table @source_schema='{#schema#}', @source_name='{#table#}', @role_name=null";
         const string _QRY_CREATE_SCHEMA = "create schema {#schema#}";
-        const string _QRY_MEDIATOR_TABLE = "CREATE TABLE {#schema#}.[Consolidated_Tracks]( [Id] [bigint] IDENTITY(1,1) NOT NULL, [Schema] [varchar](200) NOT NULL, [Name] [varchar](200) NOT NULL, [Timestamp] [datetime] NOT NULL, [Changed] [bit] NULL, [Synced] [bit] NULL, PRIMARY KEY CLUSTERED ( [Id] ASC ) )";
-        const string _QRY_CREATE_TRIGGER_ON_TABLE = "create trigger [cdc].[Trg_{#tableschema#}_{#cdctable#}] on [cdc].[{#tableschema#}_{#cdctable#}] after insert as begin insert into {#schema#}.[Consolidated_Tracks] ( [Schema], [Name], [Timestamp], [Changed], [Synced] ) values ( 'cdc', '{#cdctable#}', GETUTCDATE(), 1, 0 ) end";
+        const string _QRY_MEDIATOR_TABLE = "CREATE TABLE {#schema#}.[Consolidated_Tracks]( [Id] [bigint] IDENTITY(1,1) NOT NULL, [CDC_Schema] [varchar](200) NOT NULL, [CDC_Name] [varchar](200) NOT NULL, [Table_Schema] [varchar](200) NOT NULL, [Table_Name] [varchar](200) NOT NULL,[Timestamp] [datetime] NOT NULL, [Changed] [bit] NULL, [Synced] [bit] NULL, PRIMARY KEY CLUSTERED ( [Id] ASC ) )";
+        const string _QRY_CREATE_TRIGGER_ON_TABLE = "create trigger [cdc].[Trg_{#tableschema#}_{#cdctable#}] on [cdc].[{#tableschema#}_{#cdctable#}] after insert as begin insert into {#schema#}.[Consolidated_Tracks] ( [CDC_Schema], [CDC_Name],[Table_Schema], [Table_Name], [Timestamp], [Changed], [Synced] ) values ( 'cdc', '{#tableschema#}_{#cdctable#}','{#tableschema#}','{#tablename#}', GETUTCDATE(), 1, 0 ) end";
         #endregion Queries
 
         readonly string _schema;
@@ -104,7 +104,7 @@ namespace Xync.Core
                         Console.WriteLine("Enabling change tracking on " + table.Schema.Embrace() + "." + table.Name.Embrace());
                         cmd.CommandText = _QRY_ENABLE_CDC_IN_TABLE.Replace("{#schema#}", table.Schema).Replace("{#table#}", table.Name);
                         await cmd.ExecuteNonQueryAsync();
-                        cmd.CommandText = _QRY_CREATE_TRIGGER_ON_TABLE.Replace("{#tableschema#}", table.Schema).Replace("{#cdctable#}", table.Name+"_CT").Replace("{#schema#}", _schema.Embrace());
+                        cmd.CommandText = _QRY_CREATE_TRIGGER_ON_TABLE.Replace("{#tableschema#}", table.Schema).Replace("{#cdctable#}", table.Name+"_CT").Replace("{#schema#}", _schema.Embrace()).Replace("{#tablename#}",table.Name);
                         await cmd.ExecuteNonQueryAsync();
                     }
                     catch (Exception exc)

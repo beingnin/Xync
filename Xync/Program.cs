@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xync.Abstracts;
+using Xync.Abstracts.Core;
 using Xync.Core;
 using Xync.Mongo;
 using System.Runtime.Serialization;
@@ -13,6 +13,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Xml;
 using System.ServiceProcess;
+using Xync.Abstracts;
 
 namespace Xync
 {
@@ -22,7 +23,7 @@ namespace Xync
         {
             //intialise all mappings in app start
 
-            SqlServerToMongoSynchronizer.Monitors = new List<ITable>()
+            Synchronizer.Monitors = new List<ITable>()
             {
                 Mappings.Main.Folders,
                 Mappings.Main.Documents
