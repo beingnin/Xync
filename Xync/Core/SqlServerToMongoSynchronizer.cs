@@ -13,7 +13,7 @@ namespace Xync.Core
 {
     public class SqlServerToMongoSynchronizer : Synchronizer
     {
-        const string _QRY_GET_TABLE_CHANGE = "SELECT top 1 * FROM {#table#}";
+        const string _QRY_GET_TABLE_CHANGE = "update {#table#} set __$sync=1 where __$sync=0; select * from ( select ROW_NUMBER() over(partition by [{#keycolumn#}] order by lt.tran_end_time desc) as rw,ct.* from {#table#} ct join [cdc].[lsn_time_mapping] lt on ct.__$start_lsn = lt.start_lsn where ct.__$operation <> 3 and __$sync=1 )a where a.rw=1";
         string _connectionString = null;
         SqlConnection _sqlConnection = null;
         public SqlServerToMongoSynchronizer(string connectionString)
@@ -38,55 +38,7 @@ namespace Xync.Core
 
         public override int ListenAll(bool forced = false)
         {
-            //remove if any timer going on
-            //fetch changes via cdc/tc
 
-
-
-            //int totalChanges = 0;
-            //var activeMonitors = Monitors.Where(x => !x.DNT).ToList();
-            //if (activeMonitors != null && activeMonitors.Count != 0)
-            //{
-
-
-
-
-            //    for (int i = 0; i < activeMonitors.Count; i++)
-            //    {
-            //       ITable table = activeMonitors[i];
-
-            //        //stimulating changes
-            //        table.HasChange = true;
-            //        string[] columns = new string[7] { "DepId", "BranchId", "empId", "DOB", "FirstName", "LastName", "LocationId", };
-            //        object[] values = new object[7] { 33, 99, 36, DateTime.Now, "Nithin", "Chandran", 25, };
-
-            //        //fetch collection if any
-            //        table.GetType().GetMethod("GetFromMongo").Invoke(table, new object[] { null });
-            //        //table.GetFromMongo(null);
-            //        //set current values in attributes
-
-            //        for (int j   = 0; j < columns.Length; j++)
-            //        {
-            //            IRelationalAttribute attr = table[columns[j]];
-            //            attr.Value = values[j];
-            //            attr.hasChange = true;
-            //        }
-            //        //stimulation ends
-
-
-            //        if (!table.DNT)
-            //        {
-            //            if (table.HasChange)
-            //            {
-            //              var result = table.GetType().GetMethod("CreateModel").Invoke(table,null);
-            //                var serializer = new JavaScriptSerializer();
-            //                Console.WriteLine(serializer.Serialize(result));
-            //                //table.CreateModel();
-            //            }
-
-            //        }
-            //    }
-            //}
 
             IPoller poller = new SqlServerPoller(_connectionString);
             Console.WriteLine("Listening for changes in SQL Server");
@@ -110,32 +62,54 @@ namespace Xync.Core
                 Console.WriteLine("********************************************");
 
 
-
-                cmd.CommandText = _QRY_GET_TABLE_CHANGE.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace());
+                ITable table = base[Changedtable.TableName, Changedtable.TableSchema];
+                Type tableType = table.GetType();
+                IRelationalAttribute key=(IRelationalAttribute) tableType.GetMethod("GetKey").Invoke(table, null);
+                cmd.CommandText = _QRY_GET_TABLE_CHANGE.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keycolumn#}",key.Name);
 
                 DataTable dt = new DataTable();
                 new SqlDataAdapter(cmd).Fill(dt);
                 if (dt != null && dt.Rows.Count != 0)
                 {
                     var row = dt.Rows[0];
-                    ITable table = base[Changedtable.TableName, Changedtable.TableSchema];
-                    table.GetType().GetMethod("GetFromMongo").Invoke(table, new object[] { null });
+                    tableType.GetMethod("GetFromMongo").Invoke(table, new object[] { null });
                     foreach (var col in dt.Columns)
                     {
                         var column = col.ToString();
-                        if (!column.Contains("__$"))
+                        if (!column.StartsWith("__$"))
                         {
                             IRelationalAttribute attr = table[column];
                             if (attr != null)
                             {
-                                attr.hasChange = true;
+                                attr.HasChange = true;
                                 attr.Value = row[column];
                             }
                         }
                     }
-                   var model=  table.GetType().GetMethod("CreateModel").Invoke(table, null);
+                    var model = tableType.GetMethod("CreateModel").Invoke(table, null);
+                    Console.WriteLine(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(model));
                 }
 
+            }
+        }
+
+        private async Task SetAsSynced()
+        {
+            try
+            {
+                _sqlConnection.Open();
+                SqlCommand cmd = new SqlCommand("", _sqlConnection);
+                bool isEnabled = Convert.ToBoolean(await cmd.ExecuteScalarAsync());
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\n");
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                _sqlConnection.Close();
             }
         }
     }

@@ -357,6 +357,7 @@ namespace Xync.Mappings
                 {
                     DbType=typeof(int),
                     Name="FolderId",
+                    Key=true,
                     Maps=new List<Map>
                     {
                         new Map
@@ -401,6 +402,7 @@ namespace Xync.Mappings
                 {
                     DbType=typeof(int),
                     Name="AttachmentID",
+                    Key=true,
                     Maps=new List<Map>
                     {
                         new Map

@@ -70,7 +70,7 @@ namespace Xync.SqlServer
             {
                 IRelationalAttribute attr = this[columns[i]];
                 attr.Value = values[i];
-                attr.hasChange = true;
+                attr.HasChange = true;
             }
 
             //creating object
@@ -85,6 +85,10 @@ namespace Xync.SqlServer
                 OnRowChange(this, new EventArgs());
             }
         }
+        public IRelationalAttribute GetKey()
+        {
+            return this.Attributes.Where(x => x.Key).FirstOrDefault();
+        }
         public TDocumentModel CreateModel()
         {
             try
@@ -94,7 +98,7 @@ namespace Xync.SqlServer
                 TDocumentModel model = tbl._docModel;
                 foreach (var attr in tbl.Attributes)
                 {
-                    if (attr.hasChange&& attr.Maps!=null && attr.Maps.Count!=0)
+                    if (attr.HasChange&& attr.Maps!=null && attr.Maps.Count!=0)
                     {
                         foreach (Map map in attr.Maps)
                         {
@@ -149,7 +153,7 @@ namespace Xync.SqlServer
 
                         }
                     }
-                    attr.hasChange = false;
+                    attr.HasChange = false;
                 }
                 
                 return _docModel = model;

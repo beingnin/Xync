@@ -16,6 +16,7 @@ namespace Xync.Core
     {
         #region Queries
         const string _QRY_IS_CDC_ENABLED_IN_DB = "select is_cdc_enabled from sys.databases where name ='{#catalog#}'";
+        const string _QRY_ADD_COLUMN_TO_CAPTURE = "alter table [cdc].{#table#} add __$sync tinyint default 0";
         const string _QRY_IS_CDC_ENABLED_IN_TABLE = "";
         const string _QRY_ENABLE_CDC_IN_DB = "use {#catalog#};exec sys.sp_cdc_enable_db";
         const string _QRY_ENABLE_CDC_IN_TABLE = "exec sys.sp_cdc_enable_table @source_schema='{#schema#}', @source_name='{#table#}', @role_name=null";
@@ -106,6 +107,8 @@ namespace Xync.Core
                         await cmd.ExecuteNonQueryAsync();
                         cmd.CommandText = _QRY_CREATE_TRIGGER_ON_TABLE.Replace("{#tableschema#}", table.Schema).Replace("{#cdctable#}", table.Name+"_CT").Replace("{#schema#}", _schema.Embrace()).Replace("{#tablename#}",table.Name);
                         await cmd.ExecuteNonQueryAsync();
+                        cmd.CommandText = _QRY_ADD_COLUMN_TO_CAPTURE.Replace("{#table#}", (table.Schema + "_" + table.Name + "_CT").Embrace());
+                        await cmd.ExecuteNonQueryAsync();
                     }
                     catch (Exception exc)
                     {
@@ -173,5 +176,7 @@ namespace Xync.Core
             }
 
         }
+       
+
     }
 }

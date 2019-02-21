@@ -10,10 +10,10 @@ namespace Xync.Abstracts
     {
         Type DocumentModelType { get;  }
         TDocumentModel DocumentModel { get; }
-       
+        
         TDocumentModel GetFromMongo(object identifier);
         TDocumentModel CreateModel();
-        
+        IRelationalAttribute GetKey();
     }
     
 }

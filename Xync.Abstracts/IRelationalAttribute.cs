@@ -11,7 +11,8 @@ namespace Xync.Abstracts
         long ObjectId { get; set; }
         string Name { get; set; }
         object Value { get; set; }
-        bool hasChange { get; set; }
+        bool Key { get; set; }
+        bool HasChange { get; set; }
         Type DbType { get; set; }
         List<Map> Maps { get; set; }
     }
