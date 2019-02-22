@@ -28,3 +28,13 @@ D:\Nithin\Sources\GH\Xync\Xync\obj\Debug\Xync.csproj.CoreCompileInputs.cache
 D:\Nithin\Sources\GH\Xync\Xync\obj\Debug\Xync.csproj.CopyComplete
 D:\Nithin\Sources\GH\Xync\Xync\obj\Debug\Xync.exe
 D:\Nithin\Sources\GH\Xync\Xync\obj\Debug\Xync.pdb
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\DnsClient.dll
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\MongoDB.Bson.dll
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\MongoDB.Driver.Core.dll
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\MongoDB.Driver.dll
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\System.Buffers.dll
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\DnsClient.xml
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\MongoDB.Bson.xml
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\MongoDB.Driver.xml
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\MongoDB.Driver.Core.xml

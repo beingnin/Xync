@@ -421,6 +421,17 @@ namespace Xync.Mappings
                 {
                     DbType=typeof(long),
                     Name="CaseID",
+                    Maps=new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="Case.CaseId",
+                                Key="Case.CaseId",
+                            }
+                        }
+                    }
                 },
                 new SqlServerColumn()
                 {
@@ -451,11 +462,33 @@ namespace Xync.Mappings
                 {
                     DbType=typeof(string),
                     Name="Descriptions",
+                    Maps=new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="Description",
+                                Key="Description",
+                            }
+                        }
+                    }
                 },
                 new SqlServerColumn()
                 {
                     DbType=typeof(string),
                     Name="AttachmentName",
+                     Maps=new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="FileName",
+                                Key="FileName",
+                            }
+                        }
+                    }
                 },
                 new SqlServerColumn()
                 {
