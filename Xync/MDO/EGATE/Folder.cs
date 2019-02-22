@@ -9,7 +9,7 @@ namespace Xync.MDO.EGATE
 {
     public class Folder
     {
-        public int FolderId { get; set; }
+        public int Id { get; set; }
         public string Name{ get; set; }
         public Case Case { get; set; }
         public string Path { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,7 +48,7 @@ namespace Xync.SqlServer
 
         public bool DNT { get; set; }
         public bool HasChange { get; set; }
-
+        public Change Change { get; set; }
         public void Listen()
         {
             //Register things for getting changes from DB
@@ -94,11 +95,19 @@ namespace Xync.SqlServer
             try
             {
                 var tbl = this;
-                
-                TDocumentModel model = tbl._docModel;
+
+                TDocumentModel model = default(TDocumentModel);
+                if (tbl._docModel == null)
+                {
+                    model = (TDocumentModel)Activator.CreateInstance(this.DocumentModelType);
+                }
+                else
+                {
+                    model = tbl._docModel;
+                }
                 foreach (var attr in tbl.Attributes)
                 {
-                    if (attr.HasChange&& attr.Maps!=null && attr.Maps.Count!=0)
+                    if (attr.HasChange && attr.Maps != null && attr.Maps.Count != 0)
                     {
                         foreach (Map map in attr.Maps)
                         {
@@ -155,7 +164,7 @@ namespace Xync.SqlServer
                     }
                     attr.HasChange = false;
                 }
-                
+
                 return _docModel = model;
             }
             catch (Exception ex)
@@ -166,10 +175,42 @@ namespace Xync.SqlServer
         }
         public TDocumentModel GetFromMongo(object identifier)
         {
+            //return this._docModel = (TDocumentModel)Activator.CreateInstance(this.DocumentModelType);
             //get doc from collection
-                        var ser = new System.Web.Script.Serialization.JavaScriptSerializer();
-            TDocumentModel doc = ser.Deserialize<TDocumentModel>("{\"Department\":{\"Branch\":{\"BranchId\":0,\"BranchName\":null,\"Location\":{\"LocationId\":0,\"Name\":\"America\"}},\"DepId\":33,\"DepName\":null,\"CreatedDate\":\"\\/Date(-62135596800000)\\/\"},\"EmpId\":25,\"Name\":\"Nithin Chandran\",\"FirstName\":\"Nithin\",\"LastName\":\"Chandran\",\"DOBString\":\"24-11-2019\",\"DOB\":\"\\/Date(1574611014553)\\/\",\"Designation\":0}");
-            return this._docModel = doc;
+            MongoClient client = new MongoClient("mongodb://SPSAUser:SPSADev_PITS123@10.10.100.74:27017/SPSA_MongoDev");
+            IMongoDatabase db = client.GetDatabase("SPSA_MongoDev");
+            var collection = db.GetCollection<TDocumentModel>(this.DocumentModelType.Name);
+
+            FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
+            FilterDefinition<TDocumentModel> filter = filterBuilder.Eq(this.GetKey().Maps[0].DocumentProperty.Name, identifier);
+            var col = collection.Find(filter);
+            var doc = col.ToList().FirstOrDefault();
+            if (doc == null)
+            {
+                return this._docModel = (TDocumentModel)Activator.CreateInstance(this.DocumentModelType);
+            }
+            else
+            {
+                return this._docModel = doc;
+            }
+        }
+
+        public void DeleteFromMongo(object identifier)
+        {
+            //get doc from collection
+            MongoClient client = new MongoClient("mongodb://SPSAUser:SPSADev_PITS123@10.10.100.74:27017/SPSA_MongoDev");
+            IMongoDatabase db = client.GetDatabase("SPSA_MongoDev");
+            var collection = db.GetCollection<TDocumentModel>(this.DocumentModelType.Name);
+            FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
+            FilterDefinition<TDocumentModel> filter = filterBuilder.Eq(this.GetKey().Maps[0].DocumentProperty.Name, identifier);
+            try
+            {
+                var doc = collection.DeleteOne(filter);
+            }
+            catch (NullReferenceException ex)
+            {
+            }
+
         }
 
 

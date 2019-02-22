@@ -365,7 +365,8 @@ namespace Xync.Mappings
                             DocumentProperty=new MongoDocumentProperty
                             {
                                 DbType=typeof(int),
-                                Name="FolderId",
+                                Key="Id",
+                                Name="Id"
                             }
                         }
                     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xync.Utils;
 
 namespace Xync.Abstracts
 {
@@ -12,6 +13,7 @@ namespace Xync.Abstracts
         bool DNT { get; set; }
         long ObjectId { get; set; }
         bool HasChange { get; set; }
+        Change Change { get; set; }
         IRelationalAttribute this[string col]
         {
             get;
