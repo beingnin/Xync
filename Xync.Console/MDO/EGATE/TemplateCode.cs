@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xync.MDO.EGATE
+namespace Xync.Console.MDO.EGATE
 {
     public enum TemplateCode
     {

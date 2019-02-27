@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F060C1DE-B325-465D-9261-5EAF658A5777}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Xync</RootNamespace>
+    <AssemblyName>Xync</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DnsClient, Version=1.0.7.0, Culture=neutral, PublicKeyToken=4574bb5573c51424, processorArchitecture=MSIL">
+      <HintPath>..\packages\DnsClient.1.0.7\lib\net45\DnsClient.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson, Version=2.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Bson.2.7.3\lib\net45\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=2.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.2.7.3\lib\net45\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver.Core, Version=2.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.Core.2.7.3\lib\net45\MongoDB.Driver.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.3.0\lib\netstandard1.1\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.0.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\ChangeDetectedEventArgs.cs" />
+    <Compile Include="Core\SqlServerPoller.cs" />
+    <Compile Include="Core\Setup.cs" />
+    <Compile Include="Core\SqlServerToMongoSynchronizer.cs" />
+    <Compile Include="Core\Track.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Mappings\Main.cs" />
+    <Compile Include="MDO\EGATE\Case.cs" />
+    <Compile Include="MDO\EGATE\CaseType.cs" />
+    <Compile Include="MDO\EGATE\Comment.cs" />
+    <Compile Include="MDO\EGATE\Document.cs" />
+    <Compile Include="MDO\EGATE\DocumentType.cs" />
+    <Compile Include="MDO\EGATE\Folder.cs" />
+    <Compile Include="MDO\EGATE\History.cs" />
+    <Compile Include="MDO\EGATE\HistoryTemplate.cs" />
+    <Compile Include="MDO\EGATE\Member.cs" />
+    <Compile Include="MDO\EGATE\MemberType.cs" />
+    <Compile Include="MDO\EGATE\Message.cs" />
+    <Compile Include="MDO\EGATE\Permission.cs" />
+    <Compile Include="MDO\EGATE\Priority.cs" />
+    <Compile Include="MDO\EGATE\Reminder.cs" />
+    <Compile Include="MDO\EGATE\Status.cs" />
+    <Compile Include="MDO\EGATE\TemplateCode.cs" />
+    <Compile Include="MDO\EGATE\ToDo.cs" />
+    <Compile Include="MDO\Employee.cs" />
+    <Compile Include="MDO\Product.cs" />
+    <Compile Include="Mongo\IMongoCollection.cs" />
+    <Compile Include="Mongo\MongoDocumentProperty.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlServer\SqlServerColumn.cs" />
+    <Compile Include="SqlServer\SqlServerTable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Xync.Abstracts\Xync.Abstracts.csproj">
+      <Project>{a7001af3-607b-4139-9764-dc3dc9eae2eb}</Project>
+      <Name>Xync.Abstracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xync.Utils\Xync.Utils.csproj">
+      <Project>{98cce80b-ef18-4d15-8b9a-bec404821f17}</Project>
+      <Name>Xync.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

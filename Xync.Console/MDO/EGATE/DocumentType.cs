@@ -1,15 +1,15 @@
 ﻿
 using System;
 
-namespace Xync.MDO.EGATE
+namespace Xync.Console.MDO.EGATE
 {
-    public class CaseType
+    public class DocumentType
     {
-        public int Id { get; set; }
+        //future class
+        public short Id { get; set; }
         public string NameEn { get; set; }
         public string NameAr { get; set; }
-        public string Code { get; set; }
-        public DocumentType Template { get; set; }
+        public string MIME { get; set; }
         public DateTime CreatedUTC { get; set; }
         public DateTime ModifiedUTC { get; set; }
     }

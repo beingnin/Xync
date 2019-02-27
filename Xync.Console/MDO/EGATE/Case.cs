@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 
-//namespace Xync.MDO.EGATE
-namespace Xync.MDO.EGATE
+//namespace Xync.Console.MDO.EGATE
+namespace Xync.Console.MDO.EGATE
 {
     public class Case
     {

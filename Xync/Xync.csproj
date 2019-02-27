@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{F060C1DE-B325-465D-9261-5EAF658A5777}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Xync</RootNamespace>
     <AssemblyName>Xync</AssemblyName>
@@ -31,6 +31,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DnsClient, Version=1.0.7.0, Culture=neutral, PublicKeyToken=4574bb5573c51424, processorArchitecture=MSIL">
@@ -69,29 +72,8 @@
     <Compile Include="Core\SqlServerToMongoSynchronizer.cs" />
     <Compile Include="Core\Track.cs" />
     <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="Mappings\Main.cs" />
-    <Compile Include="MDO\EGATE\Case.cs" />
-    <Compile Include="MDO\EGATE\CaseType.cs" />
-    <Compile Include="MDO\EGATE\Comment.cs" />
-    <Compile Include="MDO\EGATE\Document.cs" />
-    <Compile Include="MDO\EGATE\DocumentType.cs" />
-    <Compile Include="MDO\EGATE\Folder.cs" />
-    <Compile Include="MDO\EGATE\History.cs" />
-    <Compile Include="MDO\EGATE\HistoryTemplate.cs" />
-    <Compile Include="MDO\EGATE\Member.cs" />
-    <Compile Include="MDO\EGATE\MemberType.cs" />
-    <Compile Include="MDO\EGATE\Message.cs" />
-    <Compile Include="MDO\EGATE\Permission.cs" />
-    <Compile Include="MDO\EGATE\Priority.cs" />
-    <Compile Include="MDO\EGATE\Reminder.cs" />
-    <Compile Include="MDO\EGATE\Status.cs" />
-    <Compile Include="MDO\EGATE\TemplateCode.cs" />
-    <Compile Include="MDO\EGATE\ToDo.cs" />
-    <Compile Include="MDO\Employee.cs" />
-    <Compile Include="MDO\Product.cs" />
     <Compile Include="Mongo\IMongoCollection.cs" />
     <Compile Include="Mongo\MongoDocumentProperty.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServer\SqlServerColumn.cs" />
     <Compile Include="SqlServer\SqlServerTable.cs" />

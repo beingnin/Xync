@@ -1,17 +1,15 @@
 ﻿
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Xync.MDO.EGATE
+namespace Xync.Console.MDO.EGATE
 {
-    public class Reminder
+    public class ToDo
     {
         public long Id { get; set; }
-        public DateTime ReminderDateUTC { get; set; }
+        public string Description { get; set; }
         public Case Case { get; set; }
+        public Priority Priority { get; set; }
+        public bool Completed { get; set; }
         public DateTime CreatedUTC { get; set; }
         public DateTime ModifiedUTC { get; set; }
     }

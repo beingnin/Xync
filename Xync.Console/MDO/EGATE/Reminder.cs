@@ -1,17 +1,18 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Xync.MDO.EGATE
+namespace Xync.Console.MDO.EGATE
 {
-    public class Comment
+    public class Reminder
     {
         public long Id { get; set; }
+        public DateTime ReminderDateUTC { get; set; }
         public Case Case { get; set; }
-        public string Value { get; set; }
         public DateTime CreatedUTC { get; set; }
         public DateTime ModifiedUTC { get; set; }
-        public Comment Parent { get; set; }
-        public List<Comment> Replies { get; set; }
     }
 }

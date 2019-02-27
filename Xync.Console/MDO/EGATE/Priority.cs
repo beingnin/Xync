@@ -1,4 +1,4 @@
-﻿namespace Xync.MDO.EGATE
+﻿namespace Xync.Console.MDO.EGATE
 {
     public enum Priority
     {

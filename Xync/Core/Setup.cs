@@ -13,7 +13,7 @@ using Xync.Utils;
 namespace Xync.Core
 {
 
-    internal class Setup : ISetup
+    public class Setup : ISetup
     {
         #region Queries
         const string _QRY_IS_CDC_ENABLED_IN_DB = "select is_cdc_enabled from sys.databases where name ='{#catalog#}'";
@@ -106,7 +106,7 @@ namespace Xync.Core
                         Console.WriteLine("Enabling change tracking on " + table.Schema.Embrace() + "." + table.Name.Embrace());
                         cmd.CommandText = _QRY_ENABLE_CDC_IN_TABLE.Replace("{#schema#}", table.Schema).Replace("{#table#}", table.Name);
                         await cmd.ExecuteNonQueryAsync();
-                        cmd.CommandText = _QRY_CREATE_TRIGGER_ON_TABLE.Replace("{#tableschema#}", table.Schema).Replace("{#cdctable#}", table.Name+"_CT").Replace("{#schema#}", _schema.Embrace()).Replace("{#tablename#}",table.Name);
+                        cmd.CommandText = _QRY_CREATE_TRIGGER_ON_TABLE.Replace("{#tableschema#}", table.Schema).Replace("{#cdctable#}", table.Name + "_CT").Replace("{#schema#}", _schema.Embrace()).Replace("{#tablename#}", table.Name);
                         await cmd.ExecuteNonQueryAsync();
                         cmd.CommandText = _QRY_ADD_COLUMN_TO_CAPTURE.Replace("{#table#}", (table.Schema + "_" + table.Name + "_CT").Embrace());
                         await cmd.ExecuteNonQueryAsync();
@@ -177,7 +177,7 @@ namespace Xync.Core
             }
 
         }
-       
+
 
     }
 }

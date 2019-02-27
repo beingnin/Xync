@@ -16,8 +16,6 @@ E:\Projects\Xync\Xync\bin\Debug\Xync.Abstracts.dll
 E:\Projects\Xync\Xync\bin\Debug\Xync.Abstracts.pdb
 E:\Projects\Xync\Xync\bin\Debug\Xync.Utils.dll
 E:\Projects\Xync\Xync\bin\Debug\Xync.Utils.pdb
-D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\Xync.exe.config
-D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\Xync.exe
 D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\Xync.pdb
 D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\Xync.Abstracts.dll
 D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\Xync.Utils.dll
@@ -26,7 +24,6 @@ D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\Xync.Utils.pdb
 D:\Nithin\Sources\GH\Xync\Xync\obj\Debug\Xync.csprojAssemblyReference.cache
 D:\Nithin\Sources\GH\Xync\Xync\obj\Debug\Xync.csproj.CoreCompileInputs.cache
 D:\Nithin\Sources\GH\Xync\Xync\obj\Debug\Xync.csproj.CopyComplete
-D:\Nithin\Sources\GH\Xync\Xync\obj\Debug\Xync.exe
 D:\Nithin\Sources\GH\Xync\Xync\obj\Debug\Xync.pdb
 D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\DnsClient.dll
 D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\MongoDB.Bson.dll
@@ -38,3 +35,6 @@ D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\DnsClient.xml
 D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\MongoDB.Bson.xml
 D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\MongoDB.Driver.xml
 D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\MongoDB.Driver.Core.xml
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\Xync.dll.config
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\Xync.dll
+D:\Nithin\Sources\GH\Xync\Xync\obj\Debug\Xync.dll

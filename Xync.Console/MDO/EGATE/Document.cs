@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace Xync.MDO.EGATE
+namespace Xync.Console.MDO.EGATE
 {
     public class Document
     {
