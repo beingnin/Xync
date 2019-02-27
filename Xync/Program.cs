@@ -14,6 +14,7 @@ using System.IO;
 using System.Xml;
 using System.ServiceProcess;
 using Xync.Abstracts;
+using Xync.Utils;
 
 namespace Xync
 {
@@ -22,18 +23,19 @@ namespace Xync
         static void Main(string[] args)
         {
             //intialise all mappings in app start
-
             Synchronizer.Monitors = new List<ITable>()
             {
                 Mappings.Main.Folders,
                 Mappings.Main.Documents
             };
+            Constants.RdbmsConnection = @"Data Source=10.10.100.71\spsadb;Initial Catalog=xync;Integrated Security=True";
+            Constants.NoSqlConnection = @"mongodb://SPSAUser:SPSADev_PITS123@10.10.100.74:27017/SPSA_MongoDev";
             //start setup
-            bool setupComplete = new Setup(@"Data Source=10.10.100.71\spsadb;Initial Catalog=xync;Integrated Security=True").Initialize().Result;
+            bool setupComplete = new Setup().Initialize().Result;
             //setup ends here
 
-            
-            var monitor = new SqlServerToMongoSynchronizer(@"Data Source=10.10.100.71\spsadb;Initial Catalog=xync;Integrated Security=True").ListenAll();
+
+            new SqlServerToMongoSynchronizer().ListenAll();
             Console.ReadKey();
 
 

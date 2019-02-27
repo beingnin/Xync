@@ -12,7 +12,7 @@ namespace Xync.Core
 {
     internal class SqlServerPoller : IPoller
     {
-        const string _QRY_HAS_CHANGE = "select distinct [cdc_name],[cdc_schema],[table_name],[table_schema] from [{#schema#}].[Consolidated_Tracks] where changed=1 and synced=0";
+        const string _QRY_HAS_CHANGE = "update [{#schema#}].[Consolidated_Tracks] set sync=1 where sync=0;select distinct [cdc_name],[cdc_schema],[table_name],[table_schema] from [{#schema#}].[Consolidated_Tracks] where changed=1 and sync=1";
         private const string _schema = "XYNC";
         static string _query = _QRY_HAS_CHANGE.Replace("{#schema#}", _schema);
         public static double Interval = 5000;
@@ -27,13 +27,12 @@ namespace Xync.Core
             timer = new Timer(Interval);
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
-
+            Console.WriteLine($"Listening for changes started @ {DateTime.Now.ToLongTimeString()}");
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             //stop timer
-
             timer.Stop();
             timer.Dispose();
             IEnumerable<ITrack> changedTables = Poll();
@@ -46,7 +45,6 @@ namespace Xync.Core
 
             //after done syncing listen again
             this.Listen();
-
         }
         private IEnumerable<ITrack> Poll()
         {

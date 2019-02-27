@@ -109,5 +109,16 @@ namespace Xync.Utils
             }
 
         }
+
+        public static   object GetDefault(this object obj)
+        {
+            Type t = obj.GetType();
+            {
+                if (t.IsValueType)
+                    return Activator.CreateInstance(t);
+
+                return null;
+            }
+        }
     }
 }

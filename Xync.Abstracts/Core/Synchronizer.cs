@@ -10,7 +10,7 @@ namespace Xync.Abstracts.Core
     {
         public abstract string ConnectionString { get; }
         public static IList<ITable> Monitors { get; set; } = new List<ITable>();
-        public abstract int ListenAll(bool forced = false);
+        public abstract void ListenAll(bool forced = false);
         public abstract int Listen(string tblName);
         public virtual ITable this[string tblName,string schema="dbo"]
         {

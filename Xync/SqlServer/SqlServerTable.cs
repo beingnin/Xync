@@ -143,7 +143,7 @@ namespace Xync.SqlServer
                                 }
                                 else
                                 {
-                                    object newMappedValue = attr.Value;
+                                    object newMappedValue =attr.Value!=DBNull.Value? attr.Value:attr.Value.GetDefault();
                                     //run if any logic for manipulating result by value
                                     if (map.ManipulateByValue != null)
                                     {

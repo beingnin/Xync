@@ -8,6 +8,7 @@ using Xync.Abstracts.Core;
 using System.Data.SqlClient;
 using System.Data.Common;
 using Xync.Helpers;
+using Xync.Utils;
 
 namespace Xync.Core
 {
@@ -21,20 +22,20 @@ namespace Xync.Core
         const string _QRY_ENABLE_CDC_IN_DB = "use {#catalog#};exec sys.sp_cdc_enable_db";
         const string _QRY_ENABLE_CDC_IN_TABLE = "exec sys.sp_cdc_enable_table @source_schema='{#schema#}', @source_name='{#table#}', @role_name=null";
         const string _QRY_CREATE_SCHEMA = "create schema {#schema#}";
-        const string _QRY_MEDIATOR_TABLE = "CREATE TABLE {#schema#}.[Consolidated_Tracks]( [Id] [bigint] IDENTITY(1,1) NOT NULL, [CDC_Schema] [varchar](200) NOT NULL, [CDC_Name] [varchar](200) NOT NULL, [Table_Schema] [varchar](200) NOT NULL, [Table_Name] [varchar](200) NOT NULL,[Timestamp] [datetime] NOT NULL, [Changed] [bit] NULL, [Synced] [bit] NULL, PRIMARY KEY CLUSTERED ( [Id] ASC ) )";
-        const string _QRY_CREATE_TRIGGER_ON_TABLE = "create trigger [cdc].[Trg_{#tableschema#}_{#cdctable#}] on [cdc].[{#tableschema#}_{#cdctable#}] after insert as begin insert into {#schema#}.[Consolidated_Tracks] ( [CDC_Schema], [CDC_Name],[Table_Schema], [Table_Name], [Timestamp], [Changed], [Synced] ) values ( 'cdc', '{#tableschema#}_{#cdctable#}','{#tableschema#}','{#tablename#}', GETUTCDATE(), 1, 0 ) end";
+        const string _QRY_MEDIATOR_TABLE = "CREATE TABLE {#schema#}.[Consolidated_Tracks]( [Id] [bigint] IDENTITY(1,1) NOT NULL, [CDC_Schema] [varchar](200) NOT NULL, [CDC_Name] [varchar](200) NOT NULL, [Table_Schema] [varchar](200) NOT NULL, [Table_Name] [varchar](200) NOT NULL,[Timestamp] [datetime] NOT NULL, [Changed] [bit] NULL, [Sync] [tinyint] NULL, PRIMARY KEY CLUSTERED ( [Id] ASC ) )";
+        const string _QRY_CREATE_TRIGGER_ON_TABLE = "create trigger [cdc].[Trg_{#tableschema#}_{#cdctable#}] on [cdc].[{#tableschema#}_{#cdctable#}] after insert as begin insert into {#schema#}.[Consolidated_Tracks] ( [CDC_Schema], [CDC_Name],[Table_Schema], [Table_Name], [Timestamp], [Changed], [Sync] ) values ( 'cdc', '{#tableschema#}_{#cdctable#}','{#tableschema#}','{#tablename#}', GETUTCDATE(), 1, 0 ) end";
         #endregion Queries
 
         readonly string _schema;
         readonly string _catalog;
         readonly SqlConnection _sqlConnection;
         private string _connectionString = string.Empty;
-        public Setup(string con)
+        public Setup()
         {
-            _catalog = new SqlConnectionStringBuilder(con).InitialCatalog.TrimEnd('[', ']');
-            this._connectionString = con;
+            _catalog = new SqlConnectionStringBuilder(Constants.RdbmsConnection).InitialCatalog.TrimEnd('[', ']');
+            this._connectionString = Constants.RdbmsConnection;
             this._schema = "XYNC";
-            this._sqlConnection = new SqlConnection(con);
+            this._sqlConnection = new SqlConnection(Constants.RdbmsConnection);
         }
         public string ConnectionString
         {
