@@ -379,7 +379,34 @@ namespace Xync.Mappings
                 new SqlServerColumn()
                 {
                     DbType=typeof(string),
-                    Name="FolderName"
+                    Name="FolderName",
+                    Maps=new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                DbType=typeof(string),
+                                Key="Name",
+                                Name="Name"
+                            }
+                        },
+                       new Map
+                       {
+                           DocumentProperty=new MongoDocumentProperty
+                           {
+                               DbType=typeof(string),
+                               Key="QualifiedName",
+                               Name="QualifiedName",
+
+                           },
+                           ManipulateByRow=(item)=>{
+                               var table=(SqlServerTable<Folder>)item;
+                               return ((SqlServerColumn)table["FolderId"]).Value+":"+((SqlServerColumn)table["FolderName"]).Value;
+                           },
+                           //ManipulateByValue=(val)=>$"[{val}]"
+                       }
+                    }
                 },
                 new SqlServerColumn()
                 {

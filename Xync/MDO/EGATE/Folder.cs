@@ -11,6 +11,7 @@ namespace Xync.MDO.EGATE
     {
         public int Id { get; set; }
         public string Name{ get; set; }
+        public string QualifiedName { get; set; }
         public Case Case { get; set; }
         public string Path { get; set; }
         public DateTime CreatedUTC { get; set; }
