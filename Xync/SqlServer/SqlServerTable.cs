@@ -177,21 +177,30 @@ namespace Xync.SqlServer
         {
             //return this._docModel = (TDocumentModel)Activator.CreateInstance(this.DocumentModelType);
             //get doc from collection
-            MongoClient client = new MongoClient(Constants.NoSqlConnection);
-            IMongoDatabase db = client.GetDatabase(Constants.NoSqlDB);
-            var collection = db.GetCollection<TDocumentModel>(this.DocumentModelType.Name);
+            try
+            {
+                MongoClient client = new MongoClient(Constants.NoSqlConnection);
+                IMongoDatabase db = client.GetDatabase(Constants.NoSqlDB);
+                var collection = db.GetCollection<TDocumentModel>(this.DocumentModelType.Name);
 
-            FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
-            FilterDefinition<TDocumentModel> filter = filterBuilder.Eq(this.GetKey().Maps[0].DocumentProperty.Name, identifier);
-            var col = collection.Find(filter);
-            var doc = col.ToList().FirstOrDefault();
-            if (doc == null)
-            {
-                return this._docModel = (TDocumentModel)Activator.CreateInstance(this.DocumentModelType);
+                FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
+                FilterDefinition<TDocumentModel> filter = filterBuilder.Eq(this.GetKey().Maps[0].DocumentProperty.Name, identifier);
+                var col = collection.Find(filter);
+                var doc = col.ToList().FirstOrDefault();
+                if (doc == null)
+                {
+                    return this._docModel = (TDocumentModel)Activator.CreateInstance(this.DocumentModelType);
+                }
+                else
+                {
+                    return this._docModel = doc;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return this._docModel = doc;
+                Console.WriteLine();
+                Console.WriteLine(ex.Message);
+                throw;
             }
         }
 
