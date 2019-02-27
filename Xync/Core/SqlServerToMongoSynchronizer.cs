@@ -122,7 +122,7 @@ namespace Xync.Core
                                 var client = new MongoClient(_mongoConnectionString);
 
                                 //Use the MongoClient to access the server
-                                var database = client.GetDatabase("SPSA_MongoDev");
+                                var database = client.GetDatabase(Constants.NoSqlDB);
 
 
                                 //get mongodb collection

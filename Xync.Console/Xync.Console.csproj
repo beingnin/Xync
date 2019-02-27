@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mappings\CaseManagement.cs" />
     <Compile Include="Mappings\Main.cs" />
     <Compile Include="MDO\EGATE\Case.cs" />
     <Compile Include="MDO\EGATE\CaseType.cs" />
