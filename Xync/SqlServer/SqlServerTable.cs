@@ -177,8 +177,8 @@ namespace Xync.SqlServer
         {
             //return this._docModel = (TDocumentModel)Activator.CreateInstance(this.DocumentModelType);
             //get doc from collection
-            MongoClient client = new MongoClient("mongodb://SPSAUser:SPSADev_PITS123@10.10.100.74:27017/SPSA_MongoDev");
-            IMongoDatabase db = client.GetDatabase("SPSA_MongoDev");
+            MongoClient client = new MongoClient(Constants.NoSqlConnection);
+            IMongoDatabase db = client.GetDatabase(Constants.NoSqlDB);
             var collection = db.GetCollection<TDocumentModel>(this.DocumentModelType.Name);
 
             FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
@@ -198,8 +198,8 @@ namespace Xync.SqlServer
         public void DeleteFromMongo(object identifier)
         {
             //get doc from collection
-            MongoClient client = new MongoClient("mongodb://SPSAUser:SPSADev_PITS123@10.10.100.74:27017/SPSA_MongoDev");
-            IMongoDatabase db = client.GetDatabase("SPSA_MongoDev");
+            MongoClient client = new MongoClient(Constants.NoSqlConnection);
+            IMongoDatabase db = client.GetDatabase(Constants.NoSqlDB);
             var collection = db.GetCollection<TDocumentModel>(this.DocumentModelType.Name);
             FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
             FilterDefinition<TDocumentModel> filter = filterBuilder.Eq(this.GetKey().Maps[0].DocumentProperty.Name, identifier);

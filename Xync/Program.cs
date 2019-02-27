@@ -30,6 +30,7 @@ namespace Xync
             };
             Constants.RdbmsConnection = @"Data Source=10.10.100.71\spsadb;Initial Catalog=xync;Integrated Security=True";
             Constants.NoSqlConnection = @"mongodb://SPSAUser:SPSADev_PITS123@10.10.100.74:27017/SPSA_MongoDev";
+            Constants.NoSqlDB = "SPSA_MongoDev";
             //start setup
             bool setupComplete = new Setup().Initialize().Result;
             //setup ends here
