@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xync.Abstracts;
+using Xync.Helpers;
 using Xync.Utils;
 
 namespace Xync.SqlServer
@@ -169,7 +170,7 @@ namespace Xync.SqlServer
             }
             catch (Exception ex)
             {
-
+                Message.Error(ex.Message, "Mapping from " + this.Schema.Embrace() + this.Name.Embrace() + " to "+this.DocumentModelType.FullName+" failed");
                 throw;
             }
         }

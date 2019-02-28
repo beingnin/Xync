@@ -44,7 +44,12 @@ namespace Xync.Console
 
 
             new SqlServerToMongoSynchronizer().ListenAll();
-            System.Console.ReadKey();
+
+            while (true)
+            {
+               System.Console.ReadKey();
+            }
+            
         }
     }
 }
