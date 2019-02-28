@@ -8,6 +8,7 @@ namespace Xync.Console.MDO.EGATE
     public class Case
     {
         public long CaseId { get; set; }
+        public long Id { get; set; }
         public string CaseName { get; set; }
         public Guid ProcessId { get; set; }
         public CaseType Type { get; set; }

@@ -36,14 +36,18 @@ namespace Xync.Core
             //stop timer
             timer.Stop();
             timer.Dispose();
-            IEnumerable<ITrack> changedTables = Poll();
-            if (changedTables != null && changedTables.Count() > 0)//change occured
+            try
             {
-                OnChange(changedTables);
-                
-
+                IEnumerable<ITrack> changedTables = Poll();
+                if (changedTables != null && changedTables.Count() > 0)//change occured
+                {
+                    OnChange(changedTables);
+                }
             }
-
+            catch (Exception ex)
+            {
+                Message.Error(ex.Message, "Polling failed");
+            }
             //after done syncing listen again
             this.Listen();
         }
@@ -59,10 +63,10 @@ namespace Xync.Core
                 {
                     yield return new Track
                     {
-                       CDCTable= Convert.ToString(row["cdc_name"]),
-                       CDCSchema= Convert.ToString(row["cdc_schema"]),
-                       TableName= Convert.ToString(row["table_name"]),
-                       TableSchema = Convert.ToString(row["table_schema"]),
+                        CDCTable = Convert.ToString(row["cdc_name"]),
+                        CDCSchema = Convert.ToString(row["cdc_schema"]),
+                        TableName = Convert.ToString(row["table_name"]),
+                        TableSchema = Convert.ToString(row["table_schema"]),
                     };
 
                 }
