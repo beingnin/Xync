@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace Xync.Console
 
             //new SqlServerToMongoSynchronizer().ListenAll();
             //System.Console.ReadKey();
-
+            
             Synchronizer.Monitors = new List<ITable>()
             {
                 Mappings.CaseManagement.Cases

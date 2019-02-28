@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xync.Abstracts;
+using Xync.Helpers;
 
 namespace Xync.SqlServer
 {
@@ -16,5 +17,9 @@ namespace Xync.SqlServer
         public List<Map> Maps { get; set; }
         public object Value { get; set; }
         public bool HasChange { get; set; }
+        public override string ToString()
+        {
+            return this.Name.Embrace();
+        }
     }
 }

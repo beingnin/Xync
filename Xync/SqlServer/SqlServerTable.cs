@@ -46,7 +46,10 @@ namespace Xync.SqlServer
                 return typeof(TDocumentModel);
             }
         }
-
+        public override string ToString()
+        {
+            return this.Schema.Embrace() + "." + this.Name.Embrace();
+        }
         public bool DNT { get; set; }
         public bool HasChange { get; set; }
         public Change Change { get; set; }
