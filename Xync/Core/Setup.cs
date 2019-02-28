@@ -67,21 +67,20 @@ namespace Xync.Core
                 bool isEnabled = Convert.ToBoolean(await cmd.ExecuteScalarAsync());
                 if (isEnabled)
                 {
-                    Console.WriteLine("Capture Data Change facility is already enabled on the DB:" + _catalog.Embrace());
+                    Message.Info("Capture Data Change facility is already enabled on the DB:" + _catalog.Embrace());
                     return true;
                 }
                 else
                 {
                     cmd.CommandText = _QRY_ENABLE_CDC_IN_DB.Replace("{#catalog#}", _catalog.Embrace());
                     await cmd.ExecuteNonQueryAsync();
-                    Console.WriteLine("Capture Data Change facility has been enabled for " + _catalog.Embrace());
+                    Message.Success("Capture Data Change facility has been enabled for " + _catalog.Embrace());
                     return true;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("\n");
-                Console.WriteLine(ex.Message);
+                Message.Error(ex.Message, "Db level tracking setup");
                 return false;
             }
             finally
@@ -103,17 +102,18 @@ namespace Xync.Core
                 {
                     try
                     {
-                        Console.WriteLine("Enabling change tracking on " + table.Schema.Embrace() + "." + table.Name.Embrace());
+                        Message.Info("Enabling change tracking on " + table.Schema.Embrace() + "." + table.Name.Embrace());
                         cmd.CommandText = _QRY_ENABLE_CDC_IN_TABLE.Replace("{#schema#}", table.Schema).Replace("{#table#}", table.Name);
                         await cmd.ExecuteNonQueryAsync();
                         cmd.CommandText = _QRY_CREATE_TRIGGER_ON_TABLE.Replace("{#tableschema#}", table.Schema).Replace("{#cdctable#}", table.Name + "_CT").Replace("{#schema#}", _schema.Embrace()).Replace("{#tablename#}", table.Name);
                         await cmd.ExecuteNonQueryAsync();
                         cmd.CommandText = _QRY_ADD_COLUMN_TO_CAPTURE.Replace("{#table#}", (table.Schema + "_" + table.Name + "_CT").Embrace());
                         await cmd.ExecuteNonQueryAsync();
+                        Message.Success("Change tracking enabled for " + table.Schema.Embrace() + "." + table.Name.Embrace());
                     }
                     catch (Exception exc)
                     {
-                        Console.WriteLine(exc.Message);
+                        Message.Error(exc.Message, "Table level tracking setup");
                     }
 
 
@@ -121,7 +121,7 @@ namespace Xync.Core
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Message.Error(ex.StackTrace,ex.Message);
                 return false;
             }
             finally
@@ -135,16 +135,18 @@ namespace Xync.Core
         {
             try
             {
-                Console.WriteLine("Creating schema...");
+                Message.Info("Creating schema...");
                 if (_sqlConnection.State == System.Data.ConnectionState.Closed)
                     _sqlConnection.Open();
 
                 SqlCommand cmd = new SqlCommand(_QRY_CREATE_SCHEMA.Replace("{#schema#}", _schema.Embrace()), _sqlConnection);
-                return Convert.ToInt32(await cmd.ExecuteNonQueryAsync()) > 0;
+                int rowsAffected = Convert.ToInt32(await cmd.ExecuteNonQueryAsync());
+                Message.Success("Schema registered succesfully");
+                return  rowsAffected> 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Message.Error(ex.Message, "Creating schema "+_schema.Embrace());
                 return false;
             }
             finally
@@ -158,16 +160,18 @@ namespace Xync.Core
         {
             try
             {
-                Console.WriteLine("Creating mediator....");
+               Message.Info("Creating mediator....");
                 if (_sqlConnection.State == System.Data.ConnectionState.Closed)
                     _sqlConnection.Open();
 
                 SqlCommand cmd = new SqlCommand(_QRY_MEDIATOR_TABLE.Replace("{#schema#}", _schema.Embrace()), _sqlConnection);
-                return Convert.ToInt32(await cmd.ExecuteNonQueryAsync()) > 0;
+                int rowsAffected = Convert.ToInt32(await cmd.ExecuteNonQueryAsync());
+                Message.Success("Mediator table created");
+                return rowsAffected > 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Message.Error(ex.Message,"Creating mediator table");
                 return false;
             }
             finally

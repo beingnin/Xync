@@ -104,15 +104,16 @@ namespace Xync.Core
                             if (table.Change == Change.Delete)
                             {
                                 tableType.GetMethod("DeleteFromMongo").Invoke(table, new object[] { keyAttribute.Value });
-                                Console.WriteLine("Deleted from collection : " + docType.Name + "Key : " + keyAttribute.Value);
+                              Message.Info("Deleted from collection : " + docType.Name + "Key : " + keyAttribute.Value);
                             }
                             else
                             {
-
+                                string msg = "Inserted to";
                                 if (table.Change == Change.AfterUpdate || table.Change == Change.BeforeUpdate)
                                 {
                                     tableType.GetMethod("GetFromMongo").Invoke(table, new object[] { keyAttribute.Value });
                                     tableType.GetMethod("DeleteFromMongo").Invoke(table, new object[] { keyAttribute.Value });
+                                    msg = "Updated";
                                 }
 
                                 var model = tableType.GetMethod("CreateModel").Invoke(table, null);
@@ -128,7 +129,7 @@ namespace Xync.Core
                                 //get mongodb collection
                                 var collection = database.GetCollection<BsonDocument>(docType.Name);
                                 collection.InsertOne(bson);
-                                Console.WriteLine($"Inserted/Updated to [collection :  { docType.Name }] & [Key : {keyAttribute.Value}]");
+                               Message.Success($"{msg} [collection :  { docType.Name }] & [Key : {keyAttribute.Value}]");
                             }
                         }
                         //set as synced in db
@@ -144,7 +145,7 @@ namespace Xync.Core
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Message.Error(ex.Message,"Synchronization failed");
             }
         }
 

@@ -52,8 +52,8 @@ namespace Xync.SqlServer
         public void Listen()
         {
             //Register things for getting changes from DB
-            Console.WriteLine($"Listening for changes in {Schema}.{Name}");
-            Console.WriteLine($"Change detected in {Schema}.{Name}");
+            Message.Info($"Listening for changes in {Schema}.{Name}");
+           Message.Info($"Change detected in {Schema}.{Name}");
             RowChanged();
         }
         public event RowChangedEventHandler OnRowChange;
@@ -198,8 +198,7 @@ namespace Xync.SqlServer
             }
             catch (Exception ex)
             {
-                Console.WriteLine();
-                Console.WriteLine(ex.Message);
+                Message.Error(ex.Message,"Fetch from mongo");
                 throw;
             }
         }
@@ -218,6 +217,10 @@ namespace Xync.SqlServer
             }
             catch (NullReferenceException ex)
             {
+            }
+            catch(Exception ex)
+            {
+               Message.Error(ex.Message,"Delete from Mongo");
             }
 
         }

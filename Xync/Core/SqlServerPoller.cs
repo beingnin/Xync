@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using Xync.Abstracts.Core;
+using Xync.Utils;
 
 namespace Xync.Core
 {
@@ -27,7 +28,7 @@ namespace Xync.Core
             timer = new Timer(Interval);
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
-            Console.WriteLine($"Listening for changes started @ {DateTime.Now.ToLongTimeString()}");
+            Message.Loading($"Listening for changes started @ {DateTime.Now.ToLongTimeString()}");
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
