@@ -12,5 +12,6 @@ namespace Xync.Utils
         public static string NoSqlConnection = string.Empty;
         public static string NoSqlDB = string.Empty;
         public static string Schema = "XYNC";
+        public static double PollingInterval = 5000;
     }
 }

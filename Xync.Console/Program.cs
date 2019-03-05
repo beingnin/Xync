@@ -39,6 +39,7 @@ namespace Xync.Console
             Constants.RdbmsConnection = @"Data Source=10.10.100.71\spsadb;Initial Catalog=XYNC_TEST;uid=spsauser;pwd=$P$@789#";
             Constants.NoSqlConnection = @"mongodb://10.10.100.74:27017";
             Constants.NoSqlDB = "Xync_Test";
+            Constants.PollingInterval = 1000; 
             //start setup
             bool setupComplete = new Setup().Initialize().Result;
             //setup ends here

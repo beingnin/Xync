@@ -16,7 +16,7 @@ namespace Xync.Core
         const string _QRY_HAS_CHANGE = "update [{#schema#}].[Consolidated_Tracks] set sync=1 where sync=0;select distinct [cdc_name],[cdc_schema],[table_name],[table_schema] from [{#schema#}].[Consolidated_Tracks] where changed=1 and sync=1";
         private const string _schema = "XYNC";
         static string _query = _QRY_HAS_CHANGE.Replace("{#schema#}", _schema);
-        public static double Interval = 5000;
+        public static double Interval = Constants.PollingInterval;
         private Timer timer = null;
         private readonly SqlConnection _sqlConnection = null;
         public SqlServerPoller(string connection)
