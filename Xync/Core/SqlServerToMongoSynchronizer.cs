@@ -127,7 +127,7 @@ namespace Xync.Core
 
 
                                 //get mongodb collection
-                                var collection = database.GetCollection<BsonDocument>(docType.Name);
+                                var collection = database.GetCollection<BsonDocument>(table.Collection);
                                 collection.InsertOne(bson);
                                Message.Success($"{msg} [collection :  { docType.Name }] & [Key : {keyAttribute.Value}]");
                             }

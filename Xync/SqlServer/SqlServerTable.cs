@@ -21,6 +21,18 @@ namespace Xync.SqlServer
         }
         public long ObjectId { get; set; }
         public string Name { get; set; }
+        string _collection = string.Empty;
+        public string Collection
+        {
+            get
+            {
+                return string.IsNullOrWhiteSpace(_collection) ? typeof(TDocumentModel).Name : _collection;
+            }
+            set
+            {
+                _collection = value;
+            }
+        }
         public string Schema { get; set; } = "[DBO]";
         public string DB { get; set; }
         public List<IRelationalAttribute> Attributes { get; set; }
@@ -57,7 +69,7 @@ namespace Xync.SqlServer
         {
             //Register things for getting changes from DB
             Message.Info($"Listening for changes in {Schema}.{Name}");
-           Message.Info($"Change detected in {Schema}.{Name}");
+            Message.Info($"Change detected in {Schema}.{Name}");
             RowChanged();
         }
         public event RowChangedEventHandler OnRowChange;
@@ -147,7 +159,7 @@ namespace Xync.SqlServer
                                 }
                                 else
                                 {
-                                    object newMappedValue =attr.Value!=DBNull.Value? attr.Value:attr.Value.GetDefault();
+                                    object newMappedValue = attr.Value != DBNull.Value ? attr.Value : attr.Value.GetDefault();
                                     //run if any logic for manipulating result by value
                                     if (map.ManipulateByValue != null)
                                     {
@@ -173,7 +185,7 @@ namespace Xync.SqlServer
             }
             catch (Exception ex)
             {
-                Message.Error(ex.Message, "Mapping from " + this.Schema.Embrace() + this.Name.Embrace() + " to "+this.DocumentModelType.FullName+" failed");
+                Message.Error(ex.Message, "Mapping from " + this.Schema.Embrace() + this.Name.Embrace() + " to " + this.DocumentModelType.FullName + " failed");
                 throw;
             }
         }
@@ -185,7 +197,7 @@ namespace Xync.SqlServer
             {
                 MongoClient client = new MongoClient(Constants.NoSqlConnection);
                 IMongoDatabase db = client.GetDatabase(Constants.NoSqlDB);
-                var collection = db.GetCollection<TDocumentModel>(this.DocumentModelType.Name);
+                var collection = db.GetCollection<TDocumentModel>(this.Collection);
 
                 FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
                 FilterDefinition<TDocumentModel> filter = filterBuilder.Eq(this.GetKey().Maps[0].DocumentProperty.Name, identifier);
@@ -202,7 +214,7 @@ namespace Xync.SqlServer
             }
             catch (Exception ex)
             {
-                Message.Error(ex.Message,"Fetch from mongo");
+                Message.Error(ex.Message, "Fetch from mongo");
                 throw;
             }
         }
@@ -212,7 +224,7 @@ namespace Xync.SqlServer
             //get doc from collection
             MongoClient client = new MongoClient(Constants.NoSqlConnection);
             IMongoDatabase db = client.GetDatabase(Constants.NoSqlDB);
-            var collection = db.GetCollection<TDocumentModel>(this.DocumentModelType.Name);
+            var collection = db.GetCollection<TDocumentModel>(this.Collection);
             FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
             FilterDefinition<TDocumentModel> filter = filterBuilder.Eq(this.GetKey().Maps[0].DocumentProperty.Name, identifier);
             try
@@ -222,9 +234,9 @@ namespace Xync.SqlServer
             catch (NullReferenceException ex)
             {
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-               Message.Error(ex.Message,"Delete from Mongo");
+                Message.Error(ex.Message, "Delete from Mongo");
             }
 
         }

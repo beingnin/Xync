@@ -12,6 +12,7 @@ namespace Xync.Abstracts
         string Name { get; set; }
         bool DNT { get; set; }
         long ObjectId { get; set; }
+        string Collection { get; set; }
         bool HasChange { get; set; }
         Change Change { get; set; }
         IRelationalAttribute this[string col]

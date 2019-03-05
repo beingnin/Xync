@@ -86,6 +86,7 @@ namespace Xync.Console.Mappings
         public static IRelationalTable<Case> Cases = new SqlServerTable<Case>
         {
             Name = "Cases",
+            Collection="CM_Cases",
             Schema = "CM",
             Attributes = new List<IRelationalAttribute>
             {
