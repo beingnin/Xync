@@ -74,6 +74,11 @@ namespace Xync.Core
 
 
                     ITable table = base[Changedtable.TableName, Changedtable.TableSchema];
+                    if (table == null)
+                    {
+                        Message.Info($"Mapping not found", $"Mapping not found for a cdc enabled table [{Changedtable.TableSchema}].[{Changedtable.TableName}]");
+                        continue;
+                    }
                     Type tableType = table.GetType();
                     IRelationalAttribute key = (IRelationalAttribute)tableType.GetMethod("GetKey").Invoke(table, null);
                     cmd.CommandText = _QRY_GET_TABLE_CHANGE.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keycolumn#}", key.Name);
@@ -104,7 +109,7 @@ namespace Xync.Core
                             if (table.Change == Change.Delete)
                             {
                                 tableType.GetMethod("DeleteFromMongo").Invoke(table, new object[] { keyAttribute.Value });
-                              Message.Info("Deleted from collection : " + docType.Name + "Key : " + keyAttribute.Value);
+                                Message.Info("Deleted from collection : " + docType.Name + "Key : " + keyAttribute.Value);
                             }
                             else
                             {
@@ -129,7 +134,7 @@ namespace Xync.Core
                                 //get mongodb collection
                                 var collection = database.GetCollection<BsonDocument>(table.Collection);
                                 collection.InsertOne(bson);
-                               Message.Success($"{msg} [collection :  { docType.Name }] & [Key : {keyAttribute.Value}]");
+                                Message.Success($"{msg} [collection :  { docType.Name }] & [Key : {keyAttribute.Value}]");
                             }
                         }
                         //set as synced in db
@@ -138,14 +143,14 @@ namespace Xync.Core
                         cmd.ExecuteNonQuery();
                     }
                 }
-                cmd.CommandText = _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS.Replace("{#schema#}",Constants.Schema );
+                cmd.CommandText = _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS.Replace("{#schema#}", Constants.Schema);
                 cmd.ExecuteNonQuery();
                 if (_sqlConnection.State == ConnectionState.Open)
                     _sqlConnection.Close();
             }
             catch (Exception ex)
             {
-                Message.Error(ex.Message,"Synchronization failed");
+                Message.Error(ex.Message, "Synchronization failed");
             }
         }
 

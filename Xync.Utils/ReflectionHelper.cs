@@ -102,7 +102,7 @@ namespace Xync.Utils
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;
