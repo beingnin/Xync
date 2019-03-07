@@ -31,7 +31,7 @@ namespace Xync.Console
 
             //new SqlServerToMongoSynchronizer().ListenAll();
             //System.Console.ReadKey();
-            
+            System.Console.WriteLine("dll app");
             Synchronizer.Monitors = new List<ITable>()
             {
                 Mappings.CaseManagement.Cases
