@@ -33,7 +33,7 @@ namespace Xync.SqlServer
                 _collection = value;
             }
         }
-        public string Schema { get; set; } = "[DBO]";
+        public string Schema { get; set; } = "DBO";
         public string DB { get; set; }
         public List<IRelationalAttribute> Attributes { get; set; }
         public IRelationalAttribute this[string col]
