@@ -65,6 +65,8 @@ namespace Xync.SqlServer
         public bool DNT { get; set; }
         public bool HasChange { get; set; }
         public Change Change { get; set; }
+        public string Query { get; set; }
+        public QueryType QueryType { get; set; }
         public void Listen()
         {
             //Register things for getting changes from DB

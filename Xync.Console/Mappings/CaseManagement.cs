@@ -13,6 +13,8 @@ namespace Xync.Console.Mappings
     {
         public static IRelationalTable<Folder> Folders = new SqlServerTable<Folder>
         {
+            
+
             Schema = "CM",
             Name = "Folders",
             Attributes = new List<IRelationalAttribute>

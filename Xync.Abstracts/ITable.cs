@@ -15,6 +15,8 @@ namespace Xync.Abstracts
         string Collection { get; set; }
         bool HasChange { get; set; }
         Change Change { get; set; }
+        QueryType QueryType { get; set; }
+        string Query { get; set; }
         IRelationalAttribute this[string col]
         {
             get;
