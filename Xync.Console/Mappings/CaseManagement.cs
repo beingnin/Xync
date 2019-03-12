@@ -31,7 +31,6 @@ namespace Xync.Console.Mappings
                             DocumentProperty=new MongoDocumentProperty
                             {
                                 DbType=typeof(int),
-                                Key="Id",
                                 Name="Id"
                             }
                         }
@@ -53,7 +52,6 @@ namespace Xync.Console.Mappings
                             DocumentProperty=new MongoDocumentProperty
                             {
                                 DbType=typeof(string),
-                                Key="Name",
                                 Name="Name"
                             }
                         },
@@ -62,7 +60,6 @@ namespace Xync.Console.Mappings
                            DocumentProperty=new MongoDocumentProperty
                            {
                                DbType=typeof(string),
-                               Key="QualifiedName",
                                Name="QualifiedName",
                            },
                            ManipulateByRow=(item)=>{
@@ -105,7 +102,6 @@ namespace Xync.Console.Mappings
                             {
                                 Name="CaseId",
                                 DbType=typeof(long),
-                                Key="CaseId"
                             }
                         },
                          new Map
@@ -114,7 +110,6 @@ namespace Xync.Console.Mappings
                             {
                                 Name="Id",
                                 DbType=typeof(long),
-                                Key="Id"
                             },
 
                         }
@@ -132,7 +127,6 @@ namespace Xync.Console.Mappings
                        {
                            Name="ProcessId",
                            DbType=typeof(Guid),
-                           Key="ProcessId"
                        }
                       }
                    }
@@ -149,7 +143,6 @@ namespace Xync.Console.Mappings
                        {
                            Name="Type.Id",
                            DbType=typeof(Int16),
-                           Key="Type.Id"
                        }
                       }
                    }
@@ -166,7 +159,6 @@ namespace Xync.Console.Mappings
                        {
                            Name="CaseName",
                            DbType=typeof(string),
-                           Key="CaseName"
                        }
                       }
                    }
@@ -183,7 +175,6 @@ namespace Xync.Console.Mappings
                        {
                            Name="Number",
                            DbType=typeof(string),
-                           Key="Number"
                        }
                       }
                    }
@@ -200,7 +191,6 @@ namespace Xync.Console.Mappings
                        {
                            Name="CreatedUTC",
                            DbType=typeof(DateTime),
-                           Key="CreatedUTC"
                        }
                       }
                    }
@@ -217,7 +207,6 @@ namespace Xync.Console.Mappings
                        {
                            Name="DueDate",
                            DbType=typeof(DateTime),
-                           Key="DueDate"
                        }
                       }
                    }
@@ -234,7 +223,6 @@ namespace Xync.Console.Mappings
                        {
                            Name="Status",
                            DbType=typeof(DateTime),
-                           Key="Status"
                        }
                       }
                    }
@@ -251,7 +239,6 @@ namespace Xync.Console.Mappings
                        {
                            Name="Description",
                            DbType=typeof(string),
-                           Key="Description"
                        }
                       }
                    }
@@ -268,7 +255,6 @@ namespace Xync.Console.Mappings
                        {
                            Name="Priority",
                            DbType=typeof(Int16),
-                           Key="Priority"
                        }
                       }
                    }
@@ -285,7 +271,6 @@ namespace Xync.Console.Mappings
                        {
                            Name="Parent.CaseId",
                            DbType=typeof(long),
-                           Key="Parent.CaseId"
                        }
                       }
                    }

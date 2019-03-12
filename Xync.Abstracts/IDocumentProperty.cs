@@ -9,7 +9,6 @@ namespace Xync.Abstracts
     public interface IDocumentProperty
     {
         string Name { get; set; }
-        string Key { get; set; }
         Type DbType { get; set; }
     }
 }

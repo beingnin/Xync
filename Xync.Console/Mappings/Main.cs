@@ -32,7 +32,6 @@ namespace Xync.Console.Mappings
                                 {
                                     DbType=typeof(long),
                                     Name="Department.Branch.BranchId",
-                                    Key="Department.Branch.BranchId"
                                 }
                             }
                         }
@@ -49,7 +48,6 @@ namespace Xync.Console.Mappings
                                 {
                                     DbType=typeof(long),
                                     Name="Department.Branch.Location.LocationId",
-                                    Key="Department.Branch.Location.LocationId"
                                 }
                             }
                         }
@@ -66,7 +64,6 @@ namespace Xync.Console.Mappings
                                 {
                                     DbType=typeof(long),
                                     Name="Department.Branch.Location.Name",
-                                    Key="Department.Branch.Location.Name"
                                 }
                             }
                         }
@@ -83,7 +80,6 @@ namespace Xync.Console.Mappings
                                 {
                                     DbType=typeof(long),
                                     Name="Department.DepId",
-                                    Key="Department.DepId"
                                 }
                             }
                         }
@@ -101,7 +97,6 @@ namespace Xync.Console.Mappings
                                 {
                                     DbType=typeof(long),
                                     Name="EmpId",
-                                    Key="EmpId"
                                 }
                             }
                         }
@@ -119,7 +114,6 @@ namespace Xync.Console.Mappings
                                 {
                                     DbType=typeof(string),
                                     Name="Name",
-                                    Key="Name"
                                 },
                                 ManipulateByRow=x=>
                                 {
@@ -134,7 +128,6 @@ namespace Xync.Console.Mappings
                                 {
                                     DbType=typeof(string),
                                     Name="FirstName",
-                                    Key="FirstName"
                                 }
 
                             }
@@ -152,7 +145,6 @@ namespace Xync.Console.Mappings
                                 {
                                     DbType=typeof(string),
                                     Name="Name",
-                                    Key="Name"
                                 },
                                 ManipulateByRow=x=>
                                 {
@@ -167,7 +159,6 @@ namespace Xync.Console.Mappings
                                 {
                                     DbType=typeof(string),
                                     Name="LastName",
-                                    Key="LastName"
                                 }
 
                             }
@@ -185,7 +176,6 @@ namespace Xync.Console.Mappings
                                 {
                                     DbType=typeof(string),
                                     Name="DOBString",
-                                    Key="DOBString"
                                 },
                                 ManipulateByValue=x=>(((DateTime)x).AddYears(1)).ToShortDateString(),
 
@@ -196,7 +186,6 @@ namespace Xync.Console.Mappings
                                 {
                                     DbType=typeof(DateTime),
                                     Name="DOB",
-                                    Key="DOB"
                                 },
                                 ManipulateByValue=x=>(((DateTime)x).AddYears(1)),
 
@@ -215,7 +204,6 @@ namespace Xync.Console.Mappings
                                 {
                                     DbType=typeof(short),
                                     Name="Designation",
-                                    Key="Designation"
                                 }
                             }
                         }
@@ -243,7 +231,6 @@ namespace Xync.Console.Mappings
                                 DocumentProperty=new MongoDocumentProperty()
                                 {
                                     DbType=typeof(int),
-                                    Key="Id"
                                 }
                             }
                         }
@@ -259,7 +246,6 @@ namespace Xync.Console.Mappings
                                 DocumentProperty=new MongoDocumentProperty()
                                 {
                                     DbType=typeof(string),
-                                    Key="Name"
                                 }
                             }
                         }
@@ -275,7 +261,6 @@ namespace Xync.Console.Mappings
                                 DocumentProperty=new MongoDocumentProperty()
                                 {
                                     DbType=typeof(decimal),
-                                    Key="Price"
                                 }
                             }
                         }
@@ -291,7 +276,6 @@ namespace Xync.Console.Mappings
                                 DocumentProperty=new MongoDocumentProperty()
                                 {
                                     DbType=typeof(int),
-                                    Key="Customer.Id"
                                 }
                             }
                         }
@@ -307,7 +291,6 @@ namespace Xync.Console.Mappings
                                 DocumentProperty=new MongoDocumentProperty()
                                 {
                                     DbType=typeof(string),
-                                    Key="Customer.Name"
                                 }
                             }
                         }
@@ -323,7 +306,6 @@ namespace Xync.Console.Mappings
                                 DocumentProperty=new MongoDocumentProperty()
                                 {
                                     DbType=typeof(int),
-                                    Key="Tax.Id"
                                 }
                             }
                         }
@@ -339,7 +321,6 @@ namespace Xync.Console.Mappings
                                 DocumentProperty=new MongoDocumentProperty()
                                 {
                                     DbType=typeof(decimal),
-                                    Key="Tax.Rate"
                                 }
                             }
                         }
@@ -365,7 +346,6 @@ namespace Xync.Console.Mappings
                             DocumentProperty=new MongoDocumentProperty
                             {
                                 DbType=typeof(int),
-                                Key="Id",
                                 Name="Id"
                             }
                         }
@@ -387,7 +367,6 @@ namespace Xync.Console.Mappings
                             DocumentProperty=new MongoDocumentProperty
                             {
                                 DbType=typeof(string),
-                                Key="Name",
                                 Name="Name"
                             }
                         },
@@ -396,7 +375,6 @@ namespace Xync.Console.Mappings
                            DocumentProperty=new MongoDocumentProperty
                            {
                                DbType=typeof(string),
-                               Key="QualifiedName",
                                Name="QualifiedName",
 
                            },
@@ -439,7 +417,6 @@ namespace Xync.Console.Mappings
                             {
                                 Name="Id",
                                 DbType=typeof(int),
-                                Key="Id"
                             }
 
                         }
@@ -456,7 +433,6 @@ namespace Xync.Console.Mappings
                             DocumentProperty=new MongoDocumentProperty
                             {
                                 Name="Case.CaseId",
-                                Key="Case.CaseId",
                             }
                         }
                     }
@@ -497,7 +473,6 @@ namespace Xync.Console.Mappings
                             DocumentProperty=new MongoDocumentProperty
                             {
                                 Name="Description",
-                                Key="Description",
                             }
                         }
                     }
@@ -513,7 +488,6 @@ namespace Xync.Console.Mappings
                             DocumentProperty=new MongoDocumentProperty
                             {
                                 Name="FileName",
-                                Key="FileName",
                             }
                         }
                     }

@@ -129,7 +129,7 @@ namespace Xync.SqlServer
                     {
                         foreach (Map map in attr.Maps)
                         {
-                            string[] keys = map.DocumentProperty.Key.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] keys = map.DocumentProperty.Name.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                             int pendingAttr = keys.Length;
                             StringBuilder concatanatedProp = new StringBuilder(string.Empty);
                             for (int i = 0; i < keys.Length; i++)

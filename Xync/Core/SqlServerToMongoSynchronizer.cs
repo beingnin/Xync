@@ -65,6 +65,13 @@ namespace Xync.Core
                     _sqlConnection.Open();
                 foreach (var Changedtable in tables)
                 {
+                    //Console.WriteLine("changed :***********************************");
+                    //Console.WriteLine(Changedtable.CDCSchema);
+                    //Console.WriteLine(Changedtable.CDCTable);
+                    //Console.WriteLine(Changedtable.TableSchema);
+                    //Console.WriteLine(Changedtable.TableName);
+                    //Console.WriteLine("********************************************");
+
 
                     ITable table = base[Changedtable.TableName, Changedtable.TableSchema];
                     if (table == null)
@@ -76,18 +83,8 @@ namespace Xync.Core
                     IRelationalAttribute key = (IRelationalAttribute)tableType.GetMethod("GetKey").Invoke(table, null);
                     cmd.CommandText = _QRY_GET_TABLE_CHANGE.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keycolumn#}", key.Name);
 
-                    var keyAttribute = (IRelationalAttribute)tableType.GetMethod("GetKey").Invoke(table, null);
                     DataTable dt = new DataTable();
-                    SqlDataAdapter da= new SqlDataAdapter(cmd);
-                    da.Fill(dt);
-                    if (table.QueryType == QueryType.Procedure)
-                    {
-                        cmd.CommandText = table.Query;
-                        cmd.Parameters.AddWithValue("@key", keyAttribute.Value);
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        da.Fill(dt);
-                    }
-
+                    new SqlDataAdapter(cmd).Fill(dt);
                     if (dt != null && dt.Rows.Count != 0)
                     {
                         for (int i = 0; i < dt.Rows.Count; i++)
@@ -95,9 +92,7 @@ namespace Xync.Core
                             var docType = (Type)(tableType.GetProperty("DocumentModelType").GetValue(table));
                             var row = dt.Rows[i];
                             table.Change = (Change)row["__$operation"];
-
-
-
+                            var keyAttribute = (IRelationalAttribute)tableType.GetMethod("GetKey").Invoke(table, null);
                             foreach (var col in dt.Columns)
                             {
                                 var column = col.ToString();
