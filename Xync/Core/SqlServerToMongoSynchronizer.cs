@@ -65,14 +65,7 @@ namespace Xync.Core
                     _sqlConnection.Open();
                 foreach (var Changedtable in tables)
                 {
-                    //Console.WriteLine("changed :***********************************");
-                    //Console.WriteLine(Changedtable.CDCSchema);
-                    //Console.WriteLine(Changedtable.CDCTable);
-                    //Console.WriteLine(Changedtable.TableSchema);
-                    //Console.WriteLine(Changedtable.TableName);
-                    //Console.WriteLine("********************************************");
-
-
+                    
                     ITable table = base[Changedtable.TableName, Changedtable.TableSchema];
                     if (table == null)
                     {

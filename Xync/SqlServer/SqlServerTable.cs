@@ -142,21 +142,15 @@ namespace Xync.SqlServer
                                 else
                                 {
                                     concatanatedProp.Append(k);
-
                                 }
                                 if (pendingAttr > 1)
                                 {
-
                                     Type propType = model.GetNestedType(concatanatedProp.ToString());
-
                                     object propInstance = model.GetNestedValue(concatanatedProp.ToString());
                                     if (propInstance == null)
                                     {
                                         propInstance = Activator.CreateInstance(propType);
-
                                     }
-
-
                                     model.SetNestedValue(concatanatedProp.ToString(), propInstance);
                                 }
                                 else
