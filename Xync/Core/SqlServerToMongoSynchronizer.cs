@@ -118,7 +118,7 @@ namespace Xync.Core
                                         if (table.Change == Change.Delete)
                                         {
                                             tableType.GetMethod("DeleteFromMongo").Invoke(table, new object[] { keyAttribute.Value });
-                                            Message.Info("Deleted from collection : " + docType.Name + "Key : " + keyAttribute.Value);
+                                            Message.Info("Deleted from [collection : " +table.Collection + "] & [Key : " + keyAttribute.Value+"]");
                                         }
                                         else
                                         {
@@ -142,7 +142,7 @@ namespace Xync.Core
                                             //get mongodb collection
                                             var collection = database.GetCollection<object>(table.Collection);
                                             collection.InsertOne(model);
-                                            Message.Success($"{msg} [collection :  { docType.Name }] & [Key : {keyAttribute.Value}]");
+                                            Message.Success($"{msg} [collection :  { table.Collection }] & [Key : {keyAttribute.Value}]");
                                         }
                                         //complete synchronization for a single object
                                         keyIds.Add(Convert.ToInt64(row["__$id"]));
