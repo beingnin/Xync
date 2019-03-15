@@ -65,10 +65,10 @@ namespace Xync.Core
             //loop : change detected tables-start
             foreach (var Changedtable in changedTables)
             {
-                IList<ITable> tables = base[Changedtable.TableName, Changedtable.TableSchema];
-                if (tables != null && tables.Count != 0)
+                IList<ITable> mappings = base[Changedtable.TableName, Changedtable.TableSchema];
+                if (mappings != null && mappings.Count != 0)
                 {
-                    ITable first = tables[0];
+                    ITable first = mappings[0];
                     Type firstType = first.GetType();
                     IRelationalAttribute key = (IRelationalAttribute)firstType.GetMethod("GetKey").Invoke(first, null);
                     cmd.CommandText = _QRY_GET_TABLE_CHANGE.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keycolumn#}", key.Name);
@@ -76,11 +76,12 @@ namespace Xync.Core
                     DataTable dt = new DataTable();
                     new SqlDataAdapter(cmd).Fill(dt);
                     //loop : all mappings for a single sql table-start
-                    for (int k = 0; k < tables.Count; k++)
+                    List<long> keyIds = new List<long>();
+                    for (int k = 0; k < mappings.Count; k++)
                     {
                         try
                         {
-                            ITable table = tables[k];
+                            ITable table = mappings[k];
                             if (table == null)
                             {
                                 Message.Info($"Mapping not found", $"Mapping not found for a cdc enabled table [{Changedtable.TableSchema}].[{Changedtable.TableName}]");
@@ -89,15 +90,15 @@ namespace Xync.Core
                             Type tableType = table.GetType();
 
 
-                            List<long> keyIds = null;
                             if (dt != null && dt.Rows.Count != 0)
                             {
-                                keyIds = new List<long>();
                                 //loop : sync to mongo for a all objects of a single table-start
                                 for (int i = 0; i < dt.Rows.Count; i++)
                                 {
                                     try
                                     {
+                                        //for simulating fail on second mapping sync
+                                        //if (k > 0 && i > 10) throw new Exception();
                                         var docType = (Type)(tableType.GetProperty("DocumentModelType").GetValue(table));
                                         var row = dt.Rows[i];
                                         table.Change = (Change)row["__$operation"];
@@ -118,7 +119,7 @@ namespace Xync.Core
                                         if (table.Change == Change.Delete)
                                         {
                                             tableType.GetMethod("DeleteFromMongo").Invoke(table, new object[] { keyAttribute.Value });
-                                            Message.Info("Deleted from [collection : " +table.Collection + "] & [Key : " + keyAttribute.Value+"]");
+                                            Message.Info("Deleted from [collection : " + table.Collection + "] & [Key : " + keyAttribute.Value + "]");
                                         }
                                         else
                                         {
@@ -144,8 +145,11 @@ namespace Xync.Core
                                             collection.InsertOne(model);
                                             Message.Success($"{msg} [collection :  { table.Collection }] & [Key : {keyAttribute.Value}]");
                                         }
-                                        //complete synchronization for a single object
-                                        keyIds.Add(Convert.ToInt64(row["__$id"]));
+                                        //complete synchronization for a single object only after all mappings are done
+                                        if (k == mappings.Count - 1)
+                                        {
+                                            keyIds.Add(Convert.ToInt64(row["__$id"]));
+                                        }
                                     }
                                     catch (Exception ex)
                                     {
@@ -153,27 +157,24 @@ namespace Xync.Core
                                 }//loop : sync to mongo for a all objects of a single table-end
 
 
-                                //set as synced in cdc
-                                if (keyIds.Count != 0)
-                                {
-                                    cmd.CommandText = _QRY_SET_AS_SYNCED.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keyids#}", string.Join(",", keyIds));
-                                    cmd.ExecuteNonQuery();
-                                }
+
 
                             }
-                            //set as synced in consolidated tracks
-                            if (keyIds.Count == dt.Rows.Count)
-                            {
-                                cmd.CommandText = _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS.Replace("{#schema#}", Constants.Schema).Replace("{#cdctable#}", Changedtable.CDCTable);
-                                cmd.ExecuteNonQuery();
-                            }
+
 
                         }
                         catch (Exception exc)
                         {
                             Message.Error(exc.Message, $"Synchronization failed for {Changedtable.TableSchema.Embrace()}.{Changedtable.TableName.Embrace()}");
                         }
+
                     }//loop : all mappings for a single sql table-end
+                     //set as synced in cdc
+                    if (keyIds.Count != 0)
+                    {
+                        cmd.CommandText = _QRY_SET_AS_SYNCED.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keyids#}", string.Join(",", keyIds));
+                        cmd.ExecuteNonQuery();
+                    }
                 }
 
 
