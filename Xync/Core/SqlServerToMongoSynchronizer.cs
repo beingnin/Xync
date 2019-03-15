@@ -138,14 +138,17 @@ namespace Xync.Core
                                 //complete synchronization for a single object
                                 keyIds.Add(Convert.ToInt64(row["__$id"]));
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
                             }
                         }
                         //set as synced in db
-
-                        cmd.CommandText = _QRY_SET_AS_SYNCED.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keyids#}", string.Join(",", keyIds));
-                        cmd.ExecuteNonQuery();
+                        if (keyIds.Count != 0)
+                        {
+                            cmd.CommandText = _QRY_SET_AS_SYNCED.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keyids#}", string.Join(",", keyIds));
+                            cmd.ExecuteNonQuery();
+                        }
+                        
                     }
                     if (keyIds.Count == dt.Rows.Count)
                     {
