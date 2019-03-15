@@ -62,7 +62,7 @@ namespace Xync.Core
             cmd.Connection = _sqlConnection;
             if (_sqlConnection.State == ConnectionState.Closed)
                 _sqlConnection.Open();
-            //Start syncing for each changed table
+            //loop : change detected tables-start
             foreach (var Changedtable in tables)
             {
                 try
@@ -83,7 +83,7 @@ namespace Xync.Core
                     if (dt != null && dt.Rows.Count != 0)
                     {
                         keyIds = new List<long>();
-                        //Start syncing for each row of current table
+                        //loop : sync to mongo for a all objects of a single table-start
                         for (int i = 0; i < dt.Rows.Count; i++)
                         {
                             try
@@ -141,8 +141,10 @@ namespace Xync.Core
                             catch (Exception ex)
                             {
                             }
-                        }
-                        //set as synced in db
+                        }//loop : sync to mongo for a all objects of a single table-end
+                        
+                        
+                        //set as synced in cdc
                         if (keyIds.Count != 0)
                         {
                             cmd.CommandText = _QRY_SET_AS_SYNCED.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keyids#}", string.Join(",", keyIds));
@@ -150,6 +152,7 @@ namespace Xync.Core
                         }
                         
                     }
+                    //set as synced in consolidated tracks
                     if (keyIds.Count == dt.Rows.Count)
                     {
                         cmd.CommandText = _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS.Replace("{#schema#}", Constants.Schema).Replace("{#cdctable#}", Changedtable.CDCTable);
@@ -163,7 +166,7 @@ namespace Xync.Core
                 }
 
 
-            }
+            }//loop : change detected tables-end
 
             if (_sqlConnection.State == ConnectionState.Open)
                 _sqlConnection.Close();
