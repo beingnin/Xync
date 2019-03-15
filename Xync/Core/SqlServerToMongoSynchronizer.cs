@@ -97,7 +97,7 @@ namespace Xync.Core
                                 {
                                     try
                                     {
-                                        //for simulating fail on second mapping sync
+                                        //for simulating fail on second mapping sync uncomment below line
                                         //if (k > 0 && i > 10) throw new Exception();
                                         var docType = (Type)(tableType.GetProperty("DocumentModelType").GetValue(table));
                                         var row = dt.Rows[i];
