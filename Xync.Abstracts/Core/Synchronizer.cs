@@ -12,11 +12,11 @@ namespace Xync.Abstracts.Core
         public static IList<ITable> Monitors { get; set; } = new List<ITable>();
         public abstract void ListenAll(bool forced = false);
         public abstract int Listen(string tblName);
-        public virtual ITable this[string tblName,string schema="dbo"]
+        public virtual IList<ITable> this[string tblName,string schema="dbo"]
         {
             get
             {
-                return Monitors.Where(x => x.Name == tblName && x.Schema==schema).FirstOrDefault();
+                return Monitors.Where(x => x.Name == tblName && x.Schema==schema).ToList();
             }
         }
 
