@@ -132,7 +132,7 @@ namespace Xync.Core
                                             }
 
                                             var model = tableType.GetMethod("CreateModel").Invoke(table, null);
-                                            //var bson = model.ToBsonDocument();
+                                            var bson = model.ToBsonDocument();
 
                                             // Create a MongoClient object by using the connection string
                                             var client = new MongoClient(_mongoConnectionString);
@@ -141,8 +141,8 @@ namespace Xync.Core
                                             var database = client.GetDatabase(Constants.NoSqlDB);
 
                                             //get mongodb collection
-                                            var collection = database.GetCollection<object>(table.Collection);
-                                            collection.InsertOne(model);
+                                            var collection = database.GetCollection<BsonDocument>(table.Collection);
+                                            collection.InsertOne(bson);
                                             Message.Success($"{msg} [collection :  { table.Collection }] & [Key : {keyAttribute.Value}]");
                                         }
                                         //complete synchronization for a single object only after all mappings are done
@@ -153,6 +153,7 @@ namespace Xync.Core
                                     }
                                     catch (Exception ex)
                                     {
+                                        Message.Error(ex.Message, $"Synchronisation(single) failed for {Changedtable.TableSchema.Embrace()}.{Changedtable.TableName.Embrace()}");
                                     }
                                 }//loop : sync to mongo for a all objects of a single table-end
 
