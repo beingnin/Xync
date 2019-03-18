@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xync.Abstracts;
 using Xync.Abstracts.Core;
-using System.Data.SqlClient;
-using System.Data.Common;
 using Xync.Helpers;
 using Xync.Utils;
 
