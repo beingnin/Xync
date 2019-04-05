@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Xync.Abstracts.Core
@@ -7,7 +8,7 @@ namespace Xync.Abstracts.Core
     {
         public abstract string ConnectionString { get; }
         public static IList<ITable> Monitors { get; set; } = new List<ITable>();
-        public abstract void ListenAll(bool forced = false);
+        public abstract void ListenAll(Action<object, EventArgs> onStop = null, Action<object, EventArgs> onResume = null);
         public abstract int Listen(string tblName);
         public virtual IList<ITable> this[string tblName,string schema="dbo"]
         {

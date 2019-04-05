@@ -40,11 +40,19 @@ namespace Xync.Core
             throw new NotImplementedException();
         }
 
-        public override void ListenAll(bool forced = false)
+        public override void ListenAll(Action<object, EventArgs> onStop =null, Action<object, EventArgs> onResume =null)
         {
 
 
             IPoller poller = new SqlServerPoller(_connectionString);
+            poller.Stopped += (sender, e) => 
+            {
+                onStop.Invoke(sender, e);
+            };
+            poller.Resumed += (sender, e) =>
+            {
+                onResume.Invoke(sender, e);
+            };
             poller.ChangeDetected += PrepareModel;
             poller.Listen();
         }
