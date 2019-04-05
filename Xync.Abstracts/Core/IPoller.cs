@@ -10,5 +10,7 @@ namespace Xync.Abstracts.Core
     {
         void Listen();
         event EventHandler ChangeDetected;
+        event EventHandler Stopped;
+        event EventHandler Resumed;
     }
 }

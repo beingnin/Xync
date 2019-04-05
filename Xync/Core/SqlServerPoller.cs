@@ -26,6 +26,7 @@ namespace Xync.Core
             timer = new Timer(Interval);
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
+            Resumed?.Invoke(this, new EventArgs());
             Message.Loading($"Listening for changes started @ {DateTime.Now.ToLongTimeString()}");
         }
 
@@ -33,6 +34,7 @@ namespace Xync.Core
         {
             //stop timer
             timer.Stop();
+            Stopped?.Invoke(this, new EventArgs());
             timer.Dispose();
             try
             {
@@ -72,6 +74,8 @@ namespace Xync.Core
             yield break;
         }
         public event EventHandler ChangeDetected;
+        public event EventHandler Stopped;
+        public event EventHandler Resumed;
         private void OnChange(IEnumerable<ITrack> changedTables)
         {
             ChangeDetected?.Invoke(this, new ChangeDetectedEventArgs(changedTables));
