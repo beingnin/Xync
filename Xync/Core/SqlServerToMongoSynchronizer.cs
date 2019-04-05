@@ -47,11 +47,11 @@ namespace Xync.Core
             IPoller poller = new SqlServerPoller(_connectionString);
             poller.Stopped += (sender, e) => 
             {
-                onStop.Invoke(sender, e);
+                onStop?.Invoke(sender, e);
             };
             poller.Resumed += (sender, e) =>
             {
-                onResume.Invoke(sender, e);
+                onResume?.Invoke(sender, e);
             };
             poller.ChangeDetected += PrepareModel;
             poller.Listen();
