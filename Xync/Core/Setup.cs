@@ -56,7 +56,6 @@ namespace Xync.Core
 
         private async Task<bool> EnableOnDB()
         {
-
             try
             {
                 _sqlConnection.Open();

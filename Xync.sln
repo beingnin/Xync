@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Subscribers", "Subscribers"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xync.Console", "Xync.Console\Xync.Console.csproj", "{CD3381F6-3AEA-4B11-8689-C38AFD2F78F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xync.Desktop", "Xync.Desktop\Xync.Desktop.csproj", "{1C7DC217-B3E8-4EEB-97FC-445E5F22FF99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,12 +37,17 @@ Global
 		{CD3381F6-3AEA-4B11-8689-C38AFD2F78F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD3381F6-3AEA-4B11-8689-C38AFD2F78F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD3381F6-3AEA-4B11-8689-C38AFD2F78F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C7DC217-B3E8-4EEB-97FC-445E5F22FF99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C7DC217-B3E8-4EEB-97FC-445E5F22FF99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C7DC217-B3E8-4EEB-97FC-445E5F22FF99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C7DC217-B3E8-4EEB-97FC-445E5F22FF99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CD3381F6-3AEA-4B11-8689-C38AFD2F78F6} = {EDD858F8-EB7A-4897-85AD-3576E6275808}
+		{1C7DC217-B3E8-4EEB-97FC-445E5F22FF99} = {EDD858F8-EB7A-4897-85AD-3576E6275808}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EB975EB0-4344-4EEE-BB5B-1562A1CC9490}

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AEA39190-4608-4716-981B-FB2C83D2D840}</ProjectGuid>
+    <ProjectGuid>{1C7DC217-B3E8-4EEB-97FC-445E5F22FF99}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Xync.Desktop</RootNamespace>
     <AssemblyName>Xync.Desktop</AssemblyName>
@@ -52,6 +52,10 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Mappings\CaseManagement.cs" />
+    <Compile Include="Mappings\Main.cs" />
+    <Compile Include="MDO\EGATE\Case.cs" />
+    <Compile Include="MDO\EGATE\Folder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -81,15 +85,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xync.Abstracts\Xync.Abstracts.csproj">
-      <Project>{a7001af3-607b-4139-9764-dc3dc9eae2eb}</Project>
+      <Project>{A7001AF3-607B-4139-9764-DC3DC9EAE2EB}</Project>
       <Name>Xync.Abstracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Xync.Utils\Xync.Utils.csproj">
-      <Project>{98cce80b-ef18-4d15-8b9a-bec404821f17}</Project>
+      <Project>{98CCE80B-EF18-4D15-8B9A-BEC404821F17}</Project>
       <Name>Xync.Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\Xync\Xync.csproj">
-      <Project>{f060c1de-b325-465d-9261-5eaf658a5777}</Project>
+      <Project>{F060C1DE-B325-465D-9261-5EAF658A5777}</Project>
       <Name>Xync</Name>
     </ProjectReference>
   </ItemGroup>

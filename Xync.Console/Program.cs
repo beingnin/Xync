@@ -29,7 +29,6 @@ namespace Xync.Console
             bool setupComplete = new Setup().Initialize().Result;
             //setup ends here
 
-
             new SqlServerToMongoSynchronizer().ListenAll();
 
             while (true)
