@@ -34,8 +34,8 @@ namespace Xync.Core
         {
             //stop timer
             timer.Stop();
-            Stopped?.Invoke(this, new EventArgs());
             timer.Dispose();
+            Stopped?.Invoke(this, new EventArgs());
             try
             {
                 IEnumerable<ITrack> changedTables = Poll();
