@@ -1,0 +1,45 @@
+.app-widget {
+  height: 130px;
+  overflow: hidden;
+
+  .icon {
+    height: 24px;
+    width: 24px;
+    display: inline-block;
+    position: relative;
+    top: -3px;
+
+    & > img {
+      width: 100%;
+    }
+  }
+
+  &--primary {
+    background-color: $app-primary;
+  }
+
+  &__icon {
+    width: 140px;
+    height: 88px;
+
+    & > img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  &__desc {
+    padding: 0 1.5em;
+  }
+  &__count {
+    width: 140px;
+    height: 88px;
+    background-color: $app-primary-dark;
+    border-radius: 4px;
+    text-align: center;
+
+    & > .count {
+      margin: 10px 0 0;
+      color: $app-yellow;
+    }
+  }
+}

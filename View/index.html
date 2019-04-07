@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Xync</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/main.css">
+</head>
+
+<body>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <a class="navbar-brand" href="#">Xync</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="#">Dashboard <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="#">Connections</a>
+                <a class="nav-item nav-link" href="#">Settings</a>
+            </div>
+        </div>
+        <div class="d-flex">
+            <h3 class="text-muted m-0 xync-time">21:02:03</h3>
+            <table class="xync-status online"><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr> <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
+        </div>
+    </nav>
+
+    <!-- APP CONTENT -->
+    <div class="app-wrap">
+        <div class="container-fluid">
+    
+            <!-- WIDGET ROW -->
+            <div class="row">
+                <div class="col-6">
+                    <div class="card app-widget app-widget--primary">
+                        <div class="card-body d-flex">
+                            <div class="app-widget__icon">
+                                <img src="https://image.flaticon.com/icons/svg/861/861506.svg" alt="">
+                            </div>
+                            <div class="app-widget__desc flex-grow-1">
+                                <h5 class="text-white">Total Mappings</h5>
+                                <small class="text-white-50">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                    Eligendi nemo quas id tempore, doloremque</small>
+                            </div>
+                            <div class="app-widget__count">
+                                <h2 class="count">36</h2>
+                                <small class="text-white-50">mappings</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card app-widget">
+                        <div class="card-body d-flex align-items-center justify-content-center">
+                            <img src="images/dashboard-c1.png" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card app-widget">
+                        <div class="card-body">
+                            <h6 class="text-primary m-0 mb-2"><i class="icon"><img
+                                        src="https://image.flaticon.com/icons/svg/1509/1509289.svg" alt=""></i> Connection
+                                Mapping</h6>
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <small class="text-white badge badge-warning">From</small>
+                                    <p class="text-muted">SqlDB</p>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <small class="text-white badge badge-success">To</small>
+                                    <p class="text-muted">MongoDB</p>
+                                </div>
+    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- TABLE ROW -->
+            <div class="row mt-4">
+                <div class="col-6">
+                    <div class="card app-event-mapping">
+                        <div class="card-header">
+                            <small class="text-uppercase">Xync Events</small>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card app-event-mapping">
+                        <div class="card-header">
+                            <small class="text-uppercase">Schema Mappings</small>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="d-flex">
+                                    <div>1</div>
+                                    <div>Lorem</div>
+                                    <div>Ipsum</div>
+                                    <div>Online</div>
+                                    <div><span class="online"></span></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
