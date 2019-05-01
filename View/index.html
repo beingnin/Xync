@@ -7,6 +7,7 @@
     <title>Xync</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="css/main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 </head>
 
 <body>
@@ -90,10 +91,90 @@
                     <div class="card app-event-mapping">
                         <div class="card-header">
                             <small class="text-uppercase">Xync Events</small>
+                            <div class="btn-group float-right">
+                                <button class="btn btn-sm btn-light rounded-circle text-muted">
+                                    <i class="fa fa-sync"></i>
+                                </button>
+                                <button class="btn btn-sm btn-light rounded-circle text-muted">
+                                    <i class="fa fa-save"></i>
+                                </button>
+                                <button class="btn btn-sm btn-light rounded-circle text-muted">
+                                    <i class="fa fa-check-circle"></i>
+                                </button>
+                                
+                                <div class="btn-group ml-2">
+                                    <button class="btn btn-sm rounded-circle text-primary shadow-none" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="#">Action</a>
+                                        <a class="dropdown-item" href="#">Action 1</a>
+                                        <a class="dropdown-item" href="#">Action 2</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.
-                            </p>
+                        <div class="card-body p-0">
+                                <table class="table table-hover table-sm app-table app-table--status"> 
+                                        <thead>
+                                            <tr>
+                                                <th width="70">#</th>
+                                                <th width="140">Title</th>
+                                                <th>Message</th>
+                                                <th width="20"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="tr-danger">
+                                                <td>1</td>
+                                                <td>Sync Error</td>
+                                                <td>
+                                                    <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ex animi iusto expedita rem!</span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr class="tr-primary">
+                                                <td>2</td>
+                                                <td>Schema Updated</td>
+                                                <td>
+                                                    <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ex animi iusto expedita rem!</span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr class="tr-primary">
+                                                <td>3</td>
+                                                <td>-Nil-</td>
+                                                <td>
+                                                    <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ex animi iusto expedita rem!</span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr class="tr-success">
+                                                <td>4</td>
+                                                <td>Sync Completed</td>
+                                                <td>
+                                                    <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr class="">
+                                                <td>1</td>
+                                                <td>Sync Error</td>
+                                                <td>
+                                                    <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ex animi iusto expedita rem!</span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                         </div>
                     </div>
                 </div>
@@ -101,17 +182,100 @@
                     <div class="card app-event-mapping">
                         <div class="card-header">
                             <small class="text-uppercase">Schema Mappings</small>
+                            <div class="btn-group float-right">
+                                    <button class="btn btn-sm btn-light rounded-circle text-muted">
+                                        <i class="fa fa-coins"></i>
+                                    </button>
+                                    <div class="btn-group ml-2">
+                                        <button class="btn btn-sm rounded-circle text-primary shadow-none" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Action 1</a>
+                                            <a class="dropdown-item" href="#">Action 2</a>
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
-                        <div class="card-body">
-                            <ul class="list-unstyled">
-                                <li class="d-flex">
-                                    <div>1</div>
-                                    <div>Lorem</div>
-                                    <div>Ipsum</div>
-                                    <div>Online</div>
-                                    <div><span class="online"></span></div>
-                                </li>
-                            </ul>
+                        <div class="card-body p-0">
+
+                            <table class="table table-hover table-sm app-table app-table--valign"> 
+                                <thead>
+                                    <tr>
+                                        <th width="70">#</th>
+                                        <th>Schema</th>
+                                        <th>Table</th>
+                                        <th width="80">Status</th>
+                                        <th width="40"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Customers Schema</td>
+                                        <td>Customers_Table</td>
+                                        <td><small class="text-success">Online</small></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">Stop</a>
+                                                    <a class="dropdown-item" href="#">Start</a>
+                                                    <a class="dropdown-item" href="#">Restart</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Customers Schema</td>
+                                        <td>Customers_Table</td>
+                                        <td><small class="text-success">Online</small></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">Stop</a>
+                                                    <a class="dropdown-item" href="#">Start</a>
+                                                    <a class="dropdown-item" href="#">Restart</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Customers Schema</td>
+                                        <td>Customers_Table</td>
+                                        <td><small class="text-danger">Offline</small></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">Stop</a>
+                                                    <a class="dropdown-item" href="#">Start</a>
+                                                    <a class="dropdown-item" href="#">Restart</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Customers Schema</td>
+                                        <td>Customers_Table</td>
+                                        <td><small class="text-success">Online</small></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">Stop</a>
+                                                    <a class="dropdown-item" href="#">Start</a>
+                                                    <a class="dropdown-item" href="#">Restart</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
                         </div>
                     </div>
                 </div>
@@ -119,6 +283,9 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
 
 </body>
