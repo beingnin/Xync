@@ -1,0 +1,17 @@
+
+
+.btn {
+    &-action {
+        font-size: 12px;
+        box-shadow: none !important;
+    }
+    &-delete {
+        font-size: 12px;
+        opacity: .85;
+        transition: opacity .25s background-color .25s;
+        &:hover {
+            background-color: darken($app-hover-bg,5);
+            opacity: 1;
+        }
+    }
+}
