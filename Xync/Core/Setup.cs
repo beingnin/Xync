@@ -76,7 +76,7 @@ namespace Xync.Core
             }
             catch (Exception ex)
             {
-                Message.Error(ex.Message, "Db level tracking setup");
+                await Message.Error(ex, "Db level tracking setup");
                 return false;
             }
             finally
@@ -109,7 +109,7 @@ namespace Xync.Core
                     }
                     catch (Exception exc)
                     {
-                        Message.Error(exc.Message, "Table level tracking setup");
+                        await Message.Error(exc, "Table level tracking setup");
                     }
 
 
@@ -117,7 +117,7 @@ namespace Xync.Core
             }
             catch (Exception ex)
             {
-                Message.Error(ex.StackTrace,ex.Message);
+                await Message.Error(ex,ex.Message);
                 return false;
             }
             finally
@@ -142,7 +142,7 @@ namespace Xync.Core
             }
             catch (Exception ex)
             {
-                Message.Error(ex.Message, "Creating schema "+_schema.Embrace());
+                await Message.Error(ex, "Creating schema "+_schema.Embrace());
                 return false;
             }
             finally
@@ -167,7 +167,7 @@ namespace Xync.Core
             }
             catch (Exception ex)
             {
-                Message.Error(ex.Message,"Creating mediator table");
+                await Message.Error(ex,"Creating mediator table");
                 return false;
             }
             finally

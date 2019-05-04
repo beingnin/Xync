@@ -156,14 +156,14 @@ namespace Xync.Core
                                     }
                                     catch (Exception ex)
                                     {
-                                        Message.Error(ex.Message, $"Synchronisation(single) failed for {Changedtable.TableSchema.Embrace()}.{Changedtable.TableName.Embrace()}");
+                                        Message.Error(ex, $"Synchronisation(single) failed for {Changedtable.TableSchema.Embrace()}.{Changedtable.TableName.Embrace()}");
                                     }
                                 }//loop : sync to mongo for a all objects of a single table-end
                             }
                         }
                         catch (Exception exc)
                         {
-                            Message.Error(exc.Message, $"Synchronization failed for {Changedtable.TableSchema.Embrace()}.{Changedtable.TableName.Embrace()}");
+                            Message.Error(exc, $"Synchronization failed for {Changedtable.TableSchema.Embrace()}.{Changedtable.TableName.Embrace()}");
                         }
 
                     }//loop : all mappings for a single sql table-end

@@ -13,7 +13,7 @@ namespace Xync.Utils
         public static event WroteEventHandler WroteInfo;
         public static event WroteEventHandler WroteSuccess;
         public static event WroteEventHandler WroteLoading;
-        public static void Error(string message, string title = "")
+        public async static Task Error(Exception ex, string title = "")
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
             if (!string.IsNullOrWhiteSpace(title))
@@ -21,9 +21,10 @@ namespace Xync.Utils
                 Console.WriteLine(title);
                 Console.WriteLine("------------------------------------------");
             }
-            Console.WriteLine(message);
+            Console.WriteLine(ex);
             Console.ResetColor();
-            AfterWroteError(MessageType.Error, message, title);
+            await Logger.Error(ex,title);
+            //AfterWroteError(MessageType.Error, ex, title);
         }
         public static void Info(string message, string title = "")
         {
@@ -61,32 +62,32 @@ namespace Xync.Utils
             Console.ResetColor();
             AfterWroteLoading(MessageType.Error, message, title);
         }
-        private static void AfterWroteError(MessageType t,string msg,string title)
+        private static void AfterWroteError(MessageType t, Exception ex, string title)
         {
-            if (WroteError  != null)
+            if (WroteError != null)
             {
-                WroteError(null, new MessageWroteEventArgs(t, msg,title));
+                WroteError(null, new MessageWroteEventArgs(t, ex, ex.Message, title));
             }
         }
         private static void AfterWroteInfo(MessageType t, string msg, string title)
         {
             if (Message.WroteInfo != null)
             {
-                WroteInfo(null, new MessageWroteEventArgs(t, msg, title));
+                WroteInfo(null, new MessageWroteEventArgs(t, null, msg, title));
             }
         }
         private static void AfterWroteSuccess(MessageType t, string msg, string title)
         {
             if (WroteSuccess != null)
             {
-                WroteSuccess(null, new MessageWroteEventArgs(t, msg, title));
+                WroteSuccess(null, new MessageWroteEventArgs(t, null, msg, title));
             }
         }
         private static void AfterWroteLoading(MessageType t, string msg, string title)
         {
             if (WroteLoading != null)
             {
-                WroteLoading(null, new MessageWroteEventArgs(t, msg, title));
+                WroteLoading(null, new MessageWroteEventArgs(t, null, msg, title));
             }
         }
         public enum MessageType

@@ -1,8 +1,9 @@
-﻿@{
+﻿@model Xync.Web.Models.TrackingSummaryVM
+@{
     ViewBag.Title = "Xync | MSSQL Server --> MongoDb";
 }
 
-            <!-- WIDGET ROW -->
+<!-- WIDGET ROW -->
 <div class="row">
     <div class="col-6">
         <div class="card app-widget app-widget--primary">
@@ -18,7 +19,7 @@
                     </small>
                 </div>
                 <div class="app-widget__count">
-                    <h2 class="count">36</h2>
+                    <h2 class="count">@Model.TotalMappings</h2>
                     <small class="text-white-50">mappings</small>
                 </div>
             </div>
@@ -58,7 +59,7 @@
 
 <!-- TABLE ROW -->
 <div class="row mt-4">
-    <div class="col-6">
+    <div class="col-8">
         <div class="card app-event-mapping">
             <div class="card-header">
                 <small class="text-uppercase">Xync Events</small>
@@ -76,7 +77,7 @@
                     <div class="btn-group ml-2">
                         <button class="btn btn-sm rounded-circle text-primary shadow-none" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="#">Action</a>
+                            <a id="btnDeleteAllErrors"  class="dropdown-item" href="#">Delete All</a>
                             <a class="dropdown-item" href="#">Action 1</a>
                             <a class="dropdown-item" href="#">Action 2</a>
                         </div>
@@ -94,62 +95,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="tr-danger">
-                            <td>1</td>
-                            <td>Sync Error</td>
-                            <td>
-                                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ex animi iusto expedita rem!</span>
-                            </td>
-                            <td>
-                                <button class="btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
-                            </td>
-                        </tr>
-                        <tr class="tr-primary">
-                            <td>2</td>
-                            <td>Schema Updated</td>
-                            <td>
-                                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ex animi iusto expedita rem!</span>
-                            </td>
-                            <td>
-                                <button class="btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
-                            </td>
-                        </tr>
-                        <tr class="tr-primary">
-                            <td>3</td>
-                            <td>-Nil-</td>
-                            <td>
-                                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ex animi iusto expedita rem!</span>
-                            </td>
-                            <td>
-                                <button class="btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
-                            </td>
-                        </tr>
-                        <tr class="tr-success">
-                            <td>4</td>
-                            <td>Sync Completed</td>
-                            <td>
-                                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-                            </td>
-                            <td>
-                                <button class="btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
-                            </td>
-                        </tr>
-                        <tr class="">
-                            <td>1</td>
-                            <td>Sync Error</td>
-                            <td>
-                                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ex animi iusto expedita rem!</span>
-                            </td>
-                            <td>
-                                <button class="btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
-                            </td>
-                        </tr>
+                        @if (Model.Errors.Any())
+                        {
+                            for (int i = 0; i < Model.Errors.Count; i++)
+                            {
+                                var error = Model.Errors[i];
+                                <tr class="tr-danger">
+                                    <td>@(i + 1)</td>
+                                    <td title="@error.Type">@error.Title</td>
+                                    <td  title="@error.Message">
+                                        <span>@error.Message</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                  
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-4">
         <div class="card app-event-mapping">
             <div class="card-header">
                 <small class="text-uppercase">Schema Mappings</small>
@@ -175,75 +144,35 @@
                             <th width="70">#</th>
                             <th>Schema</th>
                             <th>Table</th>
+                            <th>Collection</th>
                             <th width="80">Status</th>
                             <th width="40"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Customers Schema</td>
-                            <td>Customers_Table</td>
-                            <td><small class="text-success">Online</small></td>
-                            <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Stop</a>
-                                        <a class="dropdown-item" href="#">Start</a>
-                                        <a class="dropdown-item" href="#">Restart</a>
+                        @for (int i = 0; i < Model.Mappings.Count; i++)
+                        {
+                            var map = Model.Mappings[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@map.Schema</td>
+                                <td>@map.Name</td>
+                                <td>@map.Collection</td>
+                                <td><small class="@(map.DNT?"text-danger":"text-success")">@(map.DNT?"DNT":"online")</small></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">Stop</a>
+                                            <a class="dropdown-item" href="#">Start</a>
+                                            <a class="dropdown-item" href="#">Restart</a>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Customers Schema</td>
-                            <td>Customers_Table</td>
-                            <td><small class="text-success">Online</small></td>
-                            <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Stop</a>
-                                        <a class="dropdown-item" href="#">Start</a>
-                                        <a class="dropdown-item" href="#">Restart</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Customers Schema</td>
-                            <td>Customers_Table</td>
-                            <td><small class="text-danger">Offline</small></td>
-                            <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Stop</a>
-                                        <a class="dropdown-item" href="#">Start</a>
-                                        <a class="dropdown-item" href="#">Restart</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Customers Schema</td>
-                            <td>Customers_Table</td>
-                            <td><small class="text-success">Online</small></td>
-                            <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Stop</a>
-                                        <a class="dropdown-item" href="#">Start</a>
-                                        <a class="dropdown-item" href="#">Restart</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                        }
+
+
                     </tbody>
                 </table>
 
@@ -251,3 +180,19 @@
         </div>
     </div>
 </div>
+@section scripts{
+<script>
+    $(function () {
+        $('#btnDeleteAllErrors').click(() => {
+            $.ajax({
+                url: '/Home/DeleteAllErrors',
+                method: 'POST',
+                dataType: 'json',
+                success: (data) => {
+                    app.message.success('deleted ' + data + ' errors permanently');
+                }
+            });
+        });
+    });
+</script>
+}

@@ -164,6 +164,28 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Mappings\CaseManagement.cs" />
+    <Compile Include="Mappings\Main.cs" />
+    <Compile Include="MDO\EGATE\Case.cs" />
+    <Compile Include="MDO\EGATE\CaseType.cs" />
+    <Compile Include="MDO\EGATE\Comment.cs" />
+    <Compile Include="MDO\EGATE\Document.cs" />
+    <Compile Include="MDO\EGATE\DocumentType.cs" />
+    <Compile Include="MDO\EGATE\Folder.cs" />
+    <Compile Include="MDO\EGATE\History.cs" />
+    <Compile Include="MDO\EGATE\HistoryTemplate.cs" />
+    <Compile Include="MDO\EGATE\Member.cs" />
+    <Compile Include="MDO\EGATE\MemberType.cs" />
+    <Compile Include="MDO\EGATE\Message.cs" />
+    <Compile Include="MDO\EGATE\Permission.cs" />
+    <Compile Include="MDO\EGATE\Priority.cs" />
+    <Compile Include="MDO\EGATE\Reminder.cs" />
+    <Compile Include="MDO\EGATE\Status.cs" />
+    <Compile Include="MDO\EGATE\TemplateCode.cs" />
+    <Compile Include="MDO\EGATE\ToDo.cs" />
+    <Compile Include="MDO\Employee.cs" />
+    <Compile Include="MDO\Product.cs" />
+    <Compile Include="Models\TrackingSummaryVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -309,7 +331,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -319,6 +340,20 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Xync.Abstracts\Xync.Abstracts.csproj">
+      <Project>{A7001AF3-607B-4139-9764-DC3DC9EAE2EB}</Project>
+      <Name>Xync.Abstracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xync.Utils\Xync.Utils.csproj">
+      <Project>{98CCE80B-EF18-4D15-8B9A-BEC404821F17}</Project>
+      <Name>Xync.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xync\Xync.csproj">
+      <Project>{F060C1DE-B325-465D-9261-5EAF658A5777}</Project>
+      <Name>Xync</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

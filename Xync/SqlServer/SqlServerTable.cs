@@ -181,7 +181,7 @@ namespace Xync.SqlServer
             }
             catch (Exception ex)
             {
-                Message.Error(ex.Message, "Mapping from " + this.Schema.Embrace() + this.Name.Embrace() + " to " + this.DocumentModelType.FullName + " failed");
+                Message.Error(ex, "Mapping from " + this.Schema.Embrace() + this.Name.Embrace() + " to " + this.DocumentModelType.FullName + " failed");
                 throw;
             }
         }
@@ -210,7 +210,7 @@ namespace Xync.SqlServer
             }
             catch (Exception ex)
             {
-                Message.Error(ex.Message, "Fetch from mongo");
+                Message.Error(ex, "Fetch from mongo");
                 throw;
             }
         }
@@ -232,7 +232,7 @@ namespace Xync.SqlServer
             }
             catch (Exception ex)
             {
-                Message.Error(ex.Message, "Delete from Mongo");
+                Message.Error(ex, "Delete from Mongo");
             }
 
         }

@@ -11,3 +11,11 @@
     }
     startTime();
 })();
+
+var app = {
+    message: {
+        success: (msg,title='') => {
+            alert(msg);
+        }
+    }
+}
