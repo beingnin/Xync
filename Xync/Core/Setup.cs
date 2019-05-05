@@ -15,6 +15,7 @@ namespace Xync.Core
         #region Queries
         const string _QRY_IS_CDC_ENABLED_IN_DB = "select is_cdc_enabled from sys.databases where name ='{#catalog#}'";
         const string _QRY_ADD_COLUMN_TO_CAPTURE = "alter table [cdc].{#table#} add __$sync tinyint default 0, __$id bigint primary key  identity(1,1)";
+        const string _QRY_ADD_COLUMN_TO_ORIGIN = "alter table [{#schema#}].{#table#} add __$last_migrated_on datetime";
         const string _QRY_IS_CDC_ENABLED_IN_TABLE = "";
         const string _QRY_ENABLE_CDC_IN_DB = "use {#catalog#};exec sys.sp_cdc_enable_db";
         const string _QRY_ENABLE_CDC_IN_TABLE = "exec sys.sp_cdc_enable_table @source_schema='{#schema#}', @source_name='{#table#}', @role_name=null";
@@ -70,7 +71,7 @@ namespace Xync.Core
                 {
                     cmd.CommandText = _QRY_ENABLE_CDC_IN_DB.Replace("{#catalog#}", _catalog.Embrace());
                     await cmd.ExecuteNonQueryAsync();
-                    Message.Success("Capture Data Change facility has been enabled for " + _catalog.Embrace());
+                    await Message.Success("Capture Data Change facility has been enabled for " + _catalog.Embrace());
                     return true;
                 }
             }
@@ -105,7 +106,9 @@ namespace Xync.Core
                         await cmd.ExecuteNonQueryAsync();
                         cmd.CommandText = _QRY_ADD_COLUMN_TO_CAPTURE.Replace("{#table#}", (table.Schema + "_" + table.Name + "_CT").Embrace());
                         await cmd.ExecuteNonQueryAsync();
-                        Message.Success("Change tracking enabled for " + table.Schema.Embrace() + "." + table.Name.Embrace());
+                        cmd.CommandText = _QRY_ADD_COLUMN_TO_CAPTURE.Replace("{#table#}",table.Schema).Replace("{#schema#}",table.Name);
+                        await cmd.ExecuteNonQueryAsync();
+                        await Message.Success("Change tracking enabled for " + table.Schema.Embrace() + "." + table.Name.Embrace());
                     }
                     catch (Exception exc)
                     {
@@ -117,7 +120,7 @@ namespace Xync.Core
             }
             catch (Exception ex)
             {
-                await Message.Error(ex,ex.Message);
+                await Message.Error(ex, ex.Message);
                 return false;
             }
             finally
@@ -138,11 +141,11 @@ namespace Xync.Core
                 SqlCommand cmd = new SqlCommand(_QRY_CREATE_SCHEMA.Replace("{#schema#}", _schema.Embrace()), _sqlConnection);
                 int rowsAffected = Convert.ToInt32(await cmd.ExecuteNonQueryAsync());
                 Message.Success("Schema registered succesfully");
-                return  rowsAffected> 0;
+                return rowsAffected > 0;
             }
             catch (Exception ex)
             {
-                await Message.Error(ex, "Creating schema "+_schema.Embrace());
+                await Message.Error(ex, "Creating schema " + _schema.Embrace());
                 return false;
             }
             finally
@@ -156,7 +159,7 @@ namespace Xync.Core
         {
             try
             {
-               Message.Info("Creating mediator....");
+                Message.Info("Creating mediator....");
                 if (_sqlConnection.State == System.Data.ConnectionState.Closed)
                     _sqlConnection.Open();
 
@@ -167,7 +170,7 @@ namespace Xync.Core
             }
             catch (Exception ex)
             {
-                await Message.Error(ex,"Creating mediator table");
+                await Message.Error(ex, "Creating mediator table");
                 return false;
             }
             finally

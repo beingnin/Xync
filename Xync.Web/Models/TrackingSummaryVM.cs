@@ -7,6 +7,7 @@ namespace Xync.Web.Models
     public class TrackingSummaryVM
     {
         public int TotalMappings { get; set; }
+        public double PollingInterval { get; set; }
         public IList<ITable> Mappings { get; set; }
         public IList<Event> Events { get; set; }
         public string RDBMSServer { get; set; }

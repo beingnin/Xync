@@ -16,8 +16,11 @@
             <div class="btn-group ml-2">
                 <button class="btn btn-sm rounded-circle text-primary shadow-none" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a  id="btnDeleteAllErrors" class="dropdown-item" href="#">Delete All <i class=" text-danger fa fa-trash"></i></a>
+                    <a id="btnDeleteAllEvents" class="dropdown-item" href="#">Clear events</a>
+                    <a id="btnDeleteAllErrors" class="dropdown-item" href="#">Clear errors</a>
+                    <a id="btnDeleteAllOther" class="dropdown-item" href="#">Clear messages</a>
                 </div>
+
             </div>
         </div>
     </div>
@@ -38,8 +41,8 @@
                     for (int i = 0; i < Model.Count; i++)
                     {
                         var error = Model[i];
-                        <tr class="tr-danger">
-                            <td>@(i + 1)</td>
+                        <tr class="@(error.MessageType==Xync.Utils.Message.MessageType.Error?"tr-danger":"tr-success")">
+                            <td title="@error.Id">@(i + 1)</td>
                             <td title="@error.Type">@error.Title</td>
                             <td title="@error.Message">
                                 <span>@error.Message</span>
@@ -53,7 +56,12 @@
                         </tr>
                     }
                 }
-
+                else
+                {
+                    <tr>
+                        <td colspan="5">Events list is empty</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

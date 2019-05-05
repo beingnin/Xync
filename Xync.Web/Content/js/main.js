@@ -7,7 +7,7 @@
             m = checkTime(today.getMinutes()),
             s = checkTime(today.getSeconds());
         document.querySelector('.xync-time').innerHTML = h + ":" + m + ":" + s;
-        t = setTimeout(() => startTime(), 500);
+        t = setTimeout(() => startTime(), 1000);
     }
     startTime();
 })();

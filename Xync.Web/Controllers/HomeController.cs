@@ -18,6 +18,7 @@ namespace Xync.Web.Controllers
             {
                 Mappings = Synchronizer.Monitors,
                 TotalMappings = Synchronizer.Monitors.Count,
+                PollingInterval=Constants.PollingInterval,
                 MongoServer=Constants.MongoServer,
                 RDBMSServer=Constants.SqlServer,
                 MongoDatabase=Constants.MongoDatabase,
@@ -34,7 +35,19 @@ namespace Xync.Web.Controllers
             return Json(await Logger.DeleteAllErrors());
         }
         [HttpPost]
-        public async Task<ActionResult> DeleteError(string id)
+        public async Task<ActionResult> DeleteAllEvents()
+        {
+
+            return Json(await Logger.DeleteAllEvents());
+        }
+        [HttpPost]
+        public async Task<ActionResult> DeleteAllOthers()
+        {
+
+            return Json(await Logger.DeleteAllOther());
+        }
+        [HttpPost]
+        public async Task<ActionResult> DeleteEvent(string id)
         {
 
             return Json(await Logger.DeleteError(id));

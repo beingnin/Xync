@@ -25,7 +25,8 @@ namespace Xync.Utils
                     StackTrace = exception.StackTrace,
                     Exception = exception,
                     Type = exception.GetType().ToString(),
-                    MessageType=Message.MessageType.Error
+                    MessageType=Message.MessageType.Error,
+                    CreatedDateTime=DateTime.Now
                 };
 
                 var db = _client.GetDatabase(Constants.NoSqlDB);
@@ -49,7 +50,8 @@ namespace Xync.Utils
                     StackTrace = string.Empty,
                     Exception = null,
                     Type = string.Empty,
-                    MessageType=Message.MessageType.Success
+                    MessageType=Message.MessageType.Success,
+                    CreatedDateTime = DateTime.Now
                 };
 
                 var db = _client.GetDatabase(Constants.NoSqlDB);
@@ -67,8 +69,38 @@ namespace Xync.Utils
             {
                 var db = _client.GetDatabase(Constants.NoSqlDB);
                 var collection = db.GetCollection<Event>("XYNC_Messages");
+                var filter = Builders<Event>.Filter.Eq(x => x.MessageType, Message.MessageType.Error);
+                var result = await collection.DeleteManyAsync(filter);
+                return result.DeletedCount;
+            }
+            catch (Exception ex)
+            {
+                return default(long);
+            }
+        }
+        public static async Task<long> DeleteAllEvents()
+        {
+            try
+            {
+                var db = _client.GetDatabase(Constants.NoSqlDB);
+                var collection = db.GetCollection<Event>("XYNC_Messages");
                 var filter = Builders<Event>.Filter.Empty;
-               var result= await collection.DeleteManyAsync(filter);
+                var result = await collection.DeleteManyAsync(filter);
+                return result.DeletedCount;
+            }
+            catch (Exception ex)
+            {
+                return default(long);
+            }
+        }
+        public static async Task<long> DeleteAllOther()
+        {
+            try
+            {
+                var db = _client.GetDatabase(Constants.NoSqlDB);
+                var collection = db.GetCollection<Event>("XYNC_Messages");
+                var filter = Builders<Event>.Filter.Ne(x => x.MessageType, Message.MessageType.Error);
+                var result = await collection.DeleteManyAsync(filter);
                 return result.DeletedCount;
             }
             catch (Exception ex)
