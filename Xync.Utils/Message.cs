@@ -24,7 +24,7 @@ namespace Xync.Utils
             Console.WriteLine(ex);
             Console.ResetColor();
             await Logger.Error(ex,title);
-            //AfterWroteError(MessageType.Error, ex, title);
+            AfterWroteError(MessageType.Error, ex, title);
         }
         public static void Info(string message, string title = "")
         {
@@ -36,9 +36,10 @@ namespace Xync.Utils
             }
             Console.WriteLine(message);
             Console.ResetColor();
+            Logger.Log(message, title);
             AfterWroteInfo(MessageType.Info, message, title);
         }
-        public static void Success(string message, string title = "")
+        public async static Task Success(string message, string title = "")
         {
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             if (!string.IsNullOrWhiteSpace(title))
@@ -48,6 +49,7 @@ namespace Xync.Utils
             }
             Console.WriteLine(message);
             Console.ResetColor();
+            Logger.Log(message, title);
             AfterWroteSuccess(MessageType.Error, message, title);
         }
         public static void Loading(string message, string title = "")

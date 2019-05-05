@@ -36,6 +36,29 @@ namespace Xync.Utils
 
             }
         }
+        public static async Task Log(string message, string title)
+        {
+            try
+            {
+                Error error = new Error
+                {
+                    Source = string.Empty,
+                    Message = message,
+                    Title = title,
+                    StackTrace = string.Empty,
+                    Exception = null,
+                    Type = string.Empty
+                };
+
+                var db = _client.GetDatabase(Constants.NoSqlDB);
+                var collection = db.GetCollection<Error>("XYNC_Errors");
+                await collection.InsertOneAsync(error);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
         public static async Task<long> DeleteAllErrors()
         {
             try
