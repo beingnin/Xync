@@ -22,6 +22,7 @@
                     <h2 class="count">@Model.TotalMappings</h2>
                     <small class="text-white-50">mappings</small>
                 </div>
+
             </div>
         </div>
     </div>
@@ -38,17 +39,16 @@
                 <h6 class="text-primary m-0 mb-2">
                     <i class="icon">
                         <img src="https://image.flaticon.com/icons/svg/1509/1509289.svg" alt="">
-                    </i> Connection
-                    Mapping
+                    </i>Mapping Direction
                 </h6>
                 <div class="d-flex">
                     <div class="flex-grow-1">
                         <small class="text-white badge badge-warning">From</small>
-                        <p class="text-muted">SqlDB</p>
+                       <p><small class="text-muted">@Model.RDBMSServer | @Model.RDBMSDatabase</small></p>
                     </div>
                     <div class="flex-grow-1">
                         <small class="text-white badge badge-success">To</small>
-                        <p class="text-muted">MongoDB</p>
+                        <p><small class="text-muted">@Model.MongoServer | @Model.MongoDatabase</small></p>
                     </div>
 
                 </div>
@@ -59,69 +59,13 @@
 
 <!-- TABLE ROW -->
 <div class="row mt-4">
-    <div class="col-8">
-        <div class="card app-event-mapping">
-            <div class="card-header">
-                <small class="text-uppercase">Xync Events</small>
-                <div class="btn-group float-right">
-                    <button class="btn btn-sm btn-light rounded-circle text-muted">
-                        <i class="fa fa-sync"></i>
-                    </button>
-                    <button class="btn btn-sm btn-light rounded-circle text-muted">
-                        <i class="fa fa-save"></i>
-                    </button>
-                    <button class="btn btn-sm btn-light rounded-circle text-muted">
-                        <i class="fa fa-check-circle"></i>
-                    </button>
-
-                    <div class="btn-group ml-2">
-                        <button class="btn btn-sm rounded-circle text-primary shadow-none" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a id="btnDeleteAllErrors"  class="dropdown-item" href="#">Delete All</a>
-                            <a class="dropdown-item" href="#">Action 1</a>
-                            <a class="dropdown-item" href="#">Action 2</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <table class="table table-hover table-sm app-table app-table--status">
-                    <thead>
-                        <tr>
-                            <th width="70">#</th>
-                            <th width="140">Title</th>
-                            <th>Message</th>
-                            <th width="20"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.Errors.Any())
-                        {
-                            for (int i = 0; i < Model.Errors.Count; i++)
-                            {
-                                var error = Model.Errors[i];
-                                <tr class="tr-danger">
-                                    <td>@(i + 1)</td>
-                                    <td title="@error.Type">@error.Title</td>
-                                    <td  title="@error.Message">
-                                        <span>@error.Message</span>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                  
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div id="errorsContainer" class="col-8">
+        @Html.Partial("_errors", Model.Errors)
     </div>
     <div class="col-4">
         <div class="card app-event-mapping">
             <div class="card-header">
-                <small class="text-uppercase">Schema Mappings</small>
+                <small class="text-uppercase">Mappings</small>
                 <div class="btn-group float-right">
                     <button class="btn btn-sm btn-light rounded-circle text-muted">
                         <i class="fa fa-coins"></i>
@@ -158,7 +102,7 @@
                                 <td>@map.Schema</td>
                                 <td>@map.Name</td>
                                 <td>@map.Collection</td>
-                                <td><small class="@(map.DNT?"text-danger":"text-success")">@(map.DNT?"DNT":"online")</small></td>
+                                <td><small class="@(map.DNT?"text-danger":"text-success")">@(map.DNT ? "DNT" : "online")</small></td>
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
@@ -181,18 +125,45 @@
     </div>
 </div>
 @section scripts{
-<script>
-    $(function () {
-        $('#btnDeleteAllErrors').click(() => {
-            $.ajax({
-                url: '/Home/DeleteAllErrors',
-                method: 'POST',
-                dataType: 'json',
-                success: (data) => {
-                    app.message.success('deleted ' + data + ' errors permanently');
-                }
+    <script>
+        $(function () {
+            $('body').on('click','#btnDeleteAllErrors',function() {
+                $.ajax({
+                    url: '/Home/DeleteAllErrors',
+                    method: 'POST',
+                    dataType: 'json',
+                    success: (data) => {
+                        app.message.success('deleted ' + data + ' errors permanently');
+                        app.xync.errors.refresh();
+                    }
+                });
+            });
+            //refresh errors
+            
+            $('body').on('click', '#btnRefreshErrors',function(){
+                app.xync.errors.refresh();
+            });
+            //delete an error
+           
+            $('body').on('click', '.btn-delete-error', function(e) {
+                let id = $(e.currentTarget).data('id');
+                $.ajax({
+                    url: '/Home/DeleteError?id=' + id,
+                    method: 'POST',
+                    dataType: 'json',
+                    success: (data) => {
+                        app.message.success('deleted ' + data + ' errors permanently');
+                        app.xync.errors.refresh();
+                    },
+                    error: function (err, xhr) {
+                        app.message.error('Error', 'Sorrys');
+                    }
+                });
+            });
+            $('body').on('click', '.btn-copy-error', function (e) {
+                let msg  = $(e.currentTarget).data('error');
+                app.util.copy(msg);
             });
         });
-    });
-</script>
+    </script>
 }

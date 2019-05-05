@@ -18,6 +18,10 @@ namespace Xync.Web.Controllers
             {
                 Mappings = Synchronizer.Monitors,
                 TotalMappings = Synchronizer.Monitors.Count,
+                MongoServer=Constants.MongoServer,
+                RDBMSServer=Constants.SqlServer,
+                MongoDatabase=Constants.MongoDatabase,
+                RDBMSDatabase=Constants.SqlDatabase,
                 Errors = await Logger.GetErrors()
             };
 
@@ -28,6 +32,18 @@ namespace Xync.Web.Controllers
         {
 
             return Json(await Logger.DeleteAllErrors());
+        }
+        [HttpPost]
+        public async Task<ActionResult> DeleteError(string id)
+        {
+
+            return Json(await Logger.DeleteError(id));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetErrors()
+        {
+
+            return PartialView(@"~\Views\Home\_errors.cshtml",await Logger.GetErrors());
         }
 
     }
