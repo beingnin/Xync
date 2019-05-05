@@ -17,18 +17,19 @@ namespace Xync.Utils
         {
             try
             {
-                Error error = new Error
+                Event error = new Event
                 {
                     Source = exception.Source,
                     Message = exception.Message,
                     Title = title,
                     StackTrace = exception.StackTrace,
                     Exception = exception,
-                    Type = exception.GetType().ToString()
+                    Type = exception.GetType().ToString(),
+                    MessageType=Message.MessageType.Error
                 };
 
                 var db = _client.GetDatabase(Constants.NoSqlDB);
-                var collection = db.GetCollection<Error>("XYNC_Errors");
+                var collection = db.GetCollection<Event>("XYNC_Messages");
                 await collection.InsertOneAsync(error);
             }
             catch (Exception ex)
@@ -36,22 +37,23 @@ namespace Xync.Utils
 
             }
         }
-        public static async Task Log(string message, string title)
+        public static async Task Success(string message, string title)
         {
             try
             {
-                Error error = new Error
+                Event error = new Event
                 {
                     Source = string.Empty,
                     Message = message,
                     Title = title,
                     StackTrace = string.Empty,
                     Exception = null,
-                    Type = string.Empty
+                    Type = string.Empty,
+                    MessageType=Message.MessageType.Success
                 };
 
                 var db = _client.GetDatabase(Constants.NoSqlDB);
-                var collection = db.GetCollection<Error>("XYNC_Errors");
+                var collection = db.GetCollection<Event>("XYNC_Messages");
                 await collection.InsertOneAsync(error);
             }
             catch (Exception ex)
@@ -64,8 +66,8 @@ namespace Xync.Utils
             try
             {
                 var db = _client.GetDatabase(Constants.NoSqlDB);
-                var collection = db.GetCollection<Error>("XYNC_Errors");
-                var filter = Builders<Error>.Filter.Empty;
+                var collection = db.GetCollection<Event>("XYNC_Messages");
+                var filter = Builders<Event>.Filter.Empty;
                var result= await collection.DeleteManyAsync(filter);
                 return result.DeletedCount;
             }
@@ -79,8 +81,8 @@ namespace Xync.Utils
             try
             {
                 var db = _client.GetDatabase(Constants.NoSqlDB);
-                var collection = db.GetCollection<Error>("XYNC_Errors");
-                var filter = Builders<Error>.Filter.Eq(x=>x.Id, ObjectId.Parse(id));
+                var collection = db.GetCollection<Event>("XYNC_Messages");
+                var filter = Builders<Event>.Filter.Eq(x=>x.Id, ObjectId.Parse(id));
                 var result = await collection.DeleteOneAsync(filter);
                 return result.DeletedCount;
             }
@@ -89,10 +91,10 @@ namespace Xync.Utils
                 return default(long);
             }
         }
-        public static async Task<IList<Error>> GetErrors()
+        public static async Task<IList<Event>> GetEvents()
         {
             var db = _client.GetDatabase(Constants.NoSqlDB);
-            var collection = db.GetCollection<Error>("XYNC_Errors").AsQueryable();
+            var collection = db.GetCollection<Event>("XYNC_Messages").AsQueryable();
             var query = from _error in collection
                         orderby _error.CreatedDateTime descending
                         select _error;

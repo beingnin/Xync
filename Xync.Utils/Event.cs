@@ -8,7 +8,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Xync.Utils
 {
-    public class Error
+    public class Event
     {
         public ObjectId Id { get; set; }
         public string Message { get; set; }
@@ -16,6 +16,7 @@ namespace Xync.Utils
         public string StackTrace { get; set; }
         public string Source { get; set; }
         public string Type { get; set; }
+        public Message.MessageType MessageType { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public Exception Exception { get; set; }
     }

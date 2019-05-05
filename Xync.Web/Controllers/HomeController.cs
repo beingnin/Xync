@@ -22,7 +22,7 @@ namespace Xync.Web.Controllers
                 RDBMSServer=Constants.SqlServer,
                 MongoDatabase=Constants.MongoDatabase,
                 RDBMSDatabase=Constants.SqlDatabase,
-                Errors = await Logger.GetErrors()
+                Events = await Logger.GetEvents()
             };
 
             return View(model);
@@ -43,7 +43,7 @@ namespace Xync.Web.Controllers
         public async Task<ActionResult> GetErrors()
         {
 
-            return PartialView(@"~\Views\Home\_errors.cshtml",await Logger.GetErrors());
+            return PartialView(@"~\Views\Home\_errors.cshtml",await Logger.GetEvents());
         }
 
     }

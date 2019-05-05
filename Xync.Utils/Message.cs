@@ -48,7 +48,7 @@ namespace Xync.Utils
             }
             Console.WriteLine(message);
             Console.ResetColor();
-            await Logger.Log(message, title);
+            await Logger.Success(message, title);
             AfterWroteSuccess(MessageType.Error, message, title);
         }
         public static void Loading(string message, string title = "")
