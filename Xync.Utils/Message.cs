@@ -38,7 +38,7 @@ namespace Xync.Utils
             Console.ResetColor();
             AfterWroteInfo(MessageType.Info, message, title);
         }
-        public async static Task Success(string message, string title = "")
+        public async static Task Success(string message, string title)
         {
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             if (!string.IsNullOrWhiteSpace(title))

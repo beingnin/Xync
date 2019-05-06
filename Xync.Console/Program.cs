@@ -35,10 +35,6 @@ namespace Xync.Console
             {
                 System.Console.ReadKey();
             }
-
         }
-
-
-
     }
 }

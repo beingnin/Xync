@@ -10,6 +10,7 @@ namespace Xync.Abstracts.Core
     public interface ISynchronizer 
     {
         string ConnectionString { get;  }
+        Task<bool> Migrate(string table,string schema);
     }
     
 

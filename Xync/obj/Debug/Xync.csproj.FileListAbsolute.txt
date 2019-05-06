@@ -60,3 +60,4 @@ D:\Sources\GH\Xync\Xync\bin\Debug\MongoDB.Driver.xml
 D:\Sources\GH\Xync\Xync\bin\Debug\MongoDB.Driver.Core.xml
 D:\Sources\GH\Xync\Xync\obj\Debug\Xync.dll
 D:\Sources\GH\Xync\Xync\bin\Debug\netstandard.dll
+D:\Nithin\Sources\GH\Xync\Xync\bin\Debug\netstandard.dll

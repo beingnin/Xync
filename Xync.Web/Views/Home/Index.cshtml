@@ -43,7 +43,7 @@
                 <div class="d-flex">
                     <div class="flex-grow-1">
                         <small class="text-white badge badge-warning">From</small>
-                       <p><small class="text-muted">@Model.RDBMSServer | @Model.RDBMSDatabase</small></p>
+                        <p><small class="text-muted">@Model.RDBMSServer | @Model.RDBMSDatabase</small></p>
                     </div>
                     <div class="flex-grow-1">
                         <small class="text-white badge badge-success">To</small>
@@ -106,9 +106,11 @@
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#">Stop</a>
-                                            <a class="dropdown-item" href="#">Start</a>
-                                            <a class="dropdown-item" href="#">Restart</a>
+                                            <a data-schema="@map.Schema" data-table="@map.Name" id="btnStopTracking" class="dropdown-item" href="#">Stop</a>
+                                            <a data-schema="@map.Schema" data-table="@map.Name" id="btnStartTracking" class="dropdown-item" href="#">Start</a>
+                                            <a data-schema="@map.Schema" data-table="@map.Name" id="btnRestartTracking" class="dropdown-item" href="#">Restart</a>
+                                            <a class="dropdown-divider" href="#"></a>
+                                            <a data-schema="@map.Schema" data-table="@map.Name" id="btnMigrate" class="dropdown-item" href="#">Migrate</a>
                                         </div>
                                     </div>
                                 </td>
@@ -126,7 +128,7 @@
 @section scripts{
     <script>
         $(function () {
-            $('body').on('click','#btnDeleteAllErrors',function() {
+            $('body').on('click', '#btnDeleteAllErrors', function () {
                 $.ajax({
                     url: '/Home/DeleteAllErrors',
                     method: 'POST',
@@ -160,13 +162,13 @@
                 });
             });
             //refresh errors
-            
-            $('body').on('click', '#btnRefreshErrors',function(){
+
+            $('body').on('click', '#btnRefreshErrors', function () {
                 app.xync.errors.refresh();
             });
             //delete an error
-           
-            $('body').on('click', '.btn-delete-error', function(e) {
+
+            $('body').on('click', '.btn-delete-error', function (e) {
                 let id = $(e.currentTarget).data('id');
                 $.ajax({
                     url: '/Home/DeleteEvent?id=' + id,
@@ -182,8 +184,96 @@
                 });
             });
             $('body').on('click', '.btn-copy-error', function (e) {
-                let msg  = $(e.currentTarget).data('error');
+                let msg = $(e.currentTarget).data('error');
                 app.util.copy(msg);
+            });
+            //stop tracking
+
+            $('body').on('click', '#btnStopTracking', function (e) {
+                let schema = $(e.currentTarget).data('schema');
+                let table = $(e.currentTarget).data('table');
+                $.ajax({
+                    url: '/Home/DisableOnTable?table=' + table + '&schema=' + schema,
+                    method: 'POST',
+                    dataType: 'json',
+                    success: (data) => {
+                        if (data) {
+                            app.message.success(`Tracking stopped for [${schema}].[${table}]`);
+                        }
+                        else {
+                            app.message.error('Error', 'Sorrys');
+                        }
+                        
+                    },
+                    error: function (err, xhr) {
+                        app.message.error('Error', 'Sorrys');
+                    }
+                });
+            });
+            $('body').on('click', '#btnStartTracking', function (e) {
+                let schema = $(e.currentTarget).data('schema');
+                let table = $(e.currentTarget).data('table');
+                $.ajax({
+                    url: '/Home/EnableOnTable?table=' + table + '&schema=' + schema,
+                    method: 'POST',
+                    dataType: 'json',
+                    success: (data) => {
+                        if (data) {
+                            app.message.success(`Tracking started for [${schema}].[${table}]`);
+                        }
+                        else {
+                            app.message.error('Error', 'Sorrys');
+                        }
+
+                    },
+                    error: function (err, xhr) {
+                        app.message.error('Error', 'Sorrys');
+                    }
+                });
+            });
+            $('body').on('click', '#btnRestartTracking', function (e) {
+                let schema = $(e.currentTarget).data('schema');
+                let table = $(e.currentTarget).data('table');
+                $.ajax({
+                    url: '/Home/ReenableOnTable?table=' + table + '&schema=' + schema,
+                    method: 'POST',
+                    dataType: 'json',
+                    success: (data) => {
+                        console.log(data);
+                        if (data) {
+                            app.message.success(`Tracking restarted for [${schema}].[${table}]`);
+                        }
+                        else {
+                            app.message.error('Error', 'Sorrys');
+                        }
+
+                    },
+                    error: function (err, xhr) {
+                        app.message.error('Error', 'Sorrys');
+                    }
+                });
+            });
+            $('body').on('click', '#btnMigrate', function (e) {
+                let schema = $(e.currentTarget).data('schema');
+                let table = $(e.currentTarget).data('table');
+                $.ajax({
+                    url: '/Home/Migrate?table=' + table + '&schema=' + schema,
+                    method: 'POST',
+                    dataType: 'json',
+                    success: (data) => {
+                        console.log(data);
+                        if (data) {
+                            app.message.success(`Migartion queued for [${schema}].[${table}]`);
+                        }
+                        else {
+                            app.message.error('Error', 'Sorrys');
+                        }
+
+                    },
+                    error: function (err, xhr) {
+                        app.message.error('Error', 'Sorrys');
+                    }
+                });
             });
         });
     </script>

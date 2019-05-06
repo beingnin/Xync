@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Xync.Abstracts.Core
 {
@@ -17,6 +18,7 @@ namespace Xync.Abstracts.Core
                 return Monitors.Where(x => x.Name == tblName && x.Schema==schema).ToList();
             }
         }
+        public abstract Task<bool> Migrate(string table, string schema);
 
     }
 }

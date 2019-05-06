@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using Xync.Abstracts;
 using Xync.Abstracts.Core;
 using Xync.Helpers;
@@ -16,6 +17,7 @@ namespace Xync.Core
         const string _QRY_GET_TABLE_CHANGE = "update {#table#} set __$sync=1 where __$sync=0; select * from ( select ROW_NUMBER() over(partition by [{#keycolumn#}] order by lt.tran_end_time desc) as rw,ct.* from {#table#} ct join [cdc].[lsn_time_mapping] lt on ct.__$start_lsn = lt.start_lsn where ct.__$operation <> 3 and __$sync=1 )a where a.rw=1";
         const string _QRY_SET_AS_SYNCED = "update {#table#} set __$sync=2 where __$sync=1 and __$id in ({#keyids#});";
         const string _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS = "update [{#schema#}].[Consolidated_Tracks] set sync=2 where sync=1 and [CDC_Name]='{#cdctable#}';";
+        const string _QRY_UPDATE_LAST_MIGRATED_DATE = "update [{#schema#}].[{#table#}] set __$last_migrated_on=getutcdate()";
         string _connectionString = null;
         string _mongoConnectionString = null;
         SqlConnection _sqlConnection = null;
@@ -40,12 +42,12 @@ namespace Xync.Core
             throw new NotImplementedException();
         }
 
-        public override void ListenAll(Action<object, EventArgs> onStop =null, Action<object, EventArgs> onResume =null)
+        public override void ListenAll(Action<object, EventArgs> onStop = null, Action<object, EventArgs> onResume = null)
         {
 
 
             IPoller poller = new SqlServerPoller(_connectionString);
-            poller.Stopped += (sender, e) => 
+            poller.Stopped += (sender, e) =>
             {
                 onStop?.Invoke(sender, e);
             };
@@ -146,7 +148,7 @@ namespace Xync.Core
                                             //get mongodb collection
                                             var collection = database.GetCollection<BsonDocument>(table.Collection);
                                             collection.InsertOne(bson);
-                                            Message.Success($"{msg} [collection :  { table.Collection }] & [Key : {keyAttribute.Value}]");
+                                            Message.Success($"{msg} [collection :  { table.Collection }] & [Key : {keyAttribute.Value}]", "Synced");
                                         }
                                         //complete synchronization for a single object only after all mappings are done
                                         if (k == mappings.Count - 1)
@@ -183,6 +185,30 @@ namespace Xync.Core
                 _sqlConnection.Close();
 
         }
+        public async override Task<bool> Migrate(string table, string schema)
+        {
+            try
+            {
+                if (_sqlConnection.State == System.Data.ConnectionState.Closed)
+                    _sqlConnection.Open();
+
+                SqlCommand cmd = new SqlCommand(_QRY_UPDATE_LAST_MIGRATED_DATE.Replace("{#schema#}", schema).Replace("{#table#}", table), _sqlConnection);
+                await cmd.ExecuteNonQueryAsync();
+                await Message.Success($"Migration for [{schema}].[{table}] queued", "Migration");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await Message.Error(ex, "Migration");
+                return false;
+            }
+            finally
+            {
+                if (_sqlConnection.State == System.Data.ConnectionState.Open)
+                    _sqlConnection.Close();
+            }
+        }
+
 
     }
 }
