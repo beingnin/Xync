@@ -14,7 +14,6 @@ namespace Xync.Web.Mappings
         public static IRelationalTable<Folder> Folders = new SqlServerTable<Folder>
         {
             
-            DNT=true,
             Schema = "CM",
             Name = "Folders",
             Attributes = new List<IRelationalAttribute>

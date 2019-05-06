@@ -59,6 +59,12 @@ namespace Xync.Web.Controllers
 
             return PartialView(@"~\Views\Home\_errors.cshtml",await Logger.GetEvents());
         }
+        [HttpGet]
+        public  ActionResult GetMappings()
+        {
+
+            return PartialView(@"~\Views\Home\_mappings.cshtml", Synchronizer.Monitors);
+        }
         [HttpPost]
         public async Task<ActionResult> DisableOnTable(string table,string schema)
         {

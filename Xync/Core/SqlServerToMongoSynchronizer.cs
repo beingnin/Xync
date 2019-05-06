@@ -87,9 +87,14 @@ namespace Xync.Core
                         try
                         {
                             ITable table = mappings[k];
-                            if (table == null)
+                            if (table == null )
                             {
                                 Message.Info($"Mapping not found", $"Mapping not found for a cdc enabled table [{Changedtable.TableSchema}].[{Changedtable.TableName}]");
+                                continue;
+                            }
+                            if (table.DNT)
+                            {
+                                Message.Info($"Mapping is in DNT mode", $"Mapping is in DNT mode for a cdc enabled table [{Changedtable.TableSchema}].[{Changedtable.TableName}]");
                                 continue;
                             }
                             Type tableType = table.GetType();

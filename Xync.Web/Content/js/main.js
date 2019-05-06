@@ -29,6 +29,21 @@ var app = {
                     }
                 });
             }
+        },
+        mappings: {
+            refresh: function () {
+                $.ajax({
+                    url: '/Home/GetMappings',
+                    method: 'GET',
+                    dataType: 'html',
+                    success: (data) => {
+                        $('#mappingsContainer').html(data);
+                    },
+                    error: function (err, xhr) {
+                        app.message.error('Error', 'Sorrys');
+                    }
+                });
+            }
         }
     },
     message: {

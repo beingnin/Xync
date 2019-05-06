@@ -42,12 +42,12 @@
                 </h6>
                 <div class="d-flex">
                     <div class="flex-grow-1">
-                        <small class="text-white badge badge-warning">From</small>
-                        <p><small class="text-muted">@Model.RDBMSServer | @Model.RDBMSDatabase</small></p>
+                        <small class="text-white badge badge-warning">From sql</small>
+                        <p><small class="text-muted">@Model.RDBMSServer --> @Model.RDBMSDatabase</small></p>
                     </div>
                     <div class="flex-grow-1">
-                        <small class="text-white badge badge-success">To</small>
-                        <p><small class="text-muted">@Model.MongoServer | @Model.MongoDatabase</small></p>
+                        <small class="text-white badge badge-success">To mongo</small>
+                        <p><small class="text-muted">@Model.MongoServer --> @Model.MongoDatabase</small></p>
                     </div>
 
                 </div>
@@ -61,68 +61,8 @@
     <div id="errorsContainer" class="col-8">
         @Html.Partial("_errors", Model.Events)
     </div>
-    <div class="col-4">
-        <div class="card app-event-mapping">
-            <div class="card-header">
-                <small class="text-uppercase">Mappings</small>
-                <div class="btn-group float-right">
-                    <button class="btn btn-sm btn-light rounded-circle text-muted">
-                        <i class="fa fa-coins"></i>
-                    </button>
-                    <div class="btn-group ml-2">
-                        <button class="btn btn-sm rounded-circle text-primary shadow-none" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Action 1</a>
-                            <a class="dropdown-item" href="#">Action 2</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body p-0">
-
-                <table class="table table-hover table-sm app-table app-table--valign">
-                    <thead>
-                        <tr>
-                            <th width="70">#</th>
-                            <th>Schema</th>
-                            <th>Table</th>
-                            <th>Collection</th>
-                            <th width="80">Status</th>
-                            <th width="40"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Model.Mappings.Count; i++)
-                        {
-                            var map = Model.Mappings[i];
-                            <tr>
-                                <td>@(i + 1)</td>
-                                <td>@map.Schema</td>
-                                <td>@map.Name</td>
-                                <td>@map.Collection</td>
-                                <td><small class="@(map.DNT?"text-danger":"text-success")">@(map.DNT ? "DNT" : "online")</small></td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
-                                        <div class="dropdown-menu">
-                                            <a data-schema="@map.Schema" data-table="@map.Name" id="btnStopTracking" class="dropdown-item" href="#">Stop</a>
-                                            <a data-schema="@map.Schema" data-table="@map.Name" id="btnStartTracking" class="dropdown-item" href="#">Start</a>
-                                            <a data-schema="@map.Schema" data-table="@map.Name" id="btnRestartTracking" class="dropdown-item" href="#">Restart</a>
-                                            <a class="dropdown-divider" href="#"></a>
-                                            <a data-schema="@map.Schema" data-table="@map.Name" id="btnMigrate" class="dropdown-item" href="#">Migrate</a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-
-
-                    </tbody>
-                </table>
-
-            </div>
-        </div>
+    <div class="col-4" id="mappingsContainer">
+        @Html.Partial("_mappings", Model.Mappings)
     </div>
 </div>
 @section scripts{
@@ -198,12 +138,11 @@
                     dataType: 'json',
                     success: (data) => {
                         if (data) {
-                            app.message.success(`Tracking stopped for [${schema}].[${table}]`);
+                            app.xync.mappings.refresh();
                         }
                         else {
                             app.message.error('Error', 'Sorrys');
                         }
-                        
                     },
                     error: function (err, xhr) {
                         app.message.error('Error', 'Sorrys');
@@ -219,12 +158,11 @@
                     dataType: 'json',
                     success: (data) => {
                         if (data) {
-                            app.message.success(`Tracking started for [${schema}].[${table}]`);
+                            app.xync.mappings.refresh();
                         }
                         else {
                             app.message.error('Error', 'Sorrys');
                         }
-
                     },
                     error: function (err, xhr) {
                         app.message.error('Error', 'Sorrys');
@@ -241,12 +179,11 @@
                     success: (data) => {
                         console.log(data);
                         if (data) {
-                            app.message.success(`Tracking restarted for [${schema}].[${table}]`);
+                            app.xync.mappings.refresh();
                         }
                         else {
                             app.message.error('Error', 'Sorrys');
                         }
-
                     },
                     error: function (err, xhr) {
                         app.message.error('Error', 'Sorrys');
@@ -261,14 +198,12 @@
                     method: 'POST',
                     dataType: 'json',
                     success: (data) => {
-                        console.log(data);
                         if (data) {
                             app.message.success(`Migartion queued for [${schema}].[${table}]`);
                         }
                         else {
                             app.message.error('Error', 'Sorrys');
                         }
-
                     },
                     error: function (err, xhr) {
                         app.message.error('Error', 'Sorrys');

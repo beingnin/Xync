@@ -101,6 +101,7 @@ namespace Xync.Core
                 {
                     try
                     {
+                        table.DNT = false;
                         Message.Info("Enabling change tracking on " + table.Schema.Embrace() + "." + table.Name.Embrace());
                         cmd.CommandText = _QRY_ADD_COLUMN_TO_ORIGIN.Replace("{#table#}", table.Name).Replace("{#schema#}", table.Schema);
                         await cmd.ExecuteNonQueryAsync();
@@ -148,6 +149,11 @@ namespace Xync.Core
                 await cmd.ExecuteNonQueryAsync();
                 cmd.CommandText = _QRY_REMOVE_COLUMN_FROM_ORIGIN.Replace("{#table#}", table).Replace("{#schema#}", schema);
                 await cmd.ExecuteNonQueryAsync();
+                var mappings = new SqlServerToMongoSynchronizer()[table, schema];
+                foreach (var map in mappings)
+                {
+                    map.DNT = true;
+                }
                 await Message.Success($"Tracking stopped on [{schema}].[{table}]", "Stop tracking");
             }
             catch (Exception ex)
@@ -180,7 +186,11 @@ namespace Xync.Core
                 await cmd.ExecuteNonQueryAsync();
                 cmd.CommandText = _QRY_ADD_COLUMN_TO_CAPTURE.Replace("{#table#}", (schema + "_" + table + "_CT").Embrace());
                 await cmd.ExecuteNonQueryAsync();
-
+                var mappings = new SqlServerToMongoSynchronizer()[table, schema];
+                foreach (var map in mappings)
+                {
+                    map.DNT = false;
+                }
                 await Message.Success("Change tracking enabled for " + schema.Embrace() + "." + table.Embrace(), "Tracking on table");
             }
             catch (Exception ex)

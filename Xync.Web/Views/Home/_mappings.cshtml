@@ -1,0 +1,62 @@
+﻿@model IList<Xync.Abstracts.ITable>
+<div class="card app-event-mapping">
+    <div class="card-header">
+        <small class="text-uppercase">Mappings</small>
+        <div class="btn-group float-right">
+            <button class="btn btn-sm btn-light rounded-circle text-muted">
+                <i class="fa fa-coins"></i>
+            </button>
+            <div class="btn-group ml-2">
+                <button class="btn btn-sm rounded-circle text-primary shadow-none" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Action 1</a>
+                    <a class="dropdown-item" href="#">Action 2</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+
+        <table class="table table-hover table-sm app-table app-table--valign">
+            <thead>
+                <tr>
+                    <th width="70">#</th>
+                    <th>Schema</th>
+                    <th>Table</th>
+                    <th>Collection</th>
+                    <th width="80">Status</th>
+                    <th width="40"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    var map = Model[i];
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@map.Schema</td>
+                        <td>@map.Name</td>
+                        <td>@map.Collection</td>
+                        <td><small class="mapping-status @(map.DNT?"text-danger":"text-success")">@(map.DNT ? "DNT" : "online")</small></td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
+                                <div class="dropdown-menu">
+                                    <a data-schema="@map.Schema" data-table="@map.Name" id="btnStopTracking" class="dropdown-item" href="#">Stop</a>
+                                    <a data-schema="@map.Schema" data-table="@map.Name" id="btnStartTracking" class="dropdown-item" href="#">Start</a>
+                                    <a data-schema="@map.Schema" data-table="@map.Name" id="btnRestartTracking" class="dropdown-item" href="#">Restart</a>
+                                    <a class="dropdown-divider" href="#"></a>
+                                    <a data-schema="@map.Schema" data-table="@map.Name" id="btnMigrate" class="dropdown-item" href="#">Migrate</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
