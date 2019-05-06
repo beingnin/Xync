@@ -43,11 +43,20 @@
                             <div class="btn-group">
                                 <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
                                 <div class="dropdown-menu">
-                                    <a data-schema="@map.Schema" data-table="@map.Name" id="btnStopTracking" class="dropdown-item" href="#">Stop</a>
-                                    <a data-schema="@map.Schema" data-table="@map.Name" id="btnStartTracking" class="dropdown-item" href="#">Start</a>
-                                    <a data-schema="@map.Schema" data-table="@map.Name" id="btnRestartTracking" class="dropdown-item" href="#">Restart</a>
-                                    <a class="dropdown-divider" href="#"></a>
-                                    <a data-schema="@map.Schema" data-table="@map.Name" id="btnMigrate" class="dropdown-item" href="#">Migrate</a>
+                                    @if (!map.DNT)
+                                    {
+                                        <a data-schema="@map.Schema" data-table="@map.Name" id="btnStopTracking" class="dropdown-item" href="#">Stop</a>
+                                        <a data-schema="@map.Schema" data-table="@map.Name" id="btnRestartTracking" class="dropdown-item" href="#">Restart</a>
+                                    }
+                                    @if (map.DNT)
+                                    {
+                                        <a data-schema="@map.Schema" data-table="@map.Name" id="btnStartTracking" class="dropdown-item" href="#">Start</a>
+                                    }
+
+                                    @if (!map.DNT)
+                                    {
+                                        <a data-schema="@map.Schema" data-table="@map.Name" id="btnMigrate" class="dropdown-item" href="#">Migrate</a>
+                                    }
                                 </div>
                             </div>
                         </td>
