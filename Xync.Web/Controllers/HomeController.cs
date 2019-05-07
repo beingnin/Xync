@@ -57,7 +57,7 @@ namespace Xync.Web.Controllers
         public async Task<ActionResult> GetErrors()
         {
 
-            return PartialView(@"~\Views\Home\_errors.cshtml",await Logger.GetEvents());
+            return PartialView(@"~\Views\Home\_events.cshtml",await Logger.GetEvents());
         }
         [HttpGet]
         public  ActionResult GetMappings()
