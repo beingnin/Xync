@@ -172,6 +172,8 @@
             $('body').on('click', '#btnRestartTracking', function (e) {
                 let schema = $(e.currentTarget).data('schema');
                 let table = $(e.currentTarget).data('table');
+                var oldStatus = $(e.currentTarget).closest('tr').find('.mapping-status').text();
+                $(e.currentTarget).closest('tr').find('.mapping-status').text('restarting...');
                 $.ajax({
                     url: '/Home/ReenableOnTable?table=' + table + '&schema=' + schema,
                     method: 'POST',
@@ -179,7 +181,8 @@
                     success: (data) => {
                         console.log(data);
                         if (data) {
-                            app.xync.mappings.refresh();
+
+                            setTimeout(function () { $(e.currentTarget).closest('tr').find('.mapping-status').text(oldStatus);}, 1000);
                         }
                         else {
                             app.message.error('Error', 'Sorrys');
@@ -193,13 +196,15 @@
             $('body').on('click', '#btnMigrate', function (e) {
                 let schema = $(e.currentTarget).data('schema');
                 let table = $(e.currentTarget).data('table');
+                var oldStatus = $(e.currentTarget).closest('tr').find('.mapping-status').text();
+                $(e.currentTarget).closest('tr').find('.mapping-status').text('queuing migration...');
                 $.ajax({
                     url: '/Home/Migrate?table=' + table + '&schema=' + schema,
                     method: 'POST',
                     dataType: 'json',
                     success: (data) => {
                         if (data) {
-                            app.message.success(`Migartion queued for [${schema}].[${table}]`);
+                            setTimeout(function () { $(e.currentTarget).closest('tr').find('.mapping-status').text(oldStatus); }, 1000);
                         }
                         else {
                             app.message.error('Error', 'Sorrys');
