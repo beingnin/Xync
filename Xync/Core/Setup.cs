@@ -19,7 +19,7 @@ namespace Xync.Core
         const string _QRY_REMOVE_COLUMN_FROM_ORIGIN = "alter table [{#schema#}].[{#table#}] drop column __$last_migrated_on";
         const string _QRY_IS_CDC_ENABLED_IN_TABLE = "";
         const string _QRY_ENABLE_CDC_IN_DB = "use {#catalog#};exec sys.sp_cdc_enable_db";
-        const string _QRY_ENABLE_CDC_IN_TABLE = "exec sys.sp_cdc_enable_table @source_schema='{#schema#}', @source_name='{#table#}', @role_name=null";
+        const string _QRY_ENABLE_CDC_IN_TABLE = "exec sys.sp_cdc_enable_table @source_schema='{#schema#}', @source_name='{#table#}', @role_name=null;delete from XYNC.Consolidated_Tracks where table_name='{#table#}' and table_schema='{#schema#}'";
         const string _QRY_DISABLE_CDC_IN_TABLE = "exec sys.sp_cdc_disable_table @source_schema='{#schema#}', @source_name='{#table#}', @capture_instance='all'";
         const string _QRY_CREATE_SCHEMA = "create schema {#schema#}";
         const string _QRY_MEDIATOR_TABLE = "CREATE TABLE {#schema#}.[Consolidated_Tracks]( [Id] [bigint] IDENTITY(1,1) NOT NULL, [CDC_Schema] [varchar](200) NOT NULL, [CDC_Name] [varchar](200) NOT NULL, [Table_Schema] [varchar](200) NOT NULL, [Table_Name] [varchar](200) NOT NULL,[Timestamp] [datetime] NOT NULL, [Changed] [bit] NULL, [Sync] [tinyint] NULL, PRIMARY KEY CLUSTERED ( [Id] ASC ) )";

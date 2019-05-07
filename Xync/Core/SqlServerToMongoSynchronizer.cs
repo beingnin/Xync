@@ -15,8 +15,8 @@ namespace Xync.Core
     public class SqlServerToMongoSynchronizer : Synchronizer
     {
         const string _QRY_GET_TABLE_CHANGE = "update {#table#} set __$sync=1 where __$sync=0; select * from ( select ROW_NUMBER() over(partition by [{#keycolumn#}] order by lt.tran_end_time desc) as rw,ct.* from {#table#} ct join [cdc].[lsn_time_mapping] lt on ct.__$start_lsn = lt.start_lsn where ct.__$operation <> 3 and __$sync=1 )a where a.rw=1";
-        const string _QRY_SET_AS_SYNCED = "update {#table#} set __$sync=2 where __$sync=1 and __$id in ({#keyids#});";
-        const string _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS = "update [{#schema#}].[Consolidated_Tracks] set sync=2 where sync=1 and [CDC_Name]='{#cdctable#}';";
+        const string _QRY_SET_AS_SYNCED = "delete from {#table#}  where __$sync=1 and __$id in ({#keyids#});";
+        const string _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS = "delete from [XYNC].[Consolidated_Tracks] where sync=1 and [Table_Name]='{#tablename#}' and [Table_Schema]='{#tableschema#}';";
         const string _QRY_UPDATE_LAST_MIGRATED_DATE = "update [{#schema#}].[{#table#}] set __$last_migrated_on=getutcdate()";
         string _connectionString = null;
         string _mongoConnectionString = null;
@@ -82,6 +82,7 @@ namespace Xync.Core
                     new SqlDataAdapter(cmd).Fill(dt);
                     //loop : all mappings for a single sql table-start
                     List<long> keyIds = new List<long>();
+                    int succeededMappings = 0;
                     for (int k = 0; k < mappings.Count; k++)
                     {
                         try
@@ -167,6 +168,7 @@ namespace Xync.Core
                                     }
                                 }//loop : sync to mongo for a all objects of a single table-end
                             }
+                            succeededMappings++;
                         }
                         catch (Exception exc)
                         {
@@ -179,7 +181,13 @@ namespace Xync.Core
                     {
                         cmd.CommandText = _QRY_SET_AS_SYNCED.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keyids#}", string.Join(",", keyIds));
                         cmd.ExecuteNonQuery();
+                        if (succeededMappings == mappings.Count)
+                        {
+                            cmd.CommandText = _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS.Replace("{#tableschema#}", Changedtable.TableSchema).Replace("{#tablename#}", Changedtable.TableName);
+                            cmd.ExecuteNonQuery();
+                        }
                     }
+
                 }
 
 
