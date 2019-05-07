@@ -88,7 +88,7 @@ namespace Xync.Core
                         try
                         {
                             ITable table = mappings[k];
-                            if (table == null )
+                            if (table == null)
                             {
                                 Message.Info($"Mapping not found", $"Mapping not found for a cdc enabled table [{Changedtable.TableSchema}].[{Changedtable.TableName}]");
                                 continue;
@@ -103,6 +103,7 @@ namespace Xync.Core
 
                             if (dt != null && dt.Rows.Count != 0)
                             {
+                                int totalUpdate = 0, totalInsert = 0, totalDelete = 0;
                                 //loop : sync to mongo for all objects of a single table-start
                                 for (int i = 0; i < dt.Rows.Count; i++)
                                 {
@@ -131,6 +132,7 @@ namespace Xync.Core
                                         {
                                             tableType.GetMethod("DeleteFromMongo").Invoke(table, new object[] { keyAttribute.Value });
                                             Message.Info("Deleted from [collection : " + table.Collection + "] & [Key : " + keyAttribute.Value + "]");
+                                            totalDelete++;
                                         }
                                         else
                                         {
@@ -154,7 +156,15 @@ namespace Xync.Core
                                             //get mongodb collection
                                             var collection = database.GetCollection<BsonDocument>(table.Collection);
                                             collection.InsertOne(bson);
-                                            Message.Success($"{msg} [collection :  { table.Collection }] & [Key : {keyAttribute.Value}]", "Synced");
+                                            if (table.Change == Change.AfterUpdate || table.Change == Change.BeforeUpdate)
+                                            {
+                                                totalUpdate++;
+                                            }
+                                            else
+                                            {
+                                                totalInsert++;
+                                            }
+                                            Message.Info($"{msg} [collection :  { table.Collection }] & [Key : {keyAttribute.Value}]", "Synced");
                                         }
                                         //complete synchronization for a single object only after all mappings are done
                                         if (k == mappings.Count - 1)
@@ -167,6 +177,19 @@ namespace Xync.Core
                                         Message.Error(ex, $"Synchronisation(single) failed for {Changedtable.TableSchema.Embrace()}.{Changedtable.TableName.Embrace()}");
                                     }
                                 }//loop : sync to mongo for a all objects of a single table-end
+                                if (totalInsert > 0)
+                                {
+                                    Message.Success($"{totalInsert} document{(totalInsert > 1 ? "s" : "")} inserted in collection [{table.Collection}]", "Synced");
+                                }
+                                    
+                                if (totalDelete > 0)
+                                {
+                                    Message.Success($"{totalDelete} document{(totalDelete > 1 ? "s" : "")} deleted from collection [{table.Collection}]", "Synced");
+                                }
+                                if (totalUpdate > 0)
+                                {
+                                    Message.Success($"{totalUpdate} document{(totalUpdate > 1 ? "s" : "")} updated in collection [{table.Collection}]", "Synced");
+                                }
                             }
                             succeededMappings++;
                         }
