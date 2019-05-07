@@ -16,13 +16,22 @@ var app = {
 
     xync: {
         errors: {
-            refresh: function () {
+            refresh: function (page=0,count=20) {
                 $.ajax({
-                    url: '/Home/GetErrors',
+                    url: '/Home/GetErrors?page='+page+'&count='+count,
                     method: 'GET',
                     dataType: 'html',
                     success: (data) => {
-                        $('#errorsContainer').html(data);
+                        if (1==1) {
+                            if (page == 0) {
+                                $('#errorsContainer').html('');
+                            }
+                            $('#errorsContainer').append(data);
+                            $('#btnLoadMoreEvents').data('page', page).data('count', count);
+                        }
+                        else {
+                            //
+                        }
                     },
                     error: function (err, xhr) {
                         app.message.error('Error', 'Sorrys');

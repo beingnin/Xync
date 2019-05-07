@@ -24,7 +24,7 @@ namespace Xync.Web.Controllers
                 RDBMSServer=Constants.SqlServer,
                 MongoDatabase=Constants.MongoDatabase,
                 RDBMSDatabase=Constants.SqlDatabase,
-                Events = await Logger.GetEvents()
+                Events = await Logger.GetEvents(0,20)
             };
 
             return View(model);
@@ -54,10 +54,9 @@ namespace Xync.Web.Controllers
             return Json(await Logger.DeleteError(id));
         }
         [HttpGet]
-        public async Task<ActionResult> GetErrors()
+        public async Task<ActionResult> GetErrors(int page=0,int count=20)
         {
-
-            return PartialView(@"~\Views\Home\_events.cshtml",await Logger.GetEvents());
+            return PartialView(@"~\Views\Home\_events.cshtml",await Logger.GetEvents(page,count));
         }
         [HttpGet]
         public  ActionResult GetMappings()

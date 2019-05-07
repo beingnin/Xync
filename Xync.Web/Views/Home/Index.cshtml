@@ -58,163 +58,199 @@
 
 <!-- TABLE ROW -->
 <div class="row mt-4">
-    <div id="errorsContainer" class="col-8">
-        @Html.Partial("_events", Model.Events)
+    <div  class="col-8">
+        <div class="card app-event-mapping">
+            <div class="card-header">
+                <small class="text-uppercase">Hey! What is going on?</small>
+                <div class="btn-group float-right">
+                    <button id="btnRefreshErrors" class="btn btn-sm btn-light rounded-circle text-muted">
+                        <i class="fa fa-sync"></i>
+                    </button>
+                    <div class="btn-group ml-2">
+                        <button class="btn btn-sm rounded-circle text-primary shadow-none" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a id="btnDeleteAllEvents" class="dropdown-item" href="#">Clear events</a>
+                            <a id="btnDeleteAllErrors" class="dropdown-item" href="#">Clear errors</a>
+                            <a id="btnDeleteAllOther" class="dropdown-item" href="#">Clear messages</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover table-sm app-table app-table--status">
+                    <thead>
+                        <tr>
+                            <th width="70">#</th>
+                            <th width="140">Title</th>
+                            <th>Message</th>
+                            <th width="20"></th>
+                            <th width="20"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="errorsContainer">
+                        @Html.Partial("_events", Model.Events)
+                    </tbody>
+                   
+                </table>
+            </div>
+
+        </div>
     </div>
-    <div class="col-4" id="mappingsContainer">
-        @Html.Partial("_mappings", Model.Mappings)
-    </div>
-</div>
-@section scripts{
-    <script>
-        $(function () {
-            $('body').on('click', '#btnDeleteAllErrors', function () {
-                $.ajax({
-                    url: '/Home/DeleteAllErrors',
-                    method: 'POST',
-                    dataType: 'json',
-                    success: (data) => {
-                        app.message.success('deleted ' + data + ' errors permanently');
-                        app.xync.errors.refresh();
-                    }
-                });
-            });
-            $('body').on('click', '#btnDeleteAllEvents', function () {
-                $.ajax({
-                    url: '/Home/DeleteAllEvents',
-                    method: 'POST',
-                    dataType: 'json',
-                    success: (data) => {
-                        app.message.success('deleted ' + data + ' errors permanently');
-                        app.xync.errors.refresh();
-                    }
-                });
-            });
-            $('body').on('click', '#btnDeleteAllOther', function () {
-                $.ajax({
-                    url: '/Home/DeleteAllOthers',
-                    method: 'POST',
-                    dataType: 'json',
-                    success: (data) => {
-                        app.message.success('deleted ' + data + ' errors permanently');
-                        app.xync.errors.refresh();
-                    }
-                });
-            });
-            //refresh errors
+            <div class="col-4" id="mappingsContainer">
+                @Html.Partial("_mappings", Model.Mappings)
+            </div>
+        </div>
+        @section scripts{
+            <script>
+                $(function () {
+                    $('body').on('click', '#btnDeleteAllErrors', function () {
+                        $.ajax({
+                            url: '/Home/DeleteAllErrors',
+                            method: 'POST',
+                            dataType: 'json',
+                            success: (data) => {
+                                app.xync.errors.refresh();
+                            }
+                        });
+                    });
+                    $('body').on('click', '#btnDeleteAllEvents', function () {
+                        $.ajax({
+                            url: '/Home/DeleteAllEvents',
+                            method: 'POST',
+                            dataType: 'json',
+                            success: (data) => {
+                                app.xync.errors.refresh();
+                            }
+                        });
+                    });
+                    $('body').on('click', '#btnDeleteAllOther', function () {
+                        $.ajax({
+                            url: '/Home/DeleteAllOthers',
+                            method: 'POST',
+                            dataType: 'json',
+                            success: (data) => {
+                                app.xync.errors.refresh();
+                            }
+                        });
+                    });
+                    //refresh errors
+                    //load more events
 
-            $('body').on('click', '#btnRefreshErrors', function () {
-                app.xync.errors.refresh();
-            });
-            //delete an error
-
-            $('body').on('click', '.btn-delete-error', function (e) {
-                let id = $(e.currentTarget).data('id');
-                $.ajax({
-                    url: '/Home/DeleteEvent?id=' + id,
-                    method: 'POST',
-                    dataType: 'json',
-                    success: (data) => {
-                        app.message.success('deleted ' + data + ' errors permanently');
+                    $('body').on('click', '#btnLoadMoreEvents', function () {
+                        app.xync.errors.refresh(parseInt($(this).data('page') + 1), parseInt($(this).data('count')));
+                    });
+                    $('body').on('click', '#btnRefreshErrors', function () {
                         app.xync.errors.refresh();
-                    },
-                    error: function (err, xhr) {
-                        app.message.error('Error', 'Sorrys');
-                    }
-                });
-            });
-            $('body').on('click', '.btn-copy-error', function (e) {
-                let msg = $(e.currentTarget).data('error');
-                app.util.copy(msg);
-            });
-            //stop tracking
+                    });
+                    //delete an error
 
-            $('body').on('click', '#btnStopTracking', function (e) {
-                let schema = $(e.currentTarget).data('schema');
-                let table = $(e.currentTarget).data('table');
-                $.ajax({
-                    url: '/Home/DisableOnTable?table=' + table + '&schema=' + schema,
-                    method: 'POST',
-                    dataType: 'json',
-                    success: (data) => {
-                        if (data) {
-                            app.xync.mappings.refresh();
-                        }
-                        else {
-                            app.message.error('Error', 'Sorrys');
-                        }
-                    },
-                    error: function (err, xhr) {
-                        app.message.error('Error', 'Sorrys');
-                    }
-                });
-            });
-            $('body').on('click', '#btnStartTracking', function (e) {
-                let schema = $(e.currentTarget).data('schema');
-                let table = $(e.currentTarget).data('table');
-                $.ajax({
-                    url: '/Home/EnableOnTable?table=' + table + '&schema=' + schema,
-                    method: 'POST',
-                    dataType: 'json',
-                    success: (data) => {
-                        if (data) {
-                            app.xync.mappings.refresh();
-                        }
-                        else {
-                            app.message.error('Error', 'Sorrys');
-                        }
-                    },
-                    error: function (err, xhr) {
-                        app.message.error('Error', 'Sorrys');
-                    }
-                });
-            });
-            $('body').on('click', '#btnRestartTracking', function (e) {
-                let schema = $(e.currentTarget).data('schema');
-                let table = $(e.currentTarget).data('table');
-                var oldStatus = $(e.currentTarget).closest('tr').find('.mapping-status').text();
-                $(e.currentTarget).closest('tr').find('.mapping-status').text('restarting...');
-                $.ajax({
-                    url: '/Home/ReenableOnTable?table=' + table + '&schema=' + schema,
-                    method: 'POST',
-                    dataType: 'json',
-                    success: (data) => {
-                        console.log(data);
-                        if (data) {
+                    $('body').on('click', '.btn-delete-error', function (e) {
+                        let id = $(e.currentTarget).data('id');
+                        $.ajax({
+                            url: '/Home/DeleteEvent?id=' + id,
+                            method: 'POST',
+                            dataType: 'json',
+                            success: (data) => {
+                                app.xync.errors.refresh();
+                            },
+                            error: function (err, xhr) {
+                                app.message.error('Error', 'Sorrys');
+                            }
+                        });
+                    });
+                    $('body').on('click', '.btn-copy-error', function (e) {
+                        let msg = $(e.currentTarget).data('error');
+                        app.util.copy(msg);
+                    });
+                    //stop tracking
 
-                            setTimeout(function () { $(e.currentTarget).closest('tr').find('.mapping-status').text(oldStatus);}, 1000);
-                        }
-                        else {
-                            app.message.error('Error', 'Sorrys');
-                        }
-                    },
-                    error: function (err, xhr) {
-                        app.message.error('Error', 'Sorrys');
-                    }
+                    $('body').on('click', '#btnStopTracking', function (e) {
+                        let schema = $(e.currentTarget).data('schema');
+                        let table = $(e.currentTarget).data('table');
+                        $.ajax({
+                            url: '/Home/DisableOnTable?table=' + table + '&schema=' + schema,
+                            method: 'POST',
+                            dataType: 'json',
+                            success: (data) => {
+                                if (data) {
+                                    app.xync.mappings.refresh();
+                                }
+                                else {
+                                    app.message.error('Error', 'Sorrys');
+                                }
+                            },
+                            error: function (err, xhr) {
+                                app.message.error('Error', 'Sorrys');
+                            }
+                        });
+                    });
+                    $('body').on('click', '#btnStartTracking', function (e) {
+                        let schema = $(e.currentTarget).data('schema');
+                        let table = $(e.currentTarget).data('table');
+                        $.ajax({
+                            url: '/Home/EnableOnTable?table=' + table + '&schema=' + schema,
+                            method: 'POST',
+                            dataType: 'json',
+                            success: (data) => {
+                                if (data) {
+                                    app.xync.mappings.refresh();
+                                }
+                                else {
+                                    app.message.error('Error', 'Sorrys');
+                                }
+                            },
+                            error: function (err, xhr) {
+                                app.message.error('Error', 'Sorrys');
+                            }
+                        });
+                    });
+                    $('body').on('click', '#btnRestartTracking', function (e) {
+                        let schema = $(e.currentTarget).data('schema');
+                        let table = $(e.currentTarget).data('table');
+                        var oldStatus = $(e.currentTarget).closest('tr').find('.mapping-status').text();
+                        $(e.currentTarget).closest('tr').find('.mapping-status').text('restarting...');
+                        $.ajax({
+                            url: '/Home/ReenableOnTable?table=' + table + '&schema=' + schema,
+                            method: 'POST',
+                            dataType: 'json',
+                            success: (data) => {
+                                console.log(data);
+                                if (data) {
+
+                                    setTimeout(function () { $(e.currentTarget).closest('tr').find('.mapping-status').text(oldStatus); }, 1000);
+                                }
+                                else {
+                                    app.message.error('Error', 'Sorrys');
+                                }
+                            },
+                            error: function (err, xhr) {
+                                app.message.error('Error', 'Sorrys');
+                            }
+                        });
+                    });
+                    $('body').on('click', '#btnMigrate', function (e) {
+                        let schema = $(e.currentTarget).data('schema');
+                        let table = $(e.currentTarget).data('table');
+                        var oldStatus = $(e.currentTarget).closest('tr').find('.mapping-status').text();
+                        $(e.currentTarget).closest('tr').find('.mapping-status').text('queuing migration...');
+                        $.ajax({
+                            url: '/Home/Migrate?table=' + table + '&schema=' + schema,
+                            method: 'POST',
+                            dataType: 'json',
+                            success: (data) => {
+                                if (data) {
+                                    setTimeout(function () { $(e.currentTarget).closest('tr').find('.mapping-status').text(oldStatus); }, 1000);
+                                }
+                                else {
+                                    app.message.error('Error', 'Sorrys');
+                                }
+                            },
+                            error: function (err, xhr) {
+                                app.message.error('Error', 'Sorrys');
+                            }
+                        });
+                    });
                 });
-            });
-            $('body').on('click', '#btnMigrate', function (e) {
-                let schema = $(e.currentTarget).data('schema');
-                let table = $(e.currentTarget).data('table');
-                var oldStatus = $(e.currentTarget).closest('tr').find('.mapping-status').text();
-                $(e.currentTarget).closest('tr').find('.mapping-status').text('queuing migration...');
-                $.ajax({
-                    url: '/Home/Migrate?table=' + table + '&schema=' + schema,
-                    method: 'POST',
-                    dataType: 'json',
-                    success: (data) => {
-                        if (data) {
-                            setTimeout(function () { $(e.currentTarget).closest('tr').find('.mapping-status').text(oldStatus); }, 1000);
-                        }
-                        else {
-                            app.message.error('Error', 'Sorrys');
-                        }
-                    },
-                    error: function (err, xhr) {
-                        app.message.error('Error', 'Sorrys');
-                    }
-                });
-            });
-        });
-    </script>
-}
+            </script>
+        }
