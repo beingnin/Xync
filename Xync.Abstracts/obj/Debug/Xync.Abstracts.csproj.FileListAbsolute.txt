@@ -49,3 +49,5 @@ D:\Nithin\Sources\GH\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.csproj.CoreCom
 D:\Nithin\Sources\GH\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.csproj.CopyComplete
 D:\Nithin\Sources\GH\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.dll
 D:\Nithin\Sources\GH\Xync\Xync.Abstracts\obj\Debug\Xync.Abstracts.pdb
+D:\Nithin\Sources\GH\Xync\Xync.Abstracts\bin\Debug\Xync.Abstracts.dll.config
+D:\Nithin\Sources\GH\Xync\Xync.Abstracts\bin\Debug\Xync.Utils.dll.config

@@ -24,6 +24,7 @@ namespace Xync.Core
         const string _QRY_CREATE_SCHEMA = "create schema {#schema#}";
         const string _QRY_MEDIATOR_TABLE = "CREATE TABLE {#schema#}.[Consolidated_Tracks]( [Id] [bigint] IDENTITY(1,1) NOT NULL, [CDC_Schema] [varchar](200) NOT NULL, [CDC_Name] [varchar](200) NOT NULL, [Table_Schema] [varchar](200) NOT NULL, [Table_Name] [varchar](200) NOT NULL,[Timestamp] [datetime] NOT NULL, [Changed] [bit] NULL, [Sync] [tinyint] NULL, PRIMARY KEY CLUSTERED ( [Id] ASC ) )";
         const string _QRY_CREATE_TRIGGER_ON_TABLE = "create trigger [cdc].[Trg_{#tableschema#}_{#cdctable#}] on [cdc].[{#tableschema#}_{#cdctable#}] after insert as begin insert into {#schema#}.[Consolidated_Tracks] ( [CDC_Schema], [CDC_Name],[Table_Schema], [Table_Name], [Timestamp], [Changed], [Sync] ) values ( 'cdc', '{#tableschema#}_{#cdctable#}','{#tableschema#}','{#tablename#}', GETUTCDATE(), 1, 0 ) end";
+        const string _QRY_DELETE_FROM_CONSOLIDATED_TRACKS = "delete from [XYNC].[Consolidated_Tracks] where [Table_Name]='{#tablename#}' and [Table_Schema]='{#tableschema#}';";
         #endregion Queries
 
         readonly string _schema;
@@ -149,6 +150,9 @@ namespace Xync.Core
                 await cmd.ExecuteNonQueryAsync();
                 cmd.CommandText = _QRY_REMOVE_COLUMN_FROM_ORIGIN.Replace("{#table#}", table).Replace("{#schema#}", schema);
                 await cmd.ExecuteNonQueryAsync();
+                cmd.CommandText = _QRY_DELETE_FROM_CONSOLIDATED_TRACKS.Replace("{#tablename#}", table).Replace("{#tableschema#}", schema);
+                await cmd.ExecuteNonQueryAsync();
+                
                 var mappings = new SqlServerToMongoSynchronizer()[table, schema];
                 foreach (var map in mappings)
                 {
