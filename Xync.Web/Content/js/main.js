@@ -1,7 +1,7 @@
 //Sample Xync Timer Function
-(function()  {
+(function () {
     let checkTime = i => { return (i < 10) ? "0" + i : i };
-    let startTime = function()  {
+    let startTime = function () {
         var today = new Date(),
             h = checkTime(today.getHours()),
             m = checkTime(today.getMinutes()),
@@ -16,22 +16,18 @@ var app = {
 
     xync: {
         errors: {
-            refresh: function (page=0,count=20) {
-                $.ajax({
-                    url: '/Home/GetErrors?page='+page+'&count='+count,
+            refresh: function (page = 0, count = 20) {
+               return $.ajax({
+                    url: '/Home/GetErrors?page=' + page + '&count=' + count,
                     method: 'GET',
                     dataType: 'html',
                     success: (data) => {
-                        if (1==1) {
-                            if (page == 0) {
-                                $('#errorsContainer').html('');
-                            }
-                            $('#errorsContainer').append(data);
-                            $('#btnLoadMoreEvents').data('page', page).data('count', count);
+                        if (page == 0) {
+                            $('#errorsContainer').html('');
                         }
-                        else {
-                            //
-                        }
+                        $('#errorsContainer').append(data);
+                        //$('#btnLoadMoreEvents').data('page', page).data('count', count);
+
                     },
                     error: function (err, xhr) {
                         app.message.error('Error', 'Sorrys');
@@ -56,15 +52,15 @@ var app = {
         }
     },
     message: {
-        success:function (msg, title = '')  {
+        success: function (msg, title = '') {
             alert(msg);
         },
-        error: function(msg, title = '')  {
+        error: function (msg, title = '') {
             alert(msg);
         }
     },
     util: {
-        copy: function(str) {
+        copy: function (str) {
             const el = document.createElement('textarea');
             el.value = str;
             document.body.appendChild(el);

@@ -56,6 +56,8 @@ namespace Xync.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> GetErrors(int page=0,int count=20)
         {
+            ViewBag.ErrorCount = count;
+            ViewBag.ErrorPage = page;
             return PartialView(@"~\Views\Home\_events.cshtml",await Logger.GetEvents(page,count));
         }
         [HttpGet]

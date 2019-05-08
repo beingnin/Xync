@@ -5,7 +5,7 @@
     {
         var error = Model[i];
         <tr class="@(error.MessageType==Xync.Utils.Message.MessageType.Error?"tr-danger":"tr-success")">
-            <td title="@error.Id">@(i + 1)</td>
+            <td title="@error.Id">@((Convert.ToInt32(ViewBag.ErrorCount)* (Convert.ToInt32(ViewBag.ErrorPage))+1)+i)</td>
             <td title="@error.Type">@error.Title</td>
             <td title="@error.Message">
                 <span>@error.Message</span>
@@ -21,7 +21,7 @@
 
     <tr>
         <th colspan="5">
-            <div class="text-center"><a href="#" id="btnLoadMoreEvents" data-page="0" data-count="20">Load More</a></div>
+            <div class="text-center btn-load-more-events"><a href="#" id="btnLoadMoreEvents" data-page="@ViewBag.ErrorPage" data-count="@ViewBag.ErrorCount">Load More</a></div>
         </th>
     </tr>
 }
@@ -31,6 +31,6 @@ else
         <td colspan="5" class="text-center no-more-events">No more events to show</td>
     </tr>
     <script>
-        $('#btnLoadMoreEvents').remove();
+        $('.btn-load-more-events').remove();
     </script>
 }
