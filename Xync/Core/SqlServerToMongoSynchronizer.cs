@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Xync.Abstracts;
 using Xync.Abstracts.Core;
@@ -104,6 +105,8 @@ namespace Xync.Core
                             if (dt != null && dt.Rows.Count != 0)
                             {
                                 int totalUpdate = 0, totalInsert = 0, totalDelete = 0;
+                                Stopwatch timer = new Stopwatch();
+                                timer.Start();
                                 //loop : sync to mongo for all objects of a single table-start
                                 for (int i = 0; i < dt.Rows.Count; i++)
                                 {
@@ -177,18 +180,20 @@ namespace Xync.Core
                                         Message.Error(ex, $"Synchronisation(single) failed for {Changedtable.TableSchema.Embrace()}.{Changedtable.TableName.Embrace()}");
                                     }
                                 }//loop : sync to mongo for a all objects of a single table-end
+                                timer.Stop();
+                                string timeTook=Time.ToString(timer.Elapsed);
                                 if (totalInsert > 0)
                                 {
-                                    Message.Success($"{totalInsert} document{(totalInsert > 1 ? "s" : "")} inserted in collection [{table.Collection}]", "Synced");
+                                    Message.Success($"{totalInsert} document{(totalInsert > 1 ? "s" : "")} inserted in collection [{table.Collection}] in {timeTook}", "Synced");
                                 }
                                     
                                 if (totalDelete > 0)
                                 {
-                                    Message.Success($"{totalDelete} document{(totalDelete > 1 ? "s" : "")} deleted from collection [{table.Collection}]", "Synced");
+                                    Message.Success($"{totalDelete} document{(totalDelete > 1 ? "s" : "")} deleted from collection [{table.Collection}] in {timeTook}", "Synced");
                                 }
                                 if (totalUpdate > 0)
                                 {
-                                    Message.Success($"{totalUpdate} document{(totalUpdate > 1 ? "s" : "")} updated in collection [{table.Collection}]", "Synced");
+                                    Message.Success($"{totalUpdate} document{(totalUpdate > 1 ? "s" : "")} updated in collection [{table.Collection}] in {timeTook}", "Synced");
                                 }
                             }
                             succeededMappings++;
