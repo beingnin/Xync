@@ -15,10 +15,11 @@ namespace Xync.Core
         #region Queries
         const string _QRY_IS_CDC_ENABLED_IN_DB = "select is_cdc_enabled from sys.databases where name ='{#catalog#}'";
         const string _QRY_ADD_COLUMN_TO_CAPTURE = "alter table [cdc].{#table#} add __$sync tinyint default 0, __$id bigint primary key  identity(1,1)";
-        const string _QRY_ADD_COLUMN_TO_ORIGIN = "alter table [{#schema#}].[{#table#}] add __$last_migrated_on datetime";
+        const string _QRY_ADD_COLUMN_TO_ORIGIN = "if not exists (select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='{#table#}' and TABLE_SCHEMA='{#schema#}' and COLUMN_NAME='__$last_migrated_on') begin alter table [{#schema#}].[{#table#}] add __$last_migrated_on datetime end";
         const string _QRY_REMOVE_COLUMN_FROM_ORIGIN = "alter table [{#schema#}].[{#table#}] drop column __$last_migrated_on";
         const string _QRY_IS_CDC_ENABLED_IN_TABLE = "";
         const string _QRY_ENABLE_CDC_IN_DB = "use {#catalog#};exec sys.sp_cdc_enable_db";
+        const string _QRY_DISABLE_CDC_IN_DB = "use {#catalog#};exec sys.sp_cdc_enable_db";
         const string _QRY_ENABLE_CDC_IN_TABLE = "exec sys.sp_cdc_enable_table @source_schema='{#schema#}', @source_name='{#table#}', @role_name=null;delete from XYNC.Consolidated_Tracks where table_name='{#table#}' and table_schema='{#schema#}'";
         const string _QRY_DISABLE_CDC_IN_TABLE = "exec sys.sp_cdc_disable_table @source_schema='{#schema#}', @source_name='{#table#}', @capture_instance='all'";
         const string _QRY_CREATE_SCHEMA = "create schema {#schema#}";
@@ -63,6 +64,38 @@ namespace Xync.Core
             try
             {
                 _sqlConnection.Open();
+                SqlCommand cmd = new SqlCommand(_QRY_IS_CDC_ENABLED_IN_DB.Replace("{#catalog#}", _catalog), _sqlConnection);
+                bool isEnabled = Convert.ToBoolean(await cmd.ExecuteScalarAsync());
+                if (isEnabled)
+                {
+                    Message.Info("Capture Data Change facility is already enabled on the DB:" + _catalog.Embrace());
+                    return true;
+                }
+                else
+                {
+                    cmd.CommandText = _QRY_ENABLE_CDC_IN_DB.Replace("{#catalog#}", _catalog.Embrace());
+                    await cmd.ExecuteNonQueryAsync();
+                    await Message.Success("Capture Data Change facility has been enabled for " + _catalog.Embrace(), "Tracking on table");
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                await Message.Error(ex, "Db level tracking setup");
+                return false;
+            }
+            finally
+            {
+                _sqlConnection.Close();
+            }
+
+        }
+        private async Task<bool> DisableOnDB()
+        {
+            try
+            {
+                if (_sqlConnection.State == System.Data.ConnectionState.Closed)
+                    _sqlConnection.Open();
                 SqlCommand cmd = new SqlCommand(_QRY_IS_CDC_ENABLED_IN_DB.Replace("{#catalog#}", _catalog), _sqlConnection);
                 bool isEnabled = Convert.ToBoolean(await cmd.ExecuteScalarAsync());
                 if (isEnabled)
