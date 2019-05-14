@@ -12,12 +12,13 @@ namespace Xync.Utils
     {
         public ObjectId Id { get; set; }
         public string Message { get; set; }
+        public string InnerExceptionMessage { get; set; }
         public string Title { get; set; }
         public string StackTrace { get; set; }
+        public string InnerExceptionStackTrace { get; set; }
         public string Source { get; set; }
         public string Type { get; set; }
         public Message.MessageType MessageType { get; set; }
         public DateTime CreatedDateTime { get; set; }
-        public Exception Exception { get; set; }
     }
 }

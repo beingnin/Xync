@@ -23,7 +23,8 @@ namespace Xync.Utils
                     Message = exception.Message,
                     Title = title,
                     StackTrace = exception.StackTrace,
-                    Exception = exception,
+                    InnerExceptionMessage=exception.InnerException?.Message,
+                    InnerExceptionStackTrace=exception.InnerException?.StackTrace,
                     Type = exception.GetType().ToString(),
                     MessageType=Message.MessageType.Error,
                     CreatedDateTime=DateTime.Now
@@ -49,7 +50,6 @@ namespace Xync.Utils
                     Message = message,
                     Title = title,
                     StackTrace = string.Empty,
-                    Exception = null,
                     Type = string.Empty,
                     MessageType=Message.MessageType.Success,
                     CreatedDateTime = DateTime.Now
