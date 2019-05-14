@@ -35,6 +35,7 @@ namespace Xync.Utils
             }
             catch (Exception ex)
             {
+                ToFile(ex);
 
             }
         }
@@ -60,7 +61,7 @@ namespace Xync.Utils
             }
             catch (Exception ex)
             {
-
+                ToFile(ex);
             }
         }
         public static async Task<long> DeleteAllErrors()
@@ -131,6 +132,24 @@ namespace Xync.Utils
                         orderby _error.CreatedDateTime descending
                         select _error).Skip(page*count).Take(count);
             return await query.ToListAsync();
+        }
+        static void ToFile(Exception ex)
+        {
+            try
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("Message");
+                stringBuilder.AppendLine("-----------------");
+                stringBuilder.AppendLine(ex.Message);
+                stringBuilder.AppendLine("Stack Trace");
+                stringBuilder.AppendLine("-----------------");
+                stringBuilder.AppendLine(ex.StackTrace);
+                System.IO.File.WriteAllText(@"C:\Users\Public","xync_log_"+Guid.NewGuid());
+            }
+            catch
+            {
+
+            }
         }
     }
 
