@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -17,6 +19,7 @@ namespace Xync.Web
     {
         protected void Application_Start()
         {
+
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -41,5 +44,11 @@ namespace Xync.Web
 
             new SqlServerToMongoSynchronizer().ListenAll();
         }
+        protected void Application_End()
+        {
+            var reason = HostingEnvironment.ShutdownReason.ToString();
+            File.WriteAllText(Path.Combine(@"C:\Users\Public", "xync_"+Guid.NewGuid().ToString()+".txt"),reason);
+        }
     }
+
 }
