@@ -207,12 +207,26 @@ namespace Xync.Core
                      //set as synced in cdc
                     if (keyIds.Count != 0)
                     {
-                        cmd.CommandText = _QRY_SET_AS_SYNCED.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keyids#}", string.Join(",", keyIds));
-                        cmd.ExecuteNonQuery();
+                        try
+                        {
+                            cmd.CommandText = _QRY_SET_AS_SYNCED.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keyids#}", string.Join(",", keyIds));
+                            cmd.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            Message.Error(ex, "Mark as single in cdc failed for " + Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace());
+                        }
                         if (succeededMappings == mappings.Count)
                         {
-                            cmd.CommandText = _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS.Replace("{#tableschema#}", Changedtable.TableSchema).Replace("{#tablename#}", Changedtable.TableName);
-                            cmd.ExecuteNonQuery();
+                            try
+                            {
+                                cmd.CommandText = _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS.Replace("{#tableschema#}", Changedtable.TableSchema).Replace("{#tablename#}", Changedtable.TableName);
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch (Exception ex)
+                            {
+                                Message.Error(ex, "Mark as single in consolidated_tracks failed for " + Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace());
+                            }
                         }
                     }
 

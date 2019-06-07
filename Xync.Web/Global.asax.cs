@@ -47,7 +47,12 @@ namespace Xync.Web
         protected void Application_End()
         {
             var reason = HostingEnvironment.ShutdownReason.ToString();
-            File.WriteAllText(Path.Combine(@"C:\Users\Public", "xync_"+Guid.NewGuid().ToString()+".txt"),reason);
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            File.WriteAllText(Path.Combine(path, "xync_end_"+Guid.NewGuid().ToString()+".txt"),reason);
         }
     }
 
