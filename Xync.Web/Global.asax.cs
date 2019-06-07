@@ -52,8 +52,14 @@ namespace Xync.Web
             {
                 Directory.CreateDirectory(path);
             }
-            File.WriteAllText(Path.Combine(path, "xync_end_"+Guid.NewGuid().ToString()+".txt"),reason);
+            File.WriteAllText(Path.Combine(path, "xync_end_" + Guid.NewGuid().ToString() + ".txt"), reason);
+        }
+
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            
+            var exception = Server.GetLastError();
+            Message.Error(exception, "Fatal Error");
         }
     }
-
 }
