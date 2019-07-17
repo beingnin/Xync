@@ -23,11 +23,11 @@ namespace Xync.Utils
                     Message = exception.Message,
                     Title = title,
                     StackTrace = exception.StackTrace,
-                    InnerExceptionMessage=exception.InnerException?.Message,
-                    InnerExceptionStackTrace=exception.InnerException?.StackTrace,
+                    InnerExceptionMessage = exception.InnerException?.Message,
+                    InnerExceptionStackTrace = exception.InnerException?.StackTrace,
                     Type = exception.GetType().ToString(),
-                    MessageType=Message.MessageType.Error,
-                    CreatedDateTime=DateTime.Now
+                    MessageType = Message.MessageType.Error,
+                    CreatedDateTime = DateTime.Now
                 };
 
                 var db = _client.GetDatabase(Constants.NoSqlDB);
@@ -51,7 +51,7 @@ namespace Xync.Utils
                     Title = title,
                     StackTrace = string.Empty,
                     Type = string.Empty,
-                    MessageType=Message.MessageType.Success,
+                    MessageType = Message.MessageType.Success,
                     CreatedDateTime = DateTime.Now
                 };
 
@@ -115,7 +115,7 @@ namespace Xync.Utils
             {
                 var db = _client.GetDatabase(Constants.NoSqlDB);
                 var collection = db.GetCollection<Event>("XYNC_Messages");
-                var filter = Builders<Event>.Filter.Eq(x=>x.Id, ObjectId.Parse(id));
+                var filter = Builders<Event>.Filter.Eq(x => x.Id, ObjectId.Parse(id));
                 var result = await collection.DeleteOneAsync(filter);
                 return result.DeletedCount;
             }
@@ -124,13 +124,13 @@ namespace Xync.Utils
                 return default(long);
             }
         }
-        public static async Task<IList<Event>> GetEvents(int page,int count)
+        public static async Task<IList<Event>> GetEvents(int page, int count)
         {
             var db = _client.GetDatabase(Constants.NoSqlDB);
             var collection = db.GetCollection<Event>("XYNC_Messages").AsQueryable();
             var query = (from _error in collection
-                        orderby _error.CreatedDateTime descending
-                        select _error).Skip(page*count).Take(count);
+                         orderby _error.CreatedDateTime descending
+                         select _error).Skip(page * count).Take(count);
             return await query.ToListAsync();
         }
         static void ToFile(Exception ex)
@@ -144,7 +144,7 @@ namespace Xync.Utils
                 stringBuilder.AppendLine("Stack Trace");
                 stringBuilder.AppendLine("-----------------");
                 stringBuilder.AppendLine(ex.StackTrace);
-                System.IO.File.WriteAllText(@"C:\Users\Public","xync_log_"+Guid.NewGuid());
+                System.IO.File.WriteAllText(@"C:\Users\Public", "xync_log_" + Guid.NewGuid());
             }
             catch
             {

@@ -10,6 +10,7 @@ namespace Xync.Utils
 {
     public class Event
     {
+
         public ObjectId Id { get; set; }
         public string Message { get; set; }
         public string InnerExceptionMessage { get; set; }
@@ -19,6 +20,18 @@ namespace Xync.Utils
         public string Source { get; set; }
         public string Type { get; set; }
         public Message.MessageType MessageType { get; set; }
-        public DateTime CreatedDateTime { get; set; }
+        public DateTime CreatedDateTime {   get; set; }
+        string _host;
+        public string Host
+        {
+            get
+            {
+                return _host= Environment.MachineName;
+            }
+            set
+            {
+                _host = value;
+            }
+        }
     }
 }
