@@ -17,10 +17,12 @@ var app = {
     xync: {
         errors: {
             refresh: function (page = 0, count = 20) {
-               return $.ajax({
+                return $.ajax({
                     url: '/Home/GetErrors?page=' + page + '&count=' + count,
                     method: 'GET',
                     dataType: 'html',
+                    beforeSend: function () { $('#btnRefreshErrors i').addClass('fa-spin'); },
+                    complete: function () { setTimeout(function () { $('#btnRefreshErrors i').removeClass('fa-spin');},500) },
                     success: (data) => {
                         if (page == 0) {
                             $('#errorsContainer').html('');

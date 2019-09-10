@@ -44,7 +44,7 @@ namespace Xync.Core
         }
 
         public override void ListenAll(Action<object, EventArgs> onStop = null, Action<object, EventArgs> onResume = null)
-        {
+                    {
 
 
             IPoller poller = new SqlServerPoller(_connectionString);
