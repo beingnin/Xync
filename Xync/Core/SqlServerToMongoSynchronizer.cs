@@ -19,6 +19,7 @@ namespace Xync.Core
         const string _QRY_SET_AS_SYNCED = "delete from {#table#}  where __$sync=1 and __$id in ({#keyids#});";
         const string _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS = "delete from [XYNC].[Consolidated_Tracks] where sync=1 and [Table_Name]='{#tablename#}' and [Table_Schema]='{#tableschema#}';";
         const string _QRY_UPDATE_LAST_MIGRATED_DATE = "update [{#schema#}].[{#table#}] set __$last_migrated_on=getutcdate()";
+        const string _QRY_GET_COUNT = "select count(*) from [{#schema#}].[{#table#}]";
         string _connectionString = null;
         string _mongoConnectionString = null;
         SqlConnection _sqlConnection = null;
@@ -44,7 +45,7 @@ namespace Xync.Core
         }
 
         public override void ListenAll(Action<object, EventArgs> onStop = null, Action<object, EventArgs> onResume = null)
-                    {
+        {
 
 
             IPoller poller = new SqlServerPoller(_connectionString);
@@ -181,12 +182,12 @@ namespace Xync.Core
                                     }
                                 }//loop : sync to mongo for a all objects of a single table-end
                                 timer.Stop();
-                                string timeTook=Time.ToString(timer.Elapsed);
+                                string timeTook = Time.ToString(timer.Elapsed);
                                 if (totalInsert > 0)
                                 {
                                     Message.Success($"{totalInsert} document{(totalInsert > 1 ? "s" : "")} inserted in collection [{table.Collection}] in {timeTook}", "Synced");
                                 }
-                                    
+
                                 if (totalDelete > 0)
                                 {
                                     Message.Success($"{totalDelete} document{(totalDelete > 1 ? "s" : "")} deleted from collection [{table.Collection}] in {timeTook}", "Synced");
@@ -263,7 +264,44 @@ namespace Xync.Core
                     _sqlConnection.Close();
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="schema"></param>
+        /// <param name="collection"></param>
+        /// <returns>Item1 as row count and item2 as document count</returns>
+        public async override Task<Tuple<long, long>> GetCounts(string table, string schema, string collection)
+        {
+            long countInTable, countInCollection = 0;
+            try
+            {
+                if (_sqlConnection.State == System.Data.ConnectionState.Closed)
+                    _sqlConnection.Open();
 
+                SqlCommand cmd = new SqlCommand(_QRY_GET_COUNT.Replace("{#schema#}", schema).Replace("{#table#}", table), _sqlConnection);
+                countInTable = Convert.ToInt64(await cmd.ExecuteScalarAsync());
+
+                var client = new MongoClient(_mongoConnectionString);
+
+                //Use the MongoClient to access the server
+                var database = client.GetDatabase(Constants.NoSqlDB);
+
+                var col = database.GetCollection<BsonDocument>(collection);
+                var filter=new FilterDefinitionBuilder<BsonDocument>().Empty;
+                countInCollection = await col.CountDocumentsAsync(filter, null);
+                return new Tuple<long, long>(countInTable, countInCollection);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                if (_sqlConnection.State == System.Data.ConnectionState.Open)
+                    _sqlConnection.Close();
+            }
+        }
 
     }
 }
