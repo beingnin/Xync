@@ -271,7 +271,7 @@ namespace Xync.Core
         /// <param name="schema"></param>
         /// <param name="collection"></param>
         /// <returns>Item1 as row count and item2 as document count</returns>
-        public async override Task<Tuple<long, long>> GetCounts(string table, string schema, string collection)
+        public async override Task<object> GetCounts(string table, string schema, string collection)
         {
             long countInTable, countInCollection = 0;
             try
@@ -290,7 +290,7 @@ namespace Xync.Core
                 var col = database.GetCollection<BsonDocument>(collection);
                 var filter=new FilterDefinitionBuilder<BsonDocument>().Empty;
                 countInCollection = await col.CountDocumentsAsync(filter, null);
-                return new Tuple<long, long>(countInTable, countInCollection);
+                return new { Records = countInTable, Documents = countInCollection };
             }
             catch (Exception ex)
             {

@@ -172,9 +172,9 @@
             });
             //stop tracking
 
-            $('body').on('click', '#btnStopTracking', function (e) {
-                let schema = $(e.currentTarget).data('schema');
-                let table = $(e.currentTarget).data('table');
+            $('body').on('click', '.btn-stop-tracking', function (e) {
+                let schema = $(this).data('schema');
+                let table = $(this).data('table');
                 $.ajax({
                     url: '/Home/DisableOnTable?table=' + table + '&schema=' + schema,
                     method: 'POST',
@@ -192,9 +192,9 @@
                     }
                 });
             });
-            $('body').on('click', '#btnStartTracking', function (e) {
-                let schema = $(e.currentTarget).data('schema');
-                let table = $(e.currentTarget).data('table');
+            $('body').on('click', '.btn-start-tracking', function (e) {
+                let schema = $(this).data('schema');
+                let table = $(this).data('table');
                 $.ajax({
                     url: '/Home/EnableOnTable?table=' + table + '&schema=' + schema,
                     method: 'POST',
@@ -212,11 +212,12 @@
                     }
                 });
             });
-            $('body').on('click', '#btnRestartTracking', function (e) {
-                let schema = $(e.currentTarget).data('schema');
-                let table = $(e.currentTarget).data('table');
-                var oldStatus = $(e.currentTarget).closest('tr').find('.mapping-status').text();
-                $(e.currentTarget).closest('tr').find('.mapping-status').text('restarting...');
+            $('body').on('click', '.btn-restart-tracking', function (e) {
+                let schema = $(this).data('schema');
+                let table = $(this).data('table');
+                var oldStatus = $(this).closest('tr').find('.mapping-status').text();
+                $(this).closest('tr').find('.mapping-status').text('restarting...');
+                var self = $(this);
                 $.ajax({
                     url: '/Home/ReenableOnTable?table=' + table + '&schema=' + schema,
                     method: 'POST',
@@ -225,7 +226,7 @@
                         console.log(data);
                         if (data) {
 
-                            setTimeout(function () { $(e.currentTarget).closest('tr').find('.mapping-status').text(oldStatus); }, 1000);
+                            setTimeout(function () { self.closest('tr').find('.mapping-status').text(oldStatus); }, 1000);
                         }
                         else {
                             app.message.error('Error', 'Sorrys');
@@ -236,18 +237,19 @@
                     }
                 });
             });
-            $('body').on('click', '#btnMigrate', function (e) {
-                let schema = $(e.currentTarget).data('schema');
-                let table = $(e.currentTarget).data('table');
-                var oldStatus = $(e.currentTarget).closest('tr').find('.mapping-status').text();
-                $(e.currentTarget).closest('tr').find('.mapping-status').text('queuing migration...');
+            $('body').on('click', '.btn-migrate', function (e) {
+                let schema = $(this).data('schema');
+                let table = $(this).data('table');
+                var oldStatus = $(this).closest('tr').find('.mapping-status').text();
+                $(this).closest('tr').find('.mapping-status').text('queuing migration...');
+                var self = $(this);
                 $.ajax({
                     url: '/Home/Migrate?table=' + table + '&schema=' + schema,
                     method: 'POST',
                     dataType: 'json',
                     success: (data) => {
                         if (data) {
-                            setTimeout(function () { $(e.currentTarget).closest('tr').find('.mapping-status').text(oldStatus); }, 1000);
+                            setTimeout(function () { self.closest('tr').find('.mapping-status').text(oldStatus); }, 1000);
                         }
                         else {
                             app.message.error('Error', 'Sorrys');
@@ -258,6 +260,28 @@
                     }
                 });
             });
+            $('body').on('click', '.btn-get-counts', function (e) {
+                var self = $(this);
+                var table = $(this).attr('data-table');
+                var collection = $(this).attr('data-collection');
+                var schema = $(this).attr('data-schema');
+
+                $.ajax({
+
+                    url: '/home/GetCounts?table='+table+'&schema='+schema+'&collection='+collection,
+                    method: 'POST',
+                    success: function (d) {
+                        if (d) {
+                            self.closest('tr').find('td:nth-child(3)').find('span').text(d.Records);
+                            self.closest('tr').find('td:nth-child(4)').find('span').text(d.Documents);
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+
+                })
+            })
         });
     </script>
 }

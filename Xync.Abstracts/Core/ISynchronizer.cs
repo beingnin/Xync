@@ -11,7 +11,7 @@ namespace Xync.Abstracts.Core
     {
         string ConnectionString { get;  }
         Task<bool> Migrate(string table,string schema);
-        Task<Tuple<long, long>> GetCounts(string table, string schema, string collection);
+        Task<object> GetCounts(string table, string schema, string collection);
     }
     
 

@@ -19,7 +19,7 @@ namespace Xync.Abstracts.Core
             }
         }
         public abstract Task<bool> Migrate(string table, string schema);
-        public abstract Task<Tuple<long, long>> GetCounts(string table, string schema, string collection);
+        public abstract Task<object> GetCounts(string table, string schema, string collection);
 
     }
 }
