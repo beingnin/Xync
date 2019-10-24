@@ -9,6 +9,7 @@ namespace Xync.Abstracts
         
         TDocumentModel GetFromMongo(object identifier);
         void DeleteFromMongo(object identifier);
+        void ReplaceInMongo(object identifier,TDocumentModel doc);
         TDocumentModel CreateModel();
         IRelationalAttribute GetKey();
     }

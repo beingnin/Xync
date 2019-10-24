@@ -214,6 +214,25 @@ namespace Xync.SqlServer
                 throw;
             }
         }
+        public void ReplaceInMongo(object identifier,TDocumentModel document)
+        {
+            try
+            {
+                MongoClient client = new MongoClient(Constants.NoSqlConnection);
+                IMongoDatabase db = client.GetDatabase(Constants.NoSqlDB);
+                var collection = db.GetCollection<TDocumentModel>(this.Collection);
+
+                FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
+                FilterDefinition<TDocumentModel> filter = filterBuilder.Eq(this.GetKey().Maps[0].DocumentProperty.Name, identifier);
+                var col = collection.ReplaceOne(filter, document, new UpdateOptions { IsUpsert = true });
+            }
+            catch (Exception ex)
+            {
+                Message.Error(ex, "Fetch from mongo");
+                throw;
+            }
+        }
+        
 
         public void DeleteFromMongo(object identifier)
         {

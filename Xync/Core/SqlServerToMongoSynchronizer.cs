@@ -132,21 +132,17 @@ namespace Xync.Core
                                                 }
                                             }
                                         }
+                                        string msg = null;
                                         if (table.Change == Change.Delete)
                                         {
                                             tableType.GetMethod("DeleteFromMongo").Invoke(table, new object[] { keyAttribute.Value });
                                             Message.Info("Deleted from [collection : " + table.Collection + "] & [Key : " + keyAttribute.Value + "]");
                                             totalDelete++;
                                         }
-                                        else
+                                        else if (table.Change == Change.Insert)
                                         {
-                                            string msg = "Inserted to";
-                                            if (table.Change == Change.AfterUpdate || table.Change == Change.BeforeUpdate)
-                                            {
-                                                tableType.GetMethod("GetFromMongo").Invoke(table, new object[] { keyAttribute.Value });
-                                                tableType.GetMethod("DeleteFromMongo").Invoke(table, new object[] { keyAttribute.Value });
-                                                msg = "Updated";
-                                            }
+                                            msg = "Inserted to";
+
 
                                             var model = tableType.GetMethod("CreateModel").Invoke(table, null);
                                             var bson = model.ToBsonDocument();
@@ -160,14 +156,17 @@ namespace Xync.Core
                                             //get mongodb collection
                                             var collection = database.GetCollection<BsonDocument>(table.Collection);
                                             collection.InsertOne(bson);
-                                            if (table.Change == Change.AfterUpdate || table.Change == Change.BeforeUpdate)
-                                            {
-                                                totalUpdate++;
-                                            }
-                                            else
-                                            {
-                                                totalInsert++;
-                                            }
+                                            totalInsert++;
+                                            Message.Info($"{msg} [collection :  { table.Collection }] & [Key : {keyAttribute.Value}]", "Synced");
+                                        }
+                                        else//table.Change == Change.AfterUpdate || table.Change == Change.BeforeUpdate
+                                        {
+                                            tableType.GetMethod("GetFromMongo").Invoke(table, new object[] { keyAttribute.Value });
+                                            var model = tableType.GetMethod("CreateModel").Invoke(table, null);
+                                            var bson = model.ToBsonDocument();
+                                            tableType.GetMethod("ReplaceInMongo").Invoke(table, new object[] { keyAttribute.Value,model });
+                                            msg = "Updated";
+                                            totalUpdate++;
                                             Message.Info($"{msg} [collection :  { table.Collection }] & [Key : {keyAttribute.Value}]", "Synced");
                                         }
                                         //complete synchronization for a single object only after all mappings are done
@@ -288,7 +287,7 @@ namespace Xync.Core
                 var database = client.GetDatabase(Constants.NoSqlDB);
 
                 var col = database.GetCollection<BsonDocument>(collection);
-                var filter=new FilterDefinitionBuilder<BsonDocument>().Empty;
+                var filter = new FilterDefinitionBuilder<BsonDocument>().Empty;
                 countInCollection = await col.CountDocumentsAsync(filter, null);
                 return new { Records = countInTable, Documents = countInCollection };
             }
