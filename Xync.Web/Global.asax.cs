@@ -36,7 +36,7 @@ namespace Xync.Web
             //Constants.NoSqlConnection = @"mongodb://localhost:27017";
             Constants.RdbmsConnection = @"Data Source=10.10.100.68\spsadb;Initial Catalog=SharjahPolice_Beta;uid=spsauser;pwd=$P$@789#";
             Constants.NoSqlConnection = @"mongodb://10.10.100.74:27017";
-            Constants.NoSqlDB = "Xync_Test";
+            Constants.NoSqlDB = "SPSA_MongoDevLocal";
             Constants.PollingInterval = 2000;
             //start setup
             bool setupComplete = new Setup().Initialize().Result;

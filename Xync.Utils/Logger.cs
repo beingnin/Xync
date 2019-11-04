@@ -129,7 +129,7 @@ namespace Xync.Utils
             var db = _client.GetDatabase(Constants.NoSqlDB);
             var collection = db.GetCollection<Event>("XYNC_Messages").AsQueryable();
             var query = (from _error in collection
-                         orderby _error.CreatedDateTime descending
+                         orderby _error.Id descending
                          select _error).Skip(page * count).Take(count);
             return await query.ToListAsync();
         }
