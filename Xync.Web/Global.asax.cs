@@ -74,6 +74,7 @@ namespace Xync.Web
                         + "stack trace"
                         + Environment.NewLine
                         + "----------------------------------"
+                        + Environment.NewLine
                         + shutDownStack;
 
             File.WriteAllText(Path.Combine(path, "xync_end_" + Guid.NewGuid().ToString() + ".txt"), log);
