@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
@@ -46,18 +47,41 @@ namespace Xync.Web
         }
         protected void Application_End()
         {
+            var runtime = typeof(HttpRuntime).InvokeMember("_theRuntime", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetField, null, null, null);
+            var shutDownMessage = runtime.GetType().InvokeMember("_shutDownMessage", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField, null, runtime, null);
+            var shutDownStack = runtime.GetType().InvokeMember("_shutDownStack", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField, null, runtime, null);
+
+
             var reason = HostingEnvironment.ShutdownReason.ToString();
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
-            File.WriteAllText(Path.Combine(path, "xync_end_" + Guid.NewGuid().ToString() + ".txt"), reason);
+
+            string log = "reason"
+                        + Environment.NewLine
+                        + "----------------------------------"
+                        + Environment.NewLine
+                        + reason
+                        + Environment.NewLine
+                        + "message "
+                        + Environment.NewLine
+                        + "----------------------------------"
+                        + Environment.NewLine
+                        + shutDownMessage
+                        + Environment.NewLine
+                        + "stack trace"
+                        + Environment.NewLine
+                        + "----------------------------------"
+                        + shutDownStack;
+
+            File.WriteAllText(Path.Combine(path, "xync_end_" + Guid.NewGuid().ToString() + ".txt"), log);
         }
 
         protected void Application_Error(object sender, EventArgs e)
         {
-            
+
             var exception = Server.GetLastError();
             Message.Error(exception, "Fatal Error");
         }
