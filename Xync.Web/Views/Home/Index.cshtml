@@ -272,8 +272,14 @@
                     method: 'POST',
                     success: function (d) {
                         if (d) {
-                            self.closest('tr').find('td:nth-child(3)').find('span').text(d.Records);
-                            self.closest('tr').find('td:nth-child(4)').find('span').text(d.Documents);
+                            var cls = '';
+                            if (d.Records == d.Documents) {
+                                cls = 'badge-danger';
+                            } else {
+                                cls = 'badge-success';
+                            }
+                            self.closest('tr').find('td:nth-child(3)').find('span').removeClass('badge-danger badge-success').addClass(cls).text(d.Records);
+                            self.closest('tr').find('td:nth-child(4)').find('span').removeClass('badge-danger badge-success').addClass(cls).text(d.Documents);
                         }
                     },
                     error: function (err) {
