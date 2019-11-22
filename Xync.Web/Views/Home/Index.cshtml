@@ -268,7 +268,7 @@
 
                 $.ajax({
 
-                    url: '/home/GetCounts?table='+table+'&schema='+schema+'&collection='+collection,
+                    url: '/home/GetCounts?table=' + table + '&schema=' + schema + '&collection=' + collection,
                     method: 'POST',
                     success: function (d) {
                         if (d) {
@@ -280,8 +280,12 @@
                         console.log(err);
                     }
 
-                })
-            })
+                });
+            });
+
+            $('body').on('click', '#btn-get-all-counts', function (e) {
+                $('.btn-get-counts').trigger('click');
+            });
         });
     </script>
 }
