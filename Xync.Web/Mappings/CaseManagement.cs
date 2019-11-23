@@ -276,5 +276,218 @@ namespace Xync.Web.Mappings
                }
             }
         };
+        public static IRelationalTable<object> Police = new SqlServerTable<object>
+        {
+            Schema = "HRMS",
+            Name = "mstUser",
+            Collection = "Police",
+
+            Attributes = new List<IRelationalAttribute>
+            {
+                new SqlServerColumn
+                {
+                    Name="UserID",
+                    DbType=typeof(int),
+                    Key=true,
+                    Maps= new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="_id"
+
+                            },
+                            ManipulateByValue=x=>Convert.ToString(x)
+                        },
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="PoliceId"
+
+                            }
+                        }
+                    }
+                },
+                new SqlServerColumn
+                {
+                    Name="UserGUID",
+                    DbType=typeof(Guid),
+                    Maps= new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="UserGuid",
+                                DbType=typeof(Guid)
+                            }
+                        }
+                    }
+                },
+                new SqlServerColumn
+                {
+                    Name="UserName",
+                    DbType=typeof(string),
+                    Maps= new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="MilitaryNumber",
+                                DbType=typeof(string)
+                            }
+                        }
+                    }
+                },
+                new SqlServerColumn
+                {
+                    Name="EmployeeID",
+                    DbType=typeof(int),
+                    Maps= new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="Employee.EmployeeID",
+                                DbType=typeof(int)
+                            }
+                        }
+                    }
+                },
+                new SqlServerColumn
+                {
+                    Name="Password",
+                    DbType=typeof(string),
+                    Maps= new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="Password",
+                                DbType=typeof(string)
+                            }
+                        }
+                    }
+                },
+                new SqlServerColumn
+                {
+                    Name="ActiveFrom",
+                    DbType=typeof(DateTime),
+                    Maps= new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="ActiveFrom",
+                                DbType=typeof(DateTime)
+                            }
+                        }
+                    }
+                },
+                new SqlServerColumn
+                {
+                    Name="ActiveTo",
+                    DbType=typeof(DateTime),
+                    Maps= new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="ActiveTo",
+                                DbType=typeof(DateTime)
+                            }
+                        }
+                    }
+                },
+                new SqlServerColumn
+                {
+                    Name="Active",
+                    DbType=typeof(bool),
+                    Maps= new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="Active",
+                                DbType=typeof(bool)
+                            }
+                        }
+                    }
+                },
+                new SqlServerColumn
+                {
+                    Name="CreatedBy",
+                    DbType=typeof(int),
+                    Maps= new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="CreatedBy.PoliceId",
+                                DbType=typeof(int)
+                            }
+                        }
+                    }
+                },
+                new SqlServerColumn
+                {
+                    Name="CreatedOn",
+                    DbType=typeof(DateTime),
+                    Maps= new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="CreatedOn",
+                                DbType=typeof(DateTime)
+                            }
+                        }
+                    }
+                },
+                new SqlServerColumn
+                {
+                    Name="ModifiedBy",
+                    DbType=typeof(int),
+                    Maps= new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="ModifiedBy.PoliceId",
+                                DbType=typeof(int)
+                            }
+                        }
+                    }
+                },
+                new SqlServerColumn
+                {
+                    Name="ModifiedOn",
+                    DbType=typeof(DateTime),
+                    Maps= new List<Map>
+                    {
+                        new Map
+                        {
+                            DocumentProperty=new MongoDocumentProperty
+                            {
+                                Name="ModifiedOn",
+                                DbType=typeof(DateTime)
+                            }
+                        }
+                    }
+                }
+            }
+
+        };
     }
 }

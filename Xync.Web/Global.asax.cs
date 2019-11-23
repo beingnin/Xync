@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.SignalR;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,8 +17,13 @@ using Xync.Utils;
 
 namespace Xync.Web
 {
+    public enum XyncState
+    {
+        Unknown,Running,Stopped,Syncing
+    }
     public class MvcApplication : System.Web.HttpApplication
     {
+        static XyncState State;
         protected void Application_Start()
         {
 
@@ -31,7 +37,8 @@ namespace Xync.Web
             Synchronizer.Monitors = new List<ITable>()
             {
                 Mappings.CaseManagement.Cases,
-                Mappings.CaseManagement.Folders
+                Mappings.CaseManagement.Folders,
+                Mappings.CaseManagement.Police
             };
             //Constants.RdbmsConnection = @"Data Source=PITSLP030;Initial Catalog=SharjahPolice;integrated security=true";
             //Constants.NoSqlConnection = @"mongodb://localhost:27017";
@@ -42,8 +49,28 @@ namespace Xync.Web
             //start setup
             bool setupComplete = new Setup().Initialize().Result;
             ////setup ends here
-
-            new SqlServerToMongoSynchronizer().ListenAll();
+            new SqlServerToMongoSynchronizer().ListenAll
+                (
+                    (sender, e) =>
+                    {
+                        //on syncing
+                        State = XyncState.Syncing;
+                        var table = ((ChangeDetectedEventArgs)e).Tables.Select(x => x.TableSchema + "." + x.TableName).ToArray();
+                        GlobalHost.ConnectionManager.GetHubContext("PollingHub").Clients.All.Syncing(table);
+                    },
+                    (sender, e) =>
+                    {
+                        //after stopping
+                        State = XyncState.Stopped;
+                    },
+                    (sender, e) =>
+                    {
+                        //after resuming
+                        State = XyncState.Running;
+                        if(State==XyncState.Syncing)
+                            GlobalHost.ConnectionManager.GetHubContext("PollingHub").Clients.All.Stopped();
+                    }
+                );
         }
         protected void Application_End()
         {

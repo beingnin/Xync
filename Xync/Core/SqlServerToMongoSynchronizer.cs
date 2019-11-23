@@ -44,7 +44,7 @@ namespace Xync.Core
             throw new NotImplementedException();
         }
 
-        public override void ListenAll(Action<object, EventArgs> onStop = null, Action<object, EventArgs> onResume = null)
+        public override void ListenAll(Action<object, EventArgs> onSyncing = null,Action<object, EventArgs> onStop = null, Action<object, EventArgs> onResume = null)
         {
 
 
@@ -58,6 +58,11 @@ namespace Xync.Core
                 onResume?.Invoke(sender, e);
             };
             poller.ChangeDetected += PrepareModel;
+            poller.ChangeDetected += (sender, e) =>
+            {
+                
+                onSyncing?.Invoke(sender, e);
+            }; 
             poller.Listen();
         }
 

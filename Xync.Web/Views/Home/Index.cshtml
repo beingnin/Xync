@@ -292,6 +292,34 @@
             $('body').on('click', '#btn-get-all-counts', function (e) {
                 $('.btn-get-counts').trigger('click');
             });
+
+
+            //RTC
+            var mappingtable = $('#mappingsContainer tbody');
+
+            var proxy = $.connection.pollingHub;
+            proxy.client.syncing = function (tables) {
+                console.log(tables);
+                for (var t of tables) {
+                    var elem = mappingtable.find('[data-table="' + t + '"]');
+                    elem.attr('data-state', elem.text());
+                    elem.text('syncing');
+                }
+            };
+            proxy.client.stopped = function () {
+                console.log('stopped');
+                var elem = mappingtable.find('.mapping-status');
+                $.each(elem, function () {
+                    $(this).text($(this).attr('data-state'));
+                })
+            }
+            $.connection.hub.start()
+                .done(function () { console.log('Now connected, connection ID=' + $.connection.hub.id); })
+                .fail(function () { console.log('Could not Connect!'); });
+
         });
+
+
+
     </script>
 }
