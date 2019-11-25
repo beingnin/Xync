@@ -302,7 +302,6 @@
                 console.log(tables);
                 for (var t of tables) {
                     var elem = mappingtable.find('[data-table="' + t + '"]');
-                    elem.attr('data-state', elem.text());
                     elem.text('syncing');
                 }
             };
