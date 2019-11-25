@@ -301,18 +301,17 @@
             proxy.client.syncing = function (tables) {
                 console.log(tables);
                 for (var t of tables) {
-                    var elem = mappingtable.find('[data-table="' + t + '"]');
-                    elem.text('syncing');
+                    mappingtable.find('.mapping-status[data-table="' + t + '"]').hide();
+                    mappingtable.find('.mapping-sync-status[data-table="' + t + '"]').show();
                 }
             };
             proxy.client.stopped = function () {
                 console.log('stopped');
-                var elem = mappingtable.find('.mapping-status');
-                $.each(elem, function () {
-                    $(this).text($(this).attr('data-state'));
-                });
+                mappingtable.find('.mapping-sync-status').hide();
+                mappingtable.find('.mapping-status').show();
+
                 setTimeout(function () { $('#btnRefreshErrors').trigger('click'); }, 500);
-            }
+            };
             $.connection.hub.start()
                 .done(function () { console.log('Now connected, connection ID=' + $.connection.hub.id); })
                 .fail(function () { console.log('Could not Connect!'); });

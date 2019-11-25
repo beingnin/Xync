@@ -36,7 +36,10 @@
                         <td>@map.Schema</td>
                         <td>@map.Name<span class="badge badge-danger"></span></td>
                         <td>@map.Collection<span class="badge badge-danger"></span></td>
-                        <td><small data-state="@(map.DNT ? "DNT" : "online")" data-table='@(map.Schema+"."+map.Name)' class="mapping-status  @(map.DNT?"text-danger":"text-success")">@(map.DNT ? "DNT" : "online")</small></td>
+                        <td>
+                            <small data-state="@(map.DNT ? "DNT" : "online")" data-table='@(map.Schema+"."+map.Name)' class="mapping-status  @(map.DNT?"text-danger":"text-success")">@(map.DNT ? "DNT" : "online")</small>
+                            <small data-table='@(map.Schema+"."+map.Name)' style="display:none" class="mapping-sync-status  text-warning">SYNCING</small>
+                        </td>
                         <td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-dark btn-sm btn-action dropdown-toggle" data-toggle="dropdown">Actions</button>
