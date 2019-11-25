@@ -38,7 +38,7 @@ namespace Xync.Core
             Stopped?.Invoke(this, new EventArgs());
             try
             {
-                IEnumerable<ITrack> changedTables = Poll();
+                List<ITrack> changedTables = Poll();
                 if (changedTables != null && changedTables.Count() > 0)//change occured
                 {
                     OnChange(changedTables);
@@ -51,32 +51,34 @@ namespace Xync.Core
             //after done syncing listen again
             this.Listen();
         }
-        private IEnumerable<ITrack> Poll()
+        private List<ITrack> Poll()
         {
             SqlCommand cmd = new SqlCommand(_query, _sqlConnection);
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
+            List<ITrack> tracks = null;
             if (dt != null && dt.Rows.Count != 0)
             {
+                tracks = new List<ITrack>();
                 foreach (DataRow row in dt.Rows)
                 {
-                    yield return new Track
+                    tracks.Add(new Track
                     {
                         CDCTable = Convert.ToString(row["cdc_name"]),
                         CDCSchema = Convert.ToString(row["cdc_schema"]),
                         TableName = Convert.ToString(row["table_name"]),
                         TableSchema = Convert.ToString(row["table_schema"]),
-                    };
+                    });
 
                 }
             }
-            yield break;
+            return tracks;
         }
         public event EventHandler ChangeDetected;
         public event EventHandler Stopped;
         public event EventHandler Resumed;
-        private void OnChange(IEnumerable<ITrack> changedTables)
+        private void OnChange(List<ITrack> changedTables)
         {
             ChangeDetected?.Invoke(this, new ChangeDetectedEventArgs(changedTables));
         }

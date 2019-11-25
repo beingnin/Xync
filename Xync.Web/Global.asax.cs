@@ -66,9 +66,9 @@ namespace Xync.Web
                     (sender, e) =>
                     {
                         //after resuming
-                        State = XyncState.Running;
                         if(State==XyncState.Syncing)
                             GlobalHost.ConnectionManager.GetHubContext("PollingHub").Clients.All.Stopped();
+                        State = XyncState.Running;
                     }
                 );
         }

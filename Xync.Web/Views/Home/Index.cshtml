@@ -311,7 +311,8 @@
                 var elem = mappingtable.find('.mapping-status');
                 $.each(elem, function () {
                     $(this).text($(this).attr('data-state'));
-                })
+                });
+                setTimeout(function () { $('#btnRefreshErrors').trigger('click'); }, 500);
             }
             $.connection.hub.start()
                 .done(function () { console.log('Now connected, connection ID=' + $.connection.hub.id); })

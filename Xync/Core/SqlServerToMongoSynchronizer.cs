@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Xync.Abstracts;
 using Xync.Abstracts.Core;
@@ -49,7 +50,7 @@ namespace Xync.Core
 
 
             IPoller poller = new SqlServerPoller(_connectionString);
-            poller.Stopped += (sender, e) =>
+            poller.Stopped +=  (sender, e) =>
             {
                 onStop?.Invoke(sender, e);
             };
@@ -57,19 +58,19 @@ namespace Xync.Core
             {
                 onResume?.Invoke(sender, e);
             };
-            poller.ChangeDetected += PrepareModel;
+           
             poller.ChangeDetected += (sender, e) =>
             {
-                
                 onSyncing?.Invoke(sender, e);
-            }; 
+            };
+            poller.ChangeDetected += PrepareModel;
             poller.Listen();
         }
 
         private void PrepareModel(object sender, EventArgs e)
         {
 
-            var changedTables = ((ChangeDetectedEventArgs)e).Tables;
+            IEnumerable<ITrack> changedTables = ((ChangeDetectedEventArgs)e).Tables.ToList();
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = _sqlConnection;
             if (_sqlConnection.State == ConnectionState.Closed)

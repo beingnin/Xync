@@ -6,10 +6,10 @@ namespace Xync.Core
 {
     public class ChangeDetectedEventArgs : EventArgs
     {
-        public ChangeDetectedEventArgs(IEnumerable<ITrack> tables)
+        public ChangeDetectedEventArgs(List<ITrack> tables)
         {
             this.Tables = tables;
         }
-        public IEnumerable<ITrack> Tables { get; set; }
+        public List<ITrack> Tables { get; set; }
     }
 }
