@@ -183,7 +183,7 @@ namespace Xync.Core
                                     }
                                     catch (Exception ex)
                                     {
-                                        Message.Error(ex, $"Synchronisation(single) failed for {Changedtable.TableSchema.Embrace()}.{Changedtable.TableName.Embrace()}");
+                                        Message.ErrorAsync(ex, $"Synchronisation(single) failed for {Changedtable.TableSchema.Embrace()}.{Changedtable.TableName.Embrace()}");
                                     }
                                 }//loop : sync to mongo for a all objects of a single table-end
                                 timer.Stop();
@@ -255,12 +255,12 @@ namespace Xync.Core
 
                 SqlCommand cmd = new SqlCommand(_QRY_UPDATE_LAST_MIGRATED_DATE.Replace("{#schema#}", schema).Replace("{#table#}", table), _sqlConnection);
                 await cmd.ExecuteNonQueryAsync();
-                await Message.Success($"Migration for [{schema}].[{table}] queued", "Migration");
+                await Message.SuccessAsync($"Migration for [{schema}].[{table}] queued", "Migration");
                 return true;
             }
             catch (Exception ex)
             {
-                await Message.Error(ex, "Migration");
+                await Message.ErrorAsync(ex, "Migration");
                 return false;
             }
             finally

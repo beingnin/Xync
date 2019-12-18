@@ -46,7 +46,7 @@ namespace Xync.Core
             }
             catch (Exception ex)
             {
-                Message.Error(ex, "Polling failed");
+                Message.ErrorAsync(ex, "Polling failed");
             }
             //after done syncing listen again
             this.Listen();

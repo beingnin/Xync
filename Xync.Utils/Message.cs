@@ -13,7 +13,7 @@ namespace Xync.Utils
         public static event WroteEventHandler WroteInfo;
         public static event WroteEventHandler WroteSuccess;
         public static event WroteEventHandler WroteLoading;
-        public async static Task Error(Exception ex, string title = "")
+        public async static Task ErrorAsync(Exception ex, string title = "")
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
             if (!string.IsNullOrWhiteSpace(title))
@@ -23,7 +23,20 @@ namespace Xync.Utils
             }
             Console.WriteLine(ex);
             Console.ResetColor();
-            await Logger.Error(ex, title);
+            await Logger.ErrorAsync(ex, title);
+            AfterWroteError(MessageType.Error, ex, title);
+        }
+        public static void Error(Exception ex, string title = "")
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                Console.WriteLine(title);
+                Console.WriteLine("------------------------------------------");
+            }
+            Console.WriteLine(ex);
+            Console.ResetColor();
+            Logger.Error(ex, title);
             AfterWroteError(MessageType.Error, ex, title);
         }
         public static void Info(string message, string title = "")
@@ -38,7 +51,7 @@ namespace Xync.Utils
             Console.ResetColor();
             AfterWroteInfo(MessageType.Info, message, title);
         }
-        public async static Task Success(string message, string title)
+        public async static Task SuccessAsync(string message, string title)
         {
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             if (!string.IsNullOrWhiteSpace(title))
@@ -48,7 +61,20 @@ namespace Xync.Utils
             }
             Console.WriteLine(message);
             Console.ResetColor();
-            await Logger.Success(message, title);
+            await Logger.SuccessAsync(message, title);
+            AfterWroteSuccess(MessageType.Error, message, title);
+        }
+        public static void Success(string message, string title)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                Console.WriteLine(title);
+                Console.WriteLine("------------------------------------------");
+            }
+            Console.WriteLine(message);
+            Console.ResetColor();
+            Logger.Success(message, title);
             AfterWroteSuccess(MessageType.Error, message, title);
         }
         public static void Loading(string message, string title = "")

@@ -13,7 +13,7 @@ namespace Xync.Utils
     public class Logger
     {
         static MongoClient _client = new MongoClient(Constants.NoSqlConnection);
-        public static async Task Error(Exception exception, string title)
+        public static async Task ErrorAsync(Exception exception, string title)
         {
             try
             {
@@ -40,7 +40,34 @@ namespace Xync.Utils
 
             }
         }
-        public static async Task Success(string message, string title)
+        public static void Error(Exception exception, string title)
+        {
+            try
+            {
+                Event error = new Event
+                {
+                    Source = exception.Source,
+                    Message = exception.Message,
+                    Title = title,
+                    StackTrace = exception.StackTrace,
+                    InnerExceptionMessage = exception.InnerException?.Message,
+                    InnerExceptionStackTrace = exception.InnerException?.StackTrace,
+                    Type = exception.GetType().ToString(),
+                    MessageType = Message.MessageType.Error,
+                    CreatedDateTime = DateTime.Now
+                };
+
+                var db = _client.GetDatabase(Constants.NoSqlDB);
+                var collection = db.GetCollection<Event>("XYNC_Messages");
+                collection.InsertOne(error);
+            }
+            catch (Exception ex)
+            {
+                ToFile(ex);
+
+            }
+        }
+        public static async Task SuccessAsync(string message, string title)
         {
             try
             {
@@ -58,6 +85,30 @@ namespace Xync.Utils
                 var db = _client.GetDatabase(Constants.NoSqlDB);
                 var collection = db.GetCollection<Event>("XYNC_Messages");
                 await collection.InsertOneAsync(error);
+            }
+            catch (Exception ex)
+            {
+                ToFile(ex);
+            }
+        }
+        public static void Success(string message, string title)
+        {
+            try
+            {
+                Event error = new Event
+                {
+                    Source = string.Empty,
+                    Message = message,
+                    Title = title,
+                    StackTrace = string.Empty,
+                    Type = string.Empty,
+                    MessageType = Message.MessageType.Success,
+                    CreatedDateTime = DateTime.Now
+                };
+
+                var db = _client.GetDatabase(Constants.NoSqlDB);
+                var collection = db.GetCollection<Event>("XYNC_Messages");
+                collection.InsertOne(error);
             }
             catch (Exception ex)
             {

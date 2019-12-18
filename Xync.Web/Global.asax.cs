@@ -111,7 +111,7 @@ namespace Xync.Web
         {
 
             var exception = Server.GetLastError();
-            Message.Error(exception, "Fatal Error");
+            Message.ErrorAsync(exception, "Fatal Error");
         }
     }
 }

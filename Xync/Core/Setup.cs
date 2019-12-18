@@ -75,13 +75,13 @@ namespace Xync.Core
                 {
                     cmd.CommandText = _QRY_ENABLE_CDC_IN_DB.Replace("{#catalog#}", _catalog.Embrace());
                     await cmd.ExecuteNonQueryAsync();
-                    await Message.Success("Capture Data Change facility has been enabled for " + _catalog.Embrace(), "Tracking on table");
+                    await Message.SuccessAsync("Capture Data Change facility has been enabled for " + _catalog.Embrace(), "Tracking on table");
                     return true;
                 }
             }
             catch (Exception ex)
             {
-                await Message.Error(ex, "Db level tracking setup");
+                await Message.ErrorAsync(ex, "Db level tracking setup");
                 return false;
             }
             finally
@@ -107,13 +107,13 @@ namespace Xync.Core
                 {
                     cmd.CommandText = _QRY_ENABLE_CDC_IN_DB.Replace("{#catalog#}", _catalog.Embrace());
                     await cmd.ExecuteNonQueryAsync();
-                    await Message.Success("Capture Data Change facility has been enabled for " + _catalog.Embrace(), "Tracking on table");
+                    await Message.SuccessAsync("Capture Data Change facility has been enabled for " + _catalog.Embrace(), "Tracking on table");
                     return true;
                 }
             }
             catch (Exception ex)
             {
-                await Message.Error(ex, "Db level tracking setup");
+                await Message.ErrorAsync(ex, "Db level tracking setup");
                 return false;
             }
             finally
@@ -146,11 +146,11 @@ namespace Xync.Core
                         cmd.CommandText = _QRY_ADD_COLUMN_TO_CAPTURE.Replace("{#table#}", (table.Schema + "_" + table.Name + "_CT").Embrace());
                         await cmd.ExecuteNonQueryAsync();
                         
-                        await Message.Success("Change tracking enabled for " + table.Schema.Embrace() + "." + table.Name.Embrace(), "Tracking on table");
+                        await Message.SuccessAsync("Change tracking enabled for " + table.Schema.Embrace() + "." + table.Name.Embrace(), "Tracking on table");
                     }
                     catch (Exception exc)
                     {
-                        await Message.Error(exc, "Table level tracking setup");
+                        await Message.ErrorAsync(exc, "Table level tracking setup");
                     }
 
 
@@ -158,7 +158,7 @@ namespace Xync.Core
             }
             catch (Exception ex)
             {
-                await Message.Error(ex, ex.Message);
+                await Message.ErrorAsync(ex, ex.Message);
                 return false;
             }
             finally
@@ -191,11 +191,11 @@ namespace Xync.Core
                 {
                     map.DNT = true;
                 }
-                await Message.Success($"Tracking stopped on [{schema}].[{table}]", "Stop tracking");
+                await Message.SuccessAsync($"Tracking stopped on [{schema}].[{table}]", "Stop tracking");
             }
             catch (Exception ex)
             {
-                await Message.Error(ex, $"Stop tracking on [{schema}].[{table}]");
+                await Message.ErrorAsync(ex, $"Stop tracking on [{schema}].[{table}]");
                 return false;
             }
             finally
@@ -228,11 +228,11 @@ namespace Xync.Core
                 {
                     map.DNT = false;
                 }
-                await Message.Success("Change tracking enabled for " + schema.Embrace() + "." + table.Embrace(), "Tracking on table");
+                await Message.SuccessAsync("Change tracking enabled for " + schema.Embrace() + "." + table.Embrace(), "Tracking on table");
             }
             catch (Exception ex)
             {
-                await Message.Error(ex, $"Start tracking on [{schema}].[{table}]");
+                await Message.ErrorAsync(ex, $"Start tracking on [{schema}].[{table}]");
                 return false;
             }
             finally
@@ -252,7 +252,7 @@ namespace Xync.Core
             }
             catch (Exception ex)
             {
-                await Message.Error(ex, $"Restart tracking on [{schema}].[{table}]");
+                await Message.ErrorAsync(ex, $"Restart tracking on [{schema}].[{table}]");
                 return false;
             }
             finally
@@ -272,12 +272,12 @@ namespace Xync.Core
 
                 SqlCommand cmd = new SqlCommand(_QRY_CREATE_SCHEMA.Replace("{#schema#}", _schema.Embrace()), _sqlConnection);
                 int rowsAffected = Convert.ToInt32(await cmd.ExecuteNonQueryAsync());
-                await Message.Success("Schema registered succesfully", "Schema registration");
+                await Message.SuccessAsync("Schema registered succesfully", "Schema registration");
                 return rowsAffected > 0;
             }
             catch (Exception ex)
             {
-                await Message.Error(ex, "Creating schema " + _schema.Embrace());
+                await Message.ErrorAsync(ex, "Creating schema " + _schema.Embrace());
                 return false;
             }
             finally
@@ -297,12 +297,12 @@ namespace Xync.Core
 
                 SqlCommand cmd = new SqlCommand(_QRY_MEDIATOR_TABLE.Replace("{#schema#}", _schema.Embrace()), _sqlConnection);
                 int rowsAffected = Convert.ToInt32(await cmd.ExecuteNonQueryAsync());
-                Message.Success("Mediator table created", "Mediator setup");
+                Message.SuccessAsync("Mediator table created", "Mediator setup");
                 return rowsAffected > 0;
             }
             catch (Exception ex)
             {
-                await Message.Error(ex, "Creating mediator table");
+                await Message.ErrorAsync(ex, "Creating mediator table");
                 return false;
             }
             finally
