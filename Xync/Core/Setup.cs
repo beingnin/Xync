@@ -297,7 +297,7 @@ namespace Xync.Core
 
                 SqlCommand cmd = new SqlCommand(_QRY_MEDIATOR_TABLE.Replace("{#schema#}", _schema.Embrace()), _sqlConnection);
                 int rowsAffected = Convert.ToInt32(await cmd.ExecuteNonQueryAsync());
-                Message.SuccessAsync("Mediator table created", "Mediator setup");
+                Message.Success("Mediator table created", "Mediator setup");
                 return rowsAffected > 0;
             }
             catch (Exception ex)

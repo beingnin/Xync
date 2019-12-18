@@ -297,7 +297,7 @@ namespace Xync.Core
                 countInCollection = await col.CountDocumentsAsync(filter, null);
                 return new { Records = countInTable, Documents = countInCollection };
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
