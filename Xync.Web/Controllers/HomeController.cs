@@ -87,6 +87,11 @@ namespace Xync.Web.Controllers
             return Json(await new SqlServerToMongoSynchronizer().Migrate(table, schema));
         }
         [HttpPost]
+        public async Task<ActionResult> ForceSync(string table, string schema)
+        {
+            return Json(await new SqlServerToMongoSynchronizer().ForceSync(table, schema));
+        }
+        [HttpPost]
         public async Task<ActionResult> GetCounts(string table, string schema,string collection)
         {
             return Json(await new SqlServerToMongoSynchronizer().GetCounts(table, schema, collection));

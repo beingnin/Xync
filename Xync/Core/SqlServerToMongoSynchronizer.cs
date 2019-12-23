@@ -21,6 +21,7 @@ namespace Xync.Core
         const string _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS = "delete from [XYNC].[Consolidated_Tracks] where sync=1 and [Table_Name]='{#tablename#}' and [Table_Schema]='{#tableschema#}';";
         const string _QRY_UPDATE_LAST_MIGRATED_DATE = "update [{#schema#}].[{#table#}] set __$last_migrated_on=getutcdate()";
         const string _QRY_GET_COUNT = "select count(*) from [{#schema#}].[{#table#}]";
+        const string _QRY_FORCE_SYNC = "insert into [XYNC].[Consolidated_Tracks] ( [CDC_Schema], [CDC_Name],[Table_Schema], [Table_Name], [Timestamp], [Changed], [Sync] ) values ( 'cdc', '{#schema#}_{#table#}_CT','{#schema#}','{#table#}', GETUTCDATE(), 1, 0 )";
         string _connectionString = null;
         string _mongoConnectionString = null;
         SqlConnection _sqlConnection = null;
@@ -300,6 +301,29 @@ namespace Xync.Core
             catch
             {
                 return null;
+            }
+            finally
+            {
+                if (_sqlConnection.State == System.Data.ConnectionState.Open)
+                    _sqlConnection.Close();
+            }
+        }
+        public async override  Task<bool> ForceSync(string table, string schema)
+        {
+            try
+            {
+                if (_sqlConnection.State == System.Data.ConnectionState.Closed)
+                    _sqlConnection.Open();
+
+                SqlCommand cmd = new SqlCommand(_QRY_FORCE_SYNC.Replace("{#schema#}", schema).Replace("{#table#}", table), _sqlConnection);
+                await cmd.ExecuteNonQueryAsync();
+                await Message.SuccessAsync($"Force syncing for [{schema}].[{table}] queued", "Force Syncing");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await Message.ErrorAsync(ex, "Force Syncing");
+                return false;
             }
             finally
             {

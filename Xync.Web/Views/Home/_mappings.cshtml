@@ -61,6 +61,10 @@
                                     {
                                         <a data-schema="@map.Schema" data-table="@map.Name" class="btn-migrate dropdown-item" href="#">Migrate</a>
                                     }
+                                    @if (!map.DNT)
+                                    {
+                                        <a data-schema="@map.Schema" data-table="@map.Name" class="btn-force-sync dropdown-item" href="#">Force Sync</a>
+                                    }
                                     <a data-collection="@map.Collection" data-schema="@map.Schema" data-table="@map.Name" class="btn-get-counts dropdown-item" href="#">Get Counts</a>
 
                                 </div>
