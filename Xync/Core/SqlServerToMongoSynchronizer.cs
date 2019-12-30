@@ -20,7 +20,7 @@ namespace Xync.Core
         const string _QRY_SET_AS_SYNCED = "delete from {#table#}  where __$sync=1 and __$id in ({#keyids#});";
         const string _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS = "delete from [XYNC].[Consolidated_Tracks] where sync=1 and [Table_Name]='{#tablename#}' and [Table_Schema]='{#tableschema#}';";
         const string _QRY_UPDATE_LAST_MIGRATED_DATE = "update [{#schema#}].[{#table#}] set __$last_migrated_on=getutcdate()";
-        const string _QRY_UPDATE_LAST_MIGRATED_DATE_FOR_TOP_N = "update [{#schema#}].[{#table#}] set __$last_migrated_on=GETUTCDATE() where id in (select top {#count#} id from [{#schema#}].[{#table#}] order by {#key#} desc)";
+        const string _QRY_UPDATE_LAST_MIGRATED_DATE_FOR_TOP_N = "update [{#schema#}].[{#table#}] set __$last_migrated_on=GETUTCDATE() where {#key#} in (select top {#count#} {#key#} from [{#schema#}].[{#table#}] order by {#key#} desc)";
         const string _QRY_GET_COUNT = "select count(*) from [{#schema#}].[{#table#}]";
         const string _QRY_FORCE_SYNC = "insert into [XYNC].[Consolidated_Tracks] ( [CDC_Schema], [CDC_Name],[Table_Schema], [Table_Name], [Timestamp], [Changed], [Sync] ) values ( 'cdc', '{#schema#}_{#table#}_CT','{#schema#}','{#table#}', GETUTCDATE(), 1, 0 )";
         string _connectionString = null;
