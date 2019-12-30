@@ -185,7 +185,7 @@ namespace Xync.Core
                                     }
                                     catch (Exception ex)
                                     {
-                                        Message.ErrorAsync(ex, $"Synchronisation(single) failed for {Changedtable.TableSchema.Embrace()}.{Changedtable.TableName.Embrace()}");
+                                        Message.Error(ex, $"Synchronisation(single) failed for {Changedtable.TableSchema.Embrace()}.{Changedtable.TableName.Embrace()}");
                                     }
                                 }//loop : sync to mongo for a all objects of a single table-end
                                 timer.Stop();
@@ -213,16 +213,19 @@ namespace Xync.Core
 
                     }//loop : all mappings for a single sql table-end
                      //set as synced in cdc
-                    if (keyIds.Count != 0)
+                    if (keyIds.Count == dt.Rows.Count)
                     {
-                        try
+                        if (keyIds.Count > 0)
                         {
-                            cmd.CommandText = _QRY_SET_AS_SYNCED.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keyids#}", string.Join(",", keyIds));
-                            cmd.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-                            Message.Error(ex, "Mark as single in cdc failed for " + Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace());
+                            try
+                            {
+                                cmd.CommandText = _QRY_SET_AS_SYNCED.Replace("{#table#}", Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace()).Replace("{#keyids#}", string.Join(",", keyIds));
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch (Exception ex)
+                            {
+                                Message.Error(ex, "Mark as single in cdc failed for " + Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace());
+                            }
                         }
                         if (succeededMappings == mappings.Count)
                         {
