@@ -5,16 +5,21 @@
     {
         var error = Model[i];
         <tr class="@(error.MessageType==Xync.Utils.Message.MessageType.Error?"tr-danger":"tr-success")">
-            <td title="@error.Id">@((Convert.ToInt32(ViewBag.ErrorCount)* (Convert.ToInt32(ViewBag.ErrorPage))+1)+i)</td>
-            <td title="@error.Type">@error.Title</td>
-            <td title="@error.Message">
+            <td title="@error.Id">@((Convert.ToInt32(ViewBag.ErrorCount) * (Convert.ToInt32(ViewBag.ErrorPage)) + 1) + i)</td>
+            <td title="@error.CreatedDateTime.ToString("dd-MMM-yyyy hh:mm")">@error.Title</td>
+            <td title="@error.Type">
                 <span>@error.Message</span>
             </td>
             <td>
                 <button title="delete this error" data-id="@error.Id" class="btn-delete-error btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-trash text-danger"></i></button>
             </td>
             <td>
-                <button title="copy to clipboard" data-error="@error.Message" class="btn-copy-error btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-copy text-primary"></i></button>
+                @if (error.MessageType == Xync.Utils.Message.MessageType.Error)
+                {
+
+                    <button title="copy to clipboard" data-error="@error.StackTrace" class="btn-copy-error btn btn-outline-light btn-sm rounded-circle btn-delete"><i class="fa fa-copy text-primary"></i></button>
+
+                }
             </td>
         </tr>
     }
