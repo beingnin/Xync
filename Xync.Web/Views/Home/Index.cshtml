@@ -263,12 +263,16 @@
             $('body').on('click', '.btn-migrate-n-rows', function (e) {
                 let schema = $(this).data('schema');
                 let table = $(this).data('table');
-                let count = $(this).data('count');
+                let count = prompt('Set the number of rows to migrate', 1000);
+                if (isNaN(count)) {
+                    alert('Provided value is not a valid number');
+                    return;
+                }
                 var oldStatus = $(this).closest('tr').find('.mapping-status').text();
                 $(this).closest('tr').find('.mapping-status').text('queuing migration...');
                 var self = $(this);
                 $.ajax({
-                    url: '/Home/MigratenRows?table=' + table + '&schema=' + schema+'&count='+count,
+                    url: '/Home/MigratenRows?table=' + table + '&schema=' + schema + '&count=' + count,
                     method: 'POST',
                     dataType: 'json',
                     success: (data) => {
