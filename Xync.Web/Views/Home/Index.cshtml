@@ -260,6 +260,30 @@
                     }
                 });
             });
+            $('body').on('click', '.btn-migrate-n-rows', function (e) {
+                let schema = $(this).data('schema');
+                let table = $(this).data('table');
+                let count = $(this).data('count');
+                var oldStatus = $(this).closest('tr').find('.mapping-status').text();
+                $(this).closest('tr').find('.mapping-status').text('queuing migration...');
+                var self = $(this);
+                $.ajax({
+                    url: '/Home/MigratenRows?table=' + table + '&schema=' + schema+'&count='+count,
+                    method: 'POST',
+                    dataType: 'json',
+                    success: (data) => {
+                        if (data) {
+                            setTimeout(function () { self.closest('tr').find('.mapping-status').text(oldStatus); }, 1000);
+                        }
+                        else {
+                            app.message.error('Error', 'Sorrys');
+                        }
+                    },
+                    error: function (err, xhr) {
+                        app.message.error('Error', 'Sorrys');
+                    }
+                });
+            });
             $('body').on('click', '.btn-force-sync', function (e) {
                 let schema = $(this).data('schema');
                 let table = $(this).data('table');

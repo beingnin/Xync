@@ -19,6 +19,7 @@ namespace Xync.Abstracts.Core
             }
         }
         public abstract Task<bool> Migrate(string table, string schema);
+        public abstract Task<bool> Migrate(string table, string schema,int Count);
         public abstract Task<bool> ForceSync(string table, string schema);
         public abstract Task<object> GetCounts(string table, string schema, string collection);
 

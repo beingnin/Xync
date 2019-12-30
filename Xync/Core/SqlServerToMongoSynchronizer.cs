@@ -20,6 +20,7 @@ namespace Xync.Core
         const string _QRY_SET_AS_SYNCED = "delete from {#table#}  where __$sync=1 and __$id in ({#keyids#});";
         const string _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS = "delete from [XYNC].[Consolidated_Tracks] where sync=1 and [Table_Name]='{#tablename#}' and [Table_Schema]='{#tableschema#}';";
         const string _QRY_UPDATE_LAST_MIGRATED_DATE = "update [{#schema#}].[{#table#}] set __$last_migrated_on=getutcdate()";
+        const string _QRY_UPDATE_LAST_MIGRATED_DATE_FOR_TOP_N = "update [{#schema#}].[{#table#}] set __$last_migrated_on=GETUTCDATE() where id in (select top {#count#} id from [{#schema#}].[{#table#}] order by {#key#} desc)";
         const string _QRY_GET_COUNT = "select count(*) from [{#schema#}].[{#table#}]";
         const string _QRY_FORCE_SYNC = "insert into [XYNC].[Consolidated_Tracks] ( [CDC_Schema], [CDC_Name],[Table_Schema], [Table_Name], [Timestamp], [Changed], [Sync] ) values ( 'cdc', '{#schema#}_{#table#}_CT','{#schema#}','{#table#}', GETUTCDATE(), 1, 0 )";
         string _connectionString = null;
@@ -262,6 +263,32 @@ namespace Xync.Core
             catch (Exception ex)
             {
                 await Message.ErrorAsync(ex, "Migration");
+                return false;
+            }
+            finally
+            {
+                if (_sqlConnection.State == System.Data.ConnectionState.Open)
+                    _sqlConnection.Close();
+            }
+        }
+        public async override Task<bool> Migrate(string table, string schema,int Count)
+        {
+            try
+            {
+                if (_sqlConnection.State == System.Data.ConnectionState.Closed)
+                    _sqlConnection.Open();
+
+                ITable mapping = base[table, schema][0];
+                Type firstType = mapping.GetType();
+                IRelationalAttribute key = (IRelationalAttribute)firstType.GetMethod("GetKey").Invoke(mapping, null);
+                SqlCommand cmd = new SqlCommand(_QRY_UPDATE_LAST_MIGRATED_DATE_FOR_TOP_N.Replace("{#schema#}", schema).Replace("{#table#}", table).Replace("{#key#}",key.Name).Replace("{#count#}",Count.ToString()), _sqlConnection);
+                await cmd.ExecuteNonQueryAsync();
+                await Message.SuccessAsync($"Migration on [{schema}].[{table}] queued for the last {Count} rows", "Limited migration");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await Message.ErrorAsync(ex, "Limited migration");
                 return false;
             }
             finally

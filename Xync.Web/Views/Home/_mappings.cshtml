@@ -63,6 +63,10 @@
                                     }
                                     @if (!map.DNT)
                                     {
+                                        <a data-schema="@map.Schema" data-table="@map.Name" data-count="1000" class="btn-migrate-n-rows dropdown-item" href="#">Migrate Last 1000</a>
+                                    }
+                                    @if (!map.DNT)
+                                    {
                                         <a data-schema="@map.Schema" data-table="@map.Name" class="btn-force-sync dropdown-item" href="#">Force Sync</a>
                                     }
                                     <a data-collection="@map.Collection" data-schema="@map.Schema" data-table="@map.Name" class="btn-get-counts dropdown-item" href="#">Get Counts</a>
