@@ -264,6 +264,8 @@
                 let schema = $(this).data('schema');
                 let table = $(this).data('table');
                 let count = prompt('Set the number of rows to migrate', 1000);
+                if (count == null)
+                    return;
                 if (isNaN(count)) {
                     alert('Provided value is not a valid number');
                     return;
