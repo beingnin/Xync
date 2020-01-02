@@ -70,8 +70,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ChangeDetectedEventArgs.cs" />
+    <Compile Include="Core\SetupWithTriggers.cs" />
+    <Compile Include="Core\SqlServerPollerWithTriggers.cs" />
     <Compile Include="Core\SqlServerPoller.cs" />
     <Compile Include="Core\Setup.cs" />
+    <Compile Include="Core\SqlServerToMongoSynchronizerWithTriggers.cs" />
     <Compile Include="Core\SqlServerToMongoSynchronizer.cs" />
     <Compile Include="Core\Track.cs" />
     <Compile Include="Helpers\Extensions.cs" />

@@ -47,9 +47,9 @@ namespace Xync.Web
             Constants.NoSqlDB = "SPSA_MongoDevLocal";
             Constants.PollingInterval = 2000;
             //start setup
-            bool setupComplete = new Setup().Initialize().Result;
+            bool setupComplete = new SetupWithTriggers().Initialize().Result;
             ////setup ends here
-            new SqlServerToMongoSynchronizer().ListenAll
+            new SqlServerToMongoSynchronizerWithTriggers().ListenAll
                 (
                     (sender, e) =>
                     {
@@ -66,7 +66,7 @@ namespace Xync.Web
                     (sender, e) =>
                     {
                         //after resuming
-                        if(State==XyncState.Syncing)
+                        if (State == XyncState.Syncing)
                             GlobalHost.ConnectionManager.GetHubContext("PollingHub").Clients.All.Stopped();
                         State = XyncState.Running;
                     }

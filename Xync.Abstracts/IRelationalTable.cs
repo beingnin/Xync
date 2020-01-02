@@ -12,7 +12,7 @@ namespace Xync.Abstracts
         void ReplaceInMongo(object identifier,TDocumentModel doc);
         void InsertInMongo(object identifier,TDocumentModel doc);
         TDocumentModel CreateModel();
-        IRelationalAttribute GetKey();
+        //IRelationalAttribute GetKey();
     }
     
 }

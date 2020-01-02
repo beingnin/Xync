@@ -25,6 +25,7 @@ namespace Xync.Abstracts
         string DB { get; set; }
         List<IRelationalAttribute> Attributes { get; set; }
         void Listen();
+        IRelationalAttribute GetKey();
         event RowChangedEventHandler OnRowChange;
     }
     public delegate void RowChangedEventHandler(object sender, EventArgs e);
