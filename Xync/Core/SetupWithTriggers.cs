@@ -14,8 +14,6 @@ namespace Xync.Core
     {
         #region Queries
         const string _QRY_ADD_LAST_MIGRATED_COLUMN_TO_ORIGIN = "if not exists (select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='{#table#}' and TABLE_SCHEMA='{#schema#}' and COLUMN_NAME='__$last_migrated_on') begin alter table [{#schema#}].[{#table#}] add __$last_migrated_on datetime end";
-       
-        const string _QRY_ADD_SYNC_COLUMN_TO_ORIGIN = "if not exists (select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='{#table#}' and TABLE_SCHEMA='{#schema#}' and COLUMN_NAME='__$sync') begin alter table [{#schema#}].[{#table#}] add __$sync tinyint end";
         const string _QRY_REMOVE_COLUMN_FROM_ORIGIN = "alter table [{#schema#}].[{#table#}] drop column __$last_migrated_on";
         const string _QRY_CREATE_SCHEMA = "create schema {#schema#}";
         const string _QRY_MEDIATOR_TABLE = "CREATE TABLE {#schema#}.[Consolidated_Tracks]( [Id] [bigint] IDENTITY(1,1) NOT NULL, [Table_Schema] [varchar](200) NOT NULL, [Table_Name] [varchar](200) NOT NULL,[Timestamp] [datetime] NOT NULL, [Changed] [bit] NULL, [Sync] [tinyint] NULL,[Operation] int,[Key] varchar(500) PRIMARY KEY CLUSTERED ( [Id] DESC ) )";
@@ -85,8 +83,7 @@ namespace Xync.Core
                         Message.Info("Enabling change tracking on " + table.Schema.Embrace() + "." + table.Name.Embrace());
                         cmd.CommandText = _QRY_ADD_LAST_MIGRATED_COLUMN_TO_ORIGIN.Replace("{#table#}", table.Name).Replace("{#schema#}", table.Schema);
                         await cmd.ExecuteNonQueryAsync();
-                        cmd.CommandText = _QRY_ADD_SYNC_COLUMN_TO_ORIGIN.Replace("{#table#}", table.Name).Replace("{#schema#}", table.Schema);
-                        await cmd.ExecuteNonQueryAsync();
+                       
                         cmd.CommandText = _QRY_DELETE_INSERT_TRIGGER
                             .Replace("{#schema#}", _schema)
                             .Replace("{#tablename#}", table.Name)
