@@ -341,7 +341,60 @@
 
                 });
             });
+            $('body').on('click', '#btn-disable-db', function (e) {
 
+
+                $.ajax({
+
+                    url: '/home/DisableOnDb',
+                    method: 'POST',
+                    success: function (d) {
+                        if (d) {
+                            $('#btnRefreshErrors').trigger('click');
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+
+                });
+            });
+            $('body').on('click', '#btn-re-initialize-db', function (e) {
+
+
+                $.ajax({
+
+                    url: '/home/ReInitialize',
+                    method: 'POST',
+                    success: function (d) {
+                        if (d) {
+                            $('#btnRefreshErrors').trigger('click');
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+
+                });
+            });
+            $('body').on('click', '#btn-initialize-db', function (e) {
+
+
+                $.ajax({
+
+                    url: '/home/Initialize',
+                    method: 'POST',
+                    success: function (d) {
+                        if (d) {
+                            $('#btnRefreshErrors').trigger('click');
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+
+                });
+            });
             $('body').on('click', '#btn-get-all-counts', function (e) {
                 $('.btn-get-counts').trigger('click');
             });

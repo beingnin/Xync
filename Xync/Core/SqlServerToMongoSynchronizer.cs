@@ -32,7 +32,16 @@ namespace Xync.Core
             _mongoConnectionString = Constants.NoSqlConnection;
             _sqlConnection = new SqlConnection(Constants.RdbmsConnection);
         }
-
+        private MongoClient _mongoClient = null;
+        private IMongoDatabase _mongoDb = null;
+        private IMongoDatabase GetMongoDb()
+        {
+            if (_mongoClient == null)
+                _mongoClient = new MongoClient(Constants.NoSqlConnection);
+            if (_mongoDb == null)
+                return _mongoDb = _mongoClient.GetDatabase(Constants.NoSqlDB);
+            return _mongoDb;
+        }
         public override string ConnectionString
         {
             get
@@ -154,16 +163,14 @@ namespace Xync.Core
 
                                             var model = tableType.GetMethod("CreateModel").Invoke(table, null);
                                             var bson = model.ToBsonDocument();
+                                            tableType.GetMethod("InsertInMongo").Invoke(table, new object[] { keyAttribute.Value, model });
 
-                                            // Create a MongoClient object by using the connection string
-                                            var client = new MongoClient(_mongoConnectionString);
+                                            ////Use the MongoClient to access the server
+                                            //var database = GetMongoDb();
 
-                                            //Use the MongoClient to access the server
-                                            var database = client.GetDatabase(Constants.NoSqlDB);
-
-                                            //get mongodb collection
-                                            var collection = database.GetCollection<BsonDocument>(table.Collection);
-                                            collection.InsertOne(bson);
+                                            ////get mongodb collection
+                                            //var collection = database.GetCollection<BsonDocument>(table.Collection);
+                                            //collection.InsertOne(bson);
                                             totalInsert++;
                                             Message.Info($"{msg} [collection :  { table.Collection }] & [Key : {keyAttribute.Value}]", "Synced");
                                         }
@@ -227,7 +234,7 @@ namespace Xync.Core
                                 Message.Error(ex, "Mark as single in cdc failed for " + Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace());
                             }
                         }
-                        if (succeededMappings == mappings.Count)
+                        if (succeededMappings == mappings.Count && keyIds.Count == dt.Rows.Count)
                         {
                             try
                             {
@@ -318,10 +325,9 @@ namespace Xync.Core
                 SqlCommand cmd = new SqlCommand(_QRY_GET_COUNT.Replace("{#schema#}", schema).Replace("{#table#}", table), _sqlConnection);
                 countInTable = Convert.ToInt64(await cmd.ExecuteScalarAsync());
 
-                var client = new MongoClient(_mongoConnectionString);
 
                 //Use the MongoClient to access the server
-                var database = client.GetDatabase(Constants.NoSqlDB);
+                var database =GetMongoDb();
 
                 var col = database.GetCollection<BsonDocument>(collection);
                 var filter = new FilterDefinitionBuilder<BsonDocument>().Empty;

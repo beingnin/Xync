@@ -11,6 +11,8 @@ namespace Xync.SqlServer
 {
     public class SqlServerTable<TDocumentModel> : IRelationalTable<TDocumentModel>
     {
+        private MongoClient _mongoClient = null;
+        private IMongoDatabase _mongoDb = null;
         private TDocumentModel _docModel = default(TDocumentModel);
         public TDocumentModel DocumentModel
         {
@@ -67,6 +69,14 @@ namespace Xync.SqlServer
         public Change Change { get; set; }
         public string Query { get; set; }
         public QueryType QueryType { get; set; }
+        private IMongoDatabase GetMongoDb()
+        {
+            if (_mongoClient == null)
+                _mongoClient = new MongoClient(Constants.NoSqlConnection);
+            if (_mongoDb == null)
+                return _mongoDb = _mongoClient.GetDatabase(Constants.NoSqlDB);
+            return _mongoDb;
+        }
         public void Listen()
         {
             //Register things for getting changes from DB
@@ -191,8 +201,8 @@ namespace Xync.SqlServer
             //get doc from collection
             try
             {
-                MongoClient client = new MongoClient(Constants.NoSqlConnection);
-                IMongoDatabase db = client.GetDatabase(Constants.NoSqlDB);
+                
+                IMongoDatabase db = GetMongoDb();
                 var collection = db.GetCollection<TDocumentModel>(this.Collection);
 
                 FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
@@ -214,12 +224,11 @@ namespace Xync.SqlServer
                 throw;
             }
         }
-        public void ReplaceInMongo(object identifier,TDocumentModel document)
+        public void ReplaceInMongo(object identifier, TDocumentModel document)
         {
             try
             {
-                MongoClient client = new MongoClient(Constants.NoSqlConnection);
-                IMongoDatabase db = client.GetDatabase(Constants.NoSqlDB);
+                IMongoDatabase db = GetMongoDb();
                 var collection = db.GetCollection<TDocumentModel>(this.Collection);
 
                 FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
@@ -232,13 +241,27 @@ namespace Xync.SqlServer
                 throw;
             }
         }
-        
+        public void InsertInMongo(object identifier, TDocumentModel document)
+        {
+            try
+            {
+                IMongoDatabase db = GetMongoDb();
+                var collection = db.GetCollection<TDocumentModel>(this.Collection);
 
+                FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
+                FilterDefinition<TDocumentModel> filter = filterBuilder.Eq(this.GetKey().Maps[0].DocumentProperty.Name, identifier);
+                var col = collection.ReplaceOne(filter, document, new UpdateOptions { IsUpsert = true });
+            }
+            catch (Exception ex)
+            {
+                Message.Error(ex, "Insert into mongo");
+                throw;
+            }
+        }
         public void DeleteFromMongo(object identifier)
         {
             //get doc from collection
-            MongoClient client = new MongoClient(Constants.NoSqlConnection);
-            IMongoDatabase db = client.GetDatabase(Constants.NoSqlDB);
+            IMongoDatabase db = GetMongoDb();
             var collection = db.GetCollection<TDocumentModel>(this.Collection);
             FilterDefinitionBuilder<TDocumentModel> filterBuilder = Builders<TDocumentModel>.Filter;
             FilterDefinition<TDocumentModel> filter = filterBuilder.Eq(this.GetKey().Maps[0].DocumentProperty.Name, identifier);

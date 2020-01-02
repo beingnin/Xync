@@ -14,12 +14,13 @@ namespace Xync.Core
     {
         #region Queries
         const string _QRY_IS_CDC_ENABLED_IN_DB = "select is_cdc_enabled from sys.databases where name ='{#catalog#}'";
+        const string _QRY_IS_DISABLE_CLEANUP_JOB = "use {#catalog#}; exec sp_cdc_drop_job @job_type='cleanup'";
         const string _QRY_ADD_COLUMN_TO_CAPTURE = "alter table [cdc].{#table#} add __$sync tinyint default 0, __$id bigint primary key  identity(1,1)";
         const string _QRY_ADD_COLUMN_TO_ORIGIN = "if not exists (select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='{#table#}' and TABLE_SCHEMA='{#schema#}' and COLUMN_NAME='__$last_migrated_on') begin alter table [{#schema#}].[{#table#}] add __$last_migrated_on datetime end";
         const string _QRY_REMOVE_COLUMN_FROM_ORIGIN = "alter table [{#schema#}].[{#table#}] drop column __$last_migrated_on";
         const string _QRY_IS_CDC_ENABLED_IN_TABLE = "";
         const string _QRY_ENABLE_CDC_IN_DB = "use {#catalog#};exec sys.sp_cdc_enable_db";
-        const string _QRY_DISABLE_CDC_IN_DB = "use {#catalog#};exec sys.sp_cdc_enable_db";
+        const string _QRY_DISABLE_CDC_IN_DB = "use {#catalog#};exec sp_cdc_disable_db";
         const string _QRY_ENABLE_CDC_IN_TABLE = "exec sys.sp_cdc_enable_table @source_schema='{#schema#}', @source_name='{#table#}', @role_name=null;delete from XYNC.Consolidated_Tracks where table_name='{#table#}' and table_schema='{#schema#}'";
         const string _QRY_DISABLE_CDC_IN_TABLE = "exec sys.sp_cdc_disable_table @source_schema='{#schema#}', @source_name='{#table#}', @capture_instance='all'";
         const string _QRY_CREATE_SCHEMA = "create schema {#schema#}";
@@ -53,8 +54,17 @@ namespace Xync.Core
         public async Task<bool> Initialize()
         {
             await EnableOnDB();
+            await DisableCleanupJob();
             await RegisterSchema();
             await BuildMediator();
+            await EnableOnAllTables(Synchronizer.Monitors.ToArray());
+            return true;
+        }
+        public async Task<bool> ReInitialize()
+        {
+            await DisableOnDB();
+            await EnableOnDB();
+            await DisableCleanupJob();
             await EnableOnAllTables(Synchronizer.Monitors.ToArray());
             return true;
         }
@@ -75,7 +85,7 @@ namespace Xync.Core
                 {
                     cmd.CommandText = _QRY_ENABLE_CDC_IN_DB.Replace("{#catalog#}", _catalog.Embrace());
                     await cmd.ExecuteNonQueryAsync();
-                    await Message.SuccessAsync("Capture Data Change facility has been enabled for " + _catalog.Embrace(), "Tracking on table");
+                    await Message.SuccessAsync("Capture Data Change facility has been enabled for " + _catalog.Embrace(), "Db level tracking setup");
                     return true;
                 }
             }
@@ -90,7 +100,28 @@ namespace Xync.Core
             }
 
         }
-        private async Task<bool> DisableOnDB()
+        private async Task<bool> DisableCleanupJob()
+        {
+            try
+            {
+                _sqlConnection.Open();
+                SqlCommand cmd = new SqlCommand(_QRY_IS_DISABLE_CLEANUP_JOB.Replace("{#catalog#}", _catalog.Embrace()), _sqlConnection);
+
+                await Message.SuccessAsync("Cleanup Job disabled for persisting data indefinitely", "Disable cleanup");
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                await Message.ErrorAsync(ex, "Disable cleanup");
+                return false;
+            }
+            finally
+            {
+                _sqlConnection.Close();
+            }
+        }
+        public async Task<bool> DisableOnDB()
         {
             try
             {
@@ -98,16 +129,16 @@ namespace Xync.Core
                     _sqlConnection.Open();
                 SqlCommand cmd = new SqlCommand(_QRY_IS_CDC_ENABLED_IN_DB.Replace("{#catalog#}", _catalog), _sqlConnection);
                 bool isEnabled = Convert.ToBoolean(await cmd.ExecuteScalarAsync());
-                if (isEnabled)
+                if (!isEnabled)
                 {
-                    Message.Info("Capture Data Change facility is already enabled on the DB:" + _catalog.Embrace());
+                    Message.Info("Capture Data Change facility is not enabled on the DB:" + _catalog.Embrace());
                     return true;
                 }
                 else
                 {
-                    cmd.CommandText = _QRY_ENABLE_CDC_IN_DB.Replace("{#catalog#}", _catalog.Embrace());
+                    cmd.CommandText = _QRY_DISABLE_CDC_IN_DB.Replace("{#catalog#}", _catalog.Embrace());
                     await cmd.ExecuteNonQueryAsync();
-                    await Message.SuccessAsync("Capture Data Change facility has been enabled for " + _catalog.Embrace(), "Tracking on table");
+                    await Message.SuccessAsync("Capture Data Change facility has been disabled for " + _catalog.Embrace(), "Tracking on table");
                     return true;
                 }
             }
@@ -145,7 +176,7 @@ namespace Xync.Core
                         await cmd.ExecuteNonQueryAsync();
                         cmd.CommandText = _QRY_ADD_COLUMN_TO_CAPTURE.Replace("{#table#}", (table.Schema + "_" + table.Name + "_CT").Embrace());
                         await cmd.ExecuteNonQueryAsync();
-                        
+
                         await Message.SuccessAsync("Change tracking enabled for " + table.Schema.Embrace() + "." + table.Name.Embrace(), "Tracking on table");
                     }
                     catch (Exception exc)
@@ -185,7 +216,7 @@ namespace Xync.Core
                 await cmd.ExecuteNonQueryAsync();
                 cmd.CommandText = _QRY_DELETE_FROM_CONSOLIDATED_TRACKS.Replace("{#tablename#}", table).Replace("{#tableschema#}", schema);
                 await cmd.ExecuteNonQueryAsync();
-                
+
                 var mappings = new SqlServerToMongoSynchronizer()[table, schema];
                 foreach (var map in mappings)
                 {

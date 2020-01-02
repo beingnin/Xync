@@ -42,8 +42,8 @@ namespace Xync.Web
             };
             //Constants.RdbmsConnection = @"Data Source=PITSLP030;Initial Catalog=SharjahPolice;integrated security=true";
             //Constants.NoSqlConnection = @"mongodb://localhost:27017";
-            Constants.RdbmsConnection = @"Data Source=10.10.100.68\sql2016;Initial Catalog=SharjahPolice_Beta;uid=spsauser;pwd=$P$@789#";
-            Constants.NoSqlConnection = @"mongodb://10.10.100.74:27017";
+            Constants.RdbmsConnection = @"Data Source=10.10.100.68\SQL2016;Initial Catalog=SharjahPolice_Live_Beta_New;User ID=spsauser;Password=$P$@789#";
+            Constants.NoSqlConnection = @"mongodb://10.10.100.123/SPSA_MongoDevLocal";
             Constants.NoSqlDB = "SPSA_MongoDevLocal";
             Constants.PollingInterval = 2000;
             //start setup

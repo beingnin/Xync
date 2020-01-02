@@ -13,6 +13,7 @@ namespace Xync.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private ISetup setup = new Setup();
         public async Task<ActionResult> Index()
         {
             TrackingSummaryVM model = new TrackingSummaryVM()
@@ -69,17 +70,32 @@ namespace Xync.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> DisableOnTable(string table,string schema)
         {
-            return Json(await new Setup().DisableOnTable(table, schema));
+            return Json(await setup.DisableOnTable(table, schema));
         }
         [HttpPost]
         public async Task<ActionResult> EnableOnTable(string table, string schema)
         {
-            return Json(await new Setup().EnableOnTable(table, schema));
+            return Json(await setup.EnableOnTable(table, schema));
+        }
+        [HttpPost]
+        public async Task<ActionResult> ReInitialize()
+        {
+            return Json(await setup.ReInitialize());
+        }
+        [HttpPost]
+        public async Task<ActionResult> Initialize()
+        {
+            return Json(await setup.Initialize());
+        }
+        [HttpPost]
+        public async Task<ActionResult> DisableOnDb()
+        {
+            return Json(await setup.DisableOnDB());
         }
         [HttpPost]
         public async Task<ActionResult> ReenableOnTable(string table, string schema)
         {
-            return Json(await new Setup().ReEnableOnTable(table, schema));
+            return Json(await setup.ReEnableOnTable(table, schema));
         }
         [HttpPost]
         public async Task<ActionResult> Migrate(string table, string schema)
