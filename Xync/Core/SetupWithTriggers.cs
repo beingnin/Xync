@@ -272,7 +272,7 @@ namespace Xync.Core
                 {
                     map.DNT = false;
                 }
-                await Message.SuccessAsync("Change tracking enabled for " + table.Schema.Embrace() + "." + table.Name.Embrace(), "Tracking on table"); x
+                await Message.SuccessAsync("Change tracking enabled for " + table.Schema.Embrace() + "." + table.Name.Embrace(), "Tracking on table"); 
             }
             catch (Exception ex)
             {
