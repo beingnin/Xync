@@ -233,11 +233,12 @@ namespace Xync.Core
                                 .Replace("{#tableschema#}", Changedtable.TableSchema)
                                 .Replace("{#tablename#}", Changedtable.TableName)
                                 .Replace("{#keys#}", string.Join(",", keyIds));
+                            cmd.CommandTimeout = keyIds.Count < 5000 ? cmd.CommandTimeout : (int)(0.01 * keyIds.Count);
                             cmd.ExecuteNonQuery();
                         }
                         catch (Exception ex)
                         {
-                            Message.Error(ex, "Mark as synced in consolidated_tracks failed for " + Changedtable.CDCSchema.Embrace() + "." + Changedtable.CDCTable.Embrace());
+                            Message.Error(ex, "Mark as synced in consolidated_tracks failed for " + Changedtable.TableSchema.Embrace() + "." + Changedtable.TableName.Embrace());
                         }
                     }
 
