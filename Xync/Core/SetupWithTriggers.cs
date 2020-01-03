@@ -225,55 +225,54 @@ namespace Xync.Core
                 var mappings = new SqlServerToMongoSynchronizerWithTriggers()[tableName, schema];
                 var table = mappings.FirstOrDefault();
                 Message.Info("Enabling change tracking on " + table.Schema.Embrace() + "." + table.Name.Embrace());
-                        cmd.CommandText = _QRY_ADD_LAST_MIGRATED_COLUMN_TO_ORIGIN.Replace("{#table#}", table.Name).Replace("{#schema#}", table.Schema);
-                        await cmd.ExecuteNonQueryAsync();
+                cmd.CommandText = _QRY_ADD_LAST_MIGRATED_COLUMN_TO_ORIGIN.Replace("{#table#}", table.Name).Replace("{#schema#}", table.Schema);
+                await cmd.ExecuteNonQueryAsync();
 
-                        cmd.CommandText = _QRY_DELETE_INSERT_TRIGGER
-                            .Replace("{#schema#}", _schema)
-                            .Replace("{#tablename#}", table.Name)
-                            .Replace("{#tableschema#}", table.Schema)
-                            .Replace("{#key#}", table.GetKey().Name);
-                        await cmd.ExecuteNonQueryAsync();
-                        cmd.CommandText = _QRY_INSERT_TRIGGER
-                            .Replace("{#schema#}", _schema)
-                            .Replace("{#tablename#}", table.Name)
-                            .Replace("{#tableschema#}", table.Schema)
-                            .Replace("{#key#}", table.GetKey().Name);
-                        await cmd.ExecuteNonQueryAsync();
-                        //-------------------------------
-                        cmd.CommandText = _QRY_DELETE_UPDATE_TRIGGER
-                            .Replace("{#schema#}", _schema)
-                            .Replace("{#tablename#}", table.Name)
-                            .Replace("{#tableschema#}", table.Schema)
-                            .Replace("{#key#}", table.GetKey().Name);
-                        await cmd.ExecuteNonQueryAsync();
-                        cmd.CommandText = _QRY_UPDATE_TRIGGER
-                            .Replace("{#schema#}", _schema)
-                            .Replace("{#tablename#}", table.Name)
-                            .Replace("{#tableschema#}", table.Schema)
-                            .Replace("{#key#}", table.GetKey().Name);
-                        await cmd.ExecuteNonQueryAsync();
-                        //-------------------------------
-                        cmd.CommandText = _QRY_DELETE_DELETE_TRIGGER
-                            .Replace("{#schema#}", _schema)
-                            .Replace("{#tablename#}", table.Name)
-                            .Replace("{#tableschema#}", table.Schema)
-                            .Replace("{#key#}", table.GetKey().Name);
-                        await cmd.ExecuteNonQueryAsync();
-                        cmd.CommandText = _QRY_DELETE_TRIGGER
-                            .Replace("{#schema#}", _schema)
-                            .Replace("{#tablename#}", table.Name)
-                            .Replace("{#tableschema#}", table.Schema)
-                            .Replace("{#key#}", table.GetKey().Name);
-                        await cmd.ExecuteNonQueryAsync();
+                cmd.CommandText = _QRY_DELETE_INSERT_TRIGGER
+                    .Replace("{#schema#}", _schema)
+                    .Replace("{#tablename#}", table.Name)
+                    .Replace("{#tableschema#}", table.Schema)
+                    .Replace("{#key#}", table.GetKey().Name);
+                await cmd.ExecuteNonQueryAsync();
+                cmd.CommandText = _QRY_INSERT_TRIGGER
+                    .Replace("{#schema#}", _schema)
+                    .Replace("{#tablename#}", table.Name)
+                    .Replace("{#tableschema#}", table.Schema)
+                    .Replace("{#key#}", table.GetKey().Name);
+                await cmd.ExecuteNonQueryAsync();
+                //-------------------------------
+                cmd.CommandText = _QRY_DELETE_UPDATE_TRIGGER
+                    .Replace("{#schema#}", _schema)
+                    .Replace("{#tablename#}", table.Name)
+                    .Replace("{#tableschema#}", table.Schema)
+                    .Replace("{#key#}", table.GetKey().Name);
+                await cmd.ExecuteNonQueryAsync();
+                cmd.CommandText = _QRY_UPDATE_TRIGGER
+                    .Replace("{#schema#}", _schema)
+                    .Replace("{#tablename#}", table.Name)
+                    .Replace("{#tableschema#}", table.Schema)
+                    .Replace("{#key#}", table.GetKey().Name);
+                await cmd.ExecuteNonQueryAsync();
+                //-------------------------------
+                cmd.CommandText = _QRY_DELETE_DELETE_TRIGGER
+                    .Replace("{#schema#}", _schema)
+                    .Replace("{#tablename#}", table.Name)
+                    .Replace("{#tableschema#}", table.Schema)
+                    .Replace("{#key#}", table.GetKey().Name);
+                await cmd.ExecuteNonQueryAsync();
+                cmd.CommandText = _QRY_DELETE_TRIGGER
+                    .Replace("{#schema#}", _schema)
+                    .Replace("{#tablename#}", table.Name)
+                    .Replace("{#tableschema#}", table.Schema)
+                    .Replace("{#key#}", table.GetKey().Name);
+                await cmd.ExecuteNonQueryAsync();
 
-                        await Message.SuccessAsync("Change tracking enabled for " + table.Schema.Embrace() + "." + table.Name.Embrace(), "Tracking on table");
 
                 foreach (var map in mappings)
                 {
                     map.DNT = false;
                 }
-                await Message.SuccessAsync("Change tracking enabled for " + schema.Embrace() + "." + tableName.Embrace(), "Tracking on table");
+                await Message.SuccessAsync("Change tracking enabled for " + table.Schema.Embrace() + "." + table.Name.Embrace(), "Tracking on table"); x
             }
             catch (Exception ex)
             {
