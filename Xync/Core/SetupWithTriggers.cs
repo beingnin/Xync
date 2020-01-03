@@ -57,13 +57,35 @@ namespace Xync.Core
         }
         public async Task<bool> ReInitialize()
         {
+            await DisableOnDB();
             await EnableOnAllTables(Synchronizer.Monitors.ToArray());
             return true;
         }
-       
+
         public async Task<bool> DisableOnDB()
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (_sqlConnection.State == System.Data.ConnectionState.Closed)
+                    _sqlConnection.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = _sqlConnection;
+                foreach (var table in Synchronizer.Monitors.ToArray())
+                {
+                    await DisableOnTable(table.Name, table.Schema);
+                }
+            }
+            catch (Exception ex)
+            {
+                await Message.ErrorAsync(ex, ex.Message);
+                return false;
+            }
+            finally
+            {
+                if (_sqlConnection.State == System.Data.ConnectionState.Open)
+                    _sqlConnection.Close();
+            }
+            return true;
 
         }
         private async Task<bool> EnableOnAllTables(params ITable[] tables)
@@ -83,7 +105,7 @@ namespace Xync.Core
                         Message.Info("Enabling change tracking on " + table.Schema.Embrace() + "." + table.Name.Embrace());
                         cmd.CommandText = _QRY_ADD_LAST_MIGRATED_COLUMN_TO_ORIGIN.Replace("{#table#}", table.Name).Replace("{#schema#}", table.Schema);
                         await cmd.ExecuteNonQueryAsync();
-                       
+
                         cmd.CommandText = _QRY_DELETE_INSERT_TRIGGER
                             .Replace("{#schema#}", _schema)
                             .Replace("{#tablename#}", table.Name)
@@ -91,10 +113,10 @@ namespace Xync.Core
                             .Replace("{#key#}", table.GetKey().Name);
                         await cmd.ExecuteNonQueryAsync();
                         cmd.CommandText = _QRY_INSERT_TRIGGER
-                            .Replace("{#schema#}",_schema)
+                            .Replace("{#schema#}", _schema)
                             .Replace("{#tablename#}", table.Name)
                             .Replace("{#tableschema#}", table.Schema)
-                            .Replace("{#key#}",table.GetKey().Name);
+                            .Replace("{#key#}", table.GetKey().Name);
                         await cmd.ExecuteNonQueryAsync();
                         //-------------------------------
                         cmd.CommandText = _QRY_DELETE_UPDATE_TRIGGER
@@ -145,6 +167,7 @@ namespace Xync.Core
             }
             return true;
         }
+
         public async Task<bool> DisableOnTable(string table, string schema = "dbo")
         {
 
@@ -156,12 +179,22 @@ namespace Xync.Core
                 cmd.Connection = _sqlConnection;
 
                 Message.Info("Enabling change tracking on " + schema.Embrace() + "." + table.Embrace());
+                cmd.CommandText = _QRY_DELETE_INSERT_TRIGGER.Replace("{#tablename#}", table).Replace("{#tableschema#}", schema);
+                await cmd.ExecuteNonQueryAsync();
+
+                cmd.CommandText = _QRY_DELETE_UPDATE_TRIGGER.Replace("{#tablename#}", table).Replace("{#tableschema#}", schema);
+                await cmd.ExecuteNonQueryAsync();
+
+                cmd.CommandText = _QRY_DELETE_DELETE_TRIGGER.Replace("{#tablename#}", table).Replace("{#tableschema#}", schema);
+                await cmd.ExecuteNonQueryAsync();
+
                 cmd.CommandText = _QRY_REMOVE_COLUMN_FROM_ORIGIN.Replace("{#table#}", table).Replace("{#schema#}", schema);
                 await cmd.ExecuteNonQueryAsync();
+
                 cmd.CommandText = _QRY_DELETE_FROM_CONSOLIDATED_TRACKS.Replace("{#tablename#}", table).Replace("{#tableschema#}", schema);
                 await cmd.ExecuteNonQueryAsync();
 
-                var mappings = new SqlServerToMongoSynchronizer()[table, schema];
+                var mappings = new SqlServerToMongoSynchronizerWithTriggers()[table, schema];
                 foreach (var map in mappings)
                 {
                     map.DNT = true;
@@ -180,7 +213,7 @@ namespace Xync.Core
             }
             return true;
         }
-        public async Task<bool> EnableOnTable(string table, string schema = "dbo")
+        public async Task<bool> EnableOnTable(string tableName, string schema = "dbo")
         {
 
             try
@@ -189,20 +222,62 @@ namespace Xync.Core
                     _sqlConnection.Open();
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = _sqlConnection;
-                Message.Info("Enabling change tracking on " + schema.Embrace() + "." + table.Embrace());
-                cmd.CommandText = _QRY_ADD_LAST_MIGRATED_COLUMN_TO_ORIGIN.Replace("{#table#}", table).Replace("{#schema#}", schema);
-                await cmd.ExecuteNonQueryAsync();
+                var mappings = new SqlServerToMongoSynchronizerWithTriggers()[tableName, schema];
+                var table = mappings.FirstOrDefault();
+                Message.Info("Enabling change tracking on " + table.Schema.Embrace() + "." + table.Name.Embrace());
+                        cmd.CommandText = _QRY_ADD_LAST_MIGRATED_COLUMN_TO_ORIGIN.Replace("{#table#}", table.Name).Replace("{#schema#}", table.Schema);
+                        await cmd.ExecuteNonQueryAsync();
 
-                var mappings = new SqlServerToMongoSynchronizer()[table, schema];
+                        cmd.CommandText = _QRY_DELETE_INSERT_TRIGGER
+                            .Replace("{#schema#}", _schema)
+                            .Replace("{#tablename#}", table.Name)
+                            .Replace("{#tableschema#}", table.Schema)
+                            .Replace("{#key#}", table.GetKey().Name);
+                        await cmd.ExecuteNonQueryAsync();
+                        cmd.CommandText = _QRY_INSERT_TRIGGER
+                            .Replace("{#schema#}", _schema)
+                            .Replace("{#tablename#}", table.Name)
+                            .Replace("{#tableschema#}", table.Schema)
+                            .Replace("{#key#}", table.GetKey().Name);
+                        await cmd.ExecuteNonQueryAsync();
+                        //-------------------------------
+                        cmd.CommandText = _QRY_DELETE_UPDATE_TRIGGER
+                            .Replace("{#schema#}", _schema)
+                            .Replace("{#tablename#}", table.Name)
+                            .Replace("{#tableschema#}", table.Schema)
+                            .Replace("{#key#}", table.GetKey().Name);
+                        await cmd.ExecuteNonQueryAsync();
+                        cmd.CommandText = _QRY_UPDATE_TRIGGER
+                            .Replace("{#schema#}", _schema)
+                            .Replace("{#tablename#}", table.Name)
+                            .Replace("{#tableschema#}", table.Schema)
+                            .Replace("{#key#}", table.GetKey().Name);
+                        await cmd.ExecuteNonQueryAsync();
+                        //-------------------------------
+                        cmd.CommandText = _QRY_DELETE_DELETE_TRIGGER
+                            .Replace("{#schema#}", _schema)
+                            .Replace("{#tablename#}", table.Name)
+                            .Replace("{#tableschema#}", table.Schema)
+                            .Replace("{#key#}", table.GetKey().Name);
+                        await cmd.ExecuteNonQueryAsync();
+                        cmd.CommandText = _QRY_DELETE_TRIGGER
+                            .Replace("{#schema#}", _schema)
+                            .Replace("{#tablename#}", table.Name)
+                            .Replace("{#tableschema#}", table.Schema)
+                            .Replace("{#key#}", table.GetKey().Name);
+                        await cmd.ExecuteNonQueryAsync();
+
+                        await Message.SuccessAsync("Change tracking enabled for " + table.Schema.Embrace() + "." + table.Name.Embrace(), "Tracking on table");
+
                 foreach (var map in mappings)
                 {
                     map.DNT = false;
                 }
-                await Message.SuccessAsync("Change tracking enabled for " + schema.Embrace() + "." + table.Embrace(), "Tracking on table");
+                await Message.SuccessAsync("Change tracking enabled for " + schema.Embrace() + "." + tableName.Embrace(), "Tracking on table");
             }
             catch (Exception ex)
             {
-                await Message.ErrorAsync(ex, $"Start tracking on [{schema}].[{table}]");
+                await Message.ErrorAsync(ex, $"Start tracking on [{schema}].[{tableName}]");
                 return false;
             }
             finally

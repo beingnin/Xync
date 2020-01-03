@@ -18,12 +18,10 @@ namespace Xync.Core
     public class SqlServerToMongoSynchronizerWithTriggers : Synchronizer
     {
         const string _QRY_GET_TABLE_CHANGE = "select other.[{#key#}][__$id], s.Operation[__$operation],other.* from (select t.operation,t.[key] from (select *,DENSE_RANK() over (partition by [key] order by id desc)[RANK] from [xync].[consolidated_tracks] where Sync=1 and Table_Schema='{#schema#}' and Table_Name='{#table#}') t where t.[RANK]=1) s left join [{#schema#}].[{#table#}] other on other.[{#key#}]=s.[key]";
-        const string _QRY_SET_AS_SYNCED = "delete from {#table#}  where __$sync=1 and __$id in ({#keyids#});";
         const string _QRY_SET_AS_SYNCED_IN_CONSOLIDATED_TRACKS = "delete from [XYNC].[Consolidated_Tracks] where sync=1 and [Table_Name]='{#tablename#}' and [Table_Schema]='{#tableschema#}' and [key] in ({#keys#});";
         const string _QRY_UPDATE_LAST_MIGRATED_DATE = "update [{#schema#}].[{#table#}] set __$last_migrated_on=getutcdate()";
         const string _QRY_UPDATE_LAST_MIGRATED_DATE_FOR_TOP_N = "update [{#schema#}].[{#table#}] set __$last_migrated_on=GETUTCDATE() where {#key#} in (select top {#count#} {#key#} from [{#schema#}].[{#table#}] order by {#key#} desc)";
         const string _QRY_GET_COUNT = "select count(*) from [{#schema#}].[{#table#}]";
-        const string _QRY_FORCE_SYNC = "insert into [XYNC].[Consolidated_Tracks] ( [CDC_Schema], [CDC_Name],[Table_Schema], [Table_Name], [Timestamp], [Changed], [Sync] ) values ( 'cdc', '{#schema#}_{#table#}_CT','{#schema#}','{#table#}', GETUTCDATE(), 1, 0 )";
         string _connectionString = null;
         string _mongoConnectionString = null;
         SqlConnection _sqlConnection = null;
@@ -342,26 +340,7 @@ namespace Xync.Core
         }
         public async override Task<bool> ForceSync(string table, string schema)
         {
-            try
-            {
-                if (_sqlConnection.State == System.Data.ConnectionState.Closed)
-                    _sqlConnection.Open();
-
-                SqlCommand cmd = new SqlCommand(_QRY_FORCE_SYNC.Replace("{#schema#}", schema).Replace("{#table#}", table), _sqlConnection);
-                await cmd.ExecuteNonQueryAsync();
-                await Message.SuccessAsync($"Force syncing for [{schema}].[{table}] queued", "Force Syncing");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                await Message.ErrorAsync(ex, "Force Syncing");
-                return false;
-            }
-            finally
-            {
-                if (_sqlConnection.State == System.Data.ConnectionState.Open)
-                    _sqlConnection.Close();
-            }
+            throw new NotImplementedException();
         }
 
     }
