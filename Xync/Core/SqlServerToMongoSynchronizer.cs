@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xync.Abstracts;
 using Xync.Abstracts.Core;
+using Xync.Abstracts.Events;
 using Xync.Helpers;
 using Xync.Utils;
 

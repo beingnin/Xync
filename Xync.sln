@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xync.Desktop", "Xync.Deskto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xync.Web", "Xync.Web\Xync.Web.csproj", "{78609689-91DB-45DD-86E7-E4E19E156ED9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xync.Infra", "Xync.Infra\Xync.Infra.csproj", "{9B56381A-E2BC-43DB-B394-B054AD67024F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{78609689-91DB-45DD-86E7-E4E19E156ED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78609689-91DB-45DD-86E7-E4E19E156ED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78609689-91DB-45DD-86E7-E4E19E156ED9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B56381A-E2BC-43DB-B394-B054AD67024F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B56381A-E2BC-43DB-B394-B054AD67024F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B56381A-E2BC-43DB-B394-B054AD67024F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B56381A-E2BC-43DB-B394-B054AD67024F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

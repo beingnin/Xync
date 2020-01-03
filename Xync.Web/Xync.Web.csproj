@@ -371,6 +371,10 @@
       <Project>{A7001AF3-607B-4139-9764-DC3DC9EAE2EB}</Project>
       <Name>Xync.Abstracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Xync.Infra\Xync.Infra.csproj">
+      <Project>{9b56381a-e2bc-43db-b394-b054ad67024f}</Project>
+      <Name>Xync.Infra</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Xync.Utils\Xync.Utils.csproj">
       <Project>{98CCE80B-EF18-4D15-8B9A-BEC404821F17}</Project>
       <Name>Xync.Utils</Name>

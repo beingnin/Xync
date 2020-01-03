@@ -12,7 +12,8 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Xync.Abstracts;
 using Xync.Abstracts.Core;
-using Xync.Core;
+using Xync.Abstracts.Events;
+using Xync.Infra.DI;
 using Xync.Utils;
 
 namespace Xync.Web
@@ -47,9 +48,9 @@ namespace Xync.Web
             Constants.NoSqlDB = "SPSA_MongoDevLocal";
             Constants.PollingInterval = 2000;
             //start setup
-            bool setupComplete = new SetupWithTriggers().Initialize().Result;
+            bool setupComplete = InjectionResolver.Resolve<ISetup>(ImplementationType.PureTriggers).Initialize().Result;
             ////setup ends here
-            new SqlServerToMongoSynchronizerWithTriggers().ListenAll
+            InjectionResolver.Resolve< ISynchronizer>(ImplementationType.PureTriggers).ListenAll
                 (
                     (sender, e) =>
                     {
@@ -111,7 +112,7 @@ namespace Xync.Web
         {
 
             var exception = Server.GetLastError();
-            Message.ErrorAsync(exception, "Fatal Error");
+            Message.Error(exception, "Fatal Error");
         }
     }
 }

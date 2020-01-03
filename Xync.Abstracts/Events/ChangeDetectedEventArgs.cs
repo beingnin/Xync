@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Xync.Abstracts.Core;
 
-namespace Xync.Core
+namespace Xync.Abstracts.Events
 {
     public class ChangeDetectedEventArgs : EventArgs
     {

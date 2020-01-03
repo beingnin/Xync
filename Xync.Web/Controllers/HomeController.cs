@@ -5,15 +5,22 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Xync.Abstracts.Core;
-using Xync.Core;
+using Xync.Infra.DI;
 using Xync.Utils;
 using Xync.Web.Models;
+
 
 namespace Xync.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private ISetup setup = new Setup();
+        private ISetup _setup = null;
+        private ISynchronizer _synchronizer = null;
+        public HomeController()
+        {
+            _setup = InjectionResolver.Resolve<ISetup>(ImplementationType.PureTriggers);
+            _synchronizer = InjectionResolver.Resolve<ISynchronizer>(ImplementationType.PureTriggers);
+        }
         public async Task<ActionResult> Index()
         {
             TrackingSummaryVM model = new TrackingSummaryVM()
@@ -70,52 +77,52 @@ namespace Xync.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> DisableOnTable(string table,string schema)
         {
-            return Json(await setup.DisableOnTable(table, schema));
+            return Json(await _setup.DisableOnTable(table, schema));
         }
         [HttpPost]
         public async Task<ActionResult> EnableOnTable(string table, string schema)
         {
-            return Json(await setup.EnableOnTable(table, schema));
+            return Json(await _setup.EnableOnTable(table, schema));
         }
         [HttpPost]
         public async Task<ActionResult> ReInitialize()
         {
-            return Json(await setup.ReInitialize());
+            return Json(await _setup.ReInitialize());
         }
         [HttpPost]
         public async Task<ActionResult> Initialize()
         {
-            return Json(await setup.Initialize());
+            return Json(await _setup.Initialize());
         }
         [HttpPost]
         public async Task<ActionResult> DisableOnDb()
         {
-            return Json(await setup.DisableOnDB());
+            return Json(await _setup.DisableOnDB());
         }
         [HttpPost]
         public async Task<ActionResult> ReenableOnTable(string table, string schema)
         {
-            return Json(await setup.ReEnableOnTable(table, schema));
+            return Json(await _setup.ReEnableOnTable(table, schema));
         }
         [HttpPost]
         public async Task<ActionResult> Migrate(string table, string schema)
         {
-            return Json(await new SqlServerToMongoSynchronizer().Migrate(table, schema));
+            return Json(await _synchronizer.Migrate(table, schema));
         }
         [HttpPost]
         public async Task<ActionResult> MigratenRows(string table, string schema,int Count)
         {
-            return Json(await new SqlServerToMongoSynchronizer().Migrate(table, schema,Count));
+            return Json(await _synchronizer.Migrate(table, schema,Count));
         }
         [HttpPost]
         public async Task<ActionResult> ForceSync(string table, string schema)
         {
-            return Json(await new SqlServerToMongoSynchronizer().ForceSync(table, schema));
+            return Json(await _synchronizer.ForceSync(table, schema));
         }
         [HttpPost]
         public async Task<ActionResult> GetCounts(string table, string schema,string collection)
         {
-            return Json(await new SqlServerToMongoSynchronizer().GetCounts(table, schema, collection));
+            return Json(await _synchronizer.GetCounts(table, schema, collection));
         }
     }
 }

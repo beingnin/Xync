@@ -46,6 +46,7 @@
     <Compile Include="Core\ISynchronizer.cs" />
     <Compile Include="Core\ITrack.cs" />
     <Compile Include="Core\Synchronizer.cs" />
+    <Compile Include="Events\ChangeDetectedEventArgs.cs" />
     <Compile Include="IDocumentCollection.cs" />
     <Compile Include="IDocumentProperty.cs" />
     <Compile Include="IRelationalAttribute.cs" />
