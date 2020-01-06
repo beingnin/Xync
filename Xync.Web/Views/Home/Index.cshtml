@@ -28,7 +28,20 @@
     <div class="col-3">
         <div class="card app-widget">
             <div class="card-body d-flex align-items-center justify-content-center">
-                <img src="~/Content/images/dashboard-c1.png" />
+                <div style="display:none" id="rtc-chart-info">
+                    <span><strong>Time</strong></span>&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;<span><small id="rtc-chart-info-time">12.40 AM</small></span><br />
+                    <span><strong>Tables</strong></span>&nbsp;:&nbsp;<span><small id="rtc-chart-info-count">2</small></span>
+                </div>
+                <div id="rtc-chart">
+                    <div style="float:left">
+                        <div class="chart"></div>
+                        <div class="info"></div>
+                    </div>
+                    <div style="float:left">
+                        <div class="details"></div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -106,6 +119,7 @@
     </div>
 </div>
 @section scripts{
+    <script src="~/Scripts/sparkline.js"></script>
     <script>
         $(function () {
             $('body').on('click', '#btnDeleteAllErrors', function () {
@@ -405,14 +419,29 @@
 
             var proxy = $.connection.pollingHub;
             proxy.client.syncing = function (tables) {
-                console.log(tables);
                 for (var t of tables) {
                     mappingtable.find('.mapping-status[data-table="' + t + '"]').hide();
                     mappingtable.find('.mapping-sync-status[data-table="' + t + '"]').show();
                 }
+                var now = new Date();
+                var dt = getHM(now);
+
+                //add to chart
+                var exists = false;
+                for (var i = 0; i < _chart.length; i++) {
+                    if (_chart[i].timestamp === dt) {
+                        _chart[i].syncs += tables.length;
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    _chart.shift();
+                    _chart.push({ timestamp: dt, syncs: tables.length });
+                }
+                renderChart();
             };
             proxy.client.stopped = function () {
-                console.log('stopped');
                 mappingtable.find('.mapping-sync-status').hide();
                 mappingtable.find('.mapping-status').show();
 
@@ -426,5 +455,51 @@
 
 
 
+        //chart
+        function getHM(dt) {
+            var s = dt.toLocaleTimeString();
+            var mm = dt.getMinutes().toString();
+            var hh = dt.getHours();
+
+            return (hh > 12 ? hh - 12 : hh) + ':' + (mm.length > 1 ? mm : '0' + mm) + ' ' + s.substring(s.length - 2, s.length);
+        }
+        function renderChart() {
+            $('#rtc-chart .chart').empty().sparkline(
+                _chart.map(function (item, i) { return item.syncs }),
+                {
+                    disableTooltips: true,
+                    type: "line",
+                    height: 103,
+                    width: 273,
+                    lineColor: "#006363",
+                    fillColor: "transparent",
+                    spotColor: false,
+                    minSpotColor: "#CA0000",
+                    maxSpotColor: "#CA0000"
+                }
+            ).off().on('sparklineRegionChange', function (ev) {
+                var idx = ev.sparklines[0].getCurrentRegionFields().offset;
+                /* if it's defined, idx has the index into the
+                   data array corresponding to the mouse pointer */
+                if (idx) {
+                    $('#rtc-chart canvas').attr('title', _chart[idx].syncs + ' table' + (_chart[idx].syncs > 1 ? 's' : '') + ' synced @@ ' + _chart[idx].timestamp);
+                }
+            }).on('mouseleave', function (ev) {
+                $('#rtc-chart canvas').attr('title', '');
+            });
+        }
+
+
+        var _chart = [];
+        var MS_PER_MINUTE = 60000;
+        var now = new Date();
+        var durationInMinutes = 1;
+        for (var i = 0; i < 30; i++) {
+            var now = new Date(now - (durationInMinutes * MS_PER_MINUTE));
+            _chart.unshift({ timestamp: getHM(now), syncs: 0 })
+        }
+        renderChart();
+
     </script>
+
 }
