@@ -423,23 +423,7 @@
                     mappingtable.find('.mapping-status[data-table="' + t + '"]').hide();
                     mappingtable.find('.mapping-sync-status[data-table="' + t + '"]').show();
                 }
-                var now = new Date();
-                var dt = getHM(now);
 
-                //add to chart
-                var exists = false;
-                for (var i = 0; i < _chart.length; i++) {
-                    if (_chart[i].timestamp === dt) {
-                        _chart[i].syncs += tables.length;
-                        exists = true;
-                        break;
-                    }
-                }
-                if (!exists) {
-                    _chart.shift();
-                    _chart.push({ timestamp: dt, syncs: tables.length });
-                }
-                renderChart();
             };
             proxy.client.stopped = function () {
                 mappingtable.find('.mapping-sync-status').hide();
@@ -464,6 +448,8 @@
             return (hh > 12 ? hh - 12 : hh) + ':' + (mm.length > 1 ? mm : '0' + mm) + ' ' + s.substring(s.length - 2, s.length);
         }
         function renderChart() {
+            getSyncData();
+
             $('#rtc-chart .chart').empty().sparkline(
                 _chart.map(function (item, i) { return item.syncs }),
                 {
@@ -472,7 +458,7 @@
                     height: 103,
                     width: 273,
                     lineColor: "#006363",
-                    fillColor: "transparent",
+                    fillColor: "#075fff1f",
                     spotColor: false,
                     minSpotColor: "#CA0000",
                     maxSpotColor: "#CA0000"
@@ -482,23 +468,57 @@
                 /* if it's defined, idx has the index into the
                    data array corresponding to the mouse pointer */
                 if (idx) {
-                    $('#rtc-chart canvas').attr('title', _chart[idx].syncs + ' table' + (_chart[idx].syncs > 1 ? 's' : '') + ' synced @@ ' + _chart[idx].timestamp);
+                    $('#rtc-chart canvas').attr('title', _chart[idx].syncs + ' document' + (_chart[idx].syncs > 1 ? 's' : '') + ' synced @@ ' + _chart[idx].timestamp);
                 }
             }).on('mouseleave', function (ev) {
                 $('#rtc-chart canvas').attr('title', '');
             });
         }
+        function addToChartData(date, val) {
 
+            var dt = getHM(date);
+            //add to chart
+            var exists = false;
+            for (var i = 0; i < _chart.length; i++) {
+                if (_chart[i].timestamp === dt) {
+                    _chart[i].syncs += val;
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                _chart.push({ timestamp: dt, syncs: val });
+            }
+        }
+        function getSyncData() {
+            _chart = [];
+            var rows = $('#errorsContainer .tr-success[data-title="Synced"]');
+            for (var j = 0; j < rows.length; j++) {
+                var numbers = $(rows[j]).attr('data-message').match(/[0-9]+/g);
+                if (j >= _chartLength)
+                    break;
+                if (numbers.length < 2)
+                    continue;
+                var date = new Date(parseInt($(rows[j]).attr('data-time-ticks-utc')));
+                addToChartData(date, parseInt(numbers[0]));
+            }
+            if (_chart.length < _chartLength) {
+                var l = _chartLength - _chart.length;
+                for (var i = 0; i < l; i++) {
+                    var durationInMinutes = 1;
+                    var MS_PER_MINUTE = 60000;
+                    var now = new Date();
+                    var now = new Date(now - (durationInMinutes * MS_PER_MINUTE));
+                    _chart.push({ timestamp: getHM(now), syncs: 0 })
+                }
+            }
+            console.log(_chart);
+        }
 
         var _chart = [];
-        var MS_PER_MINUTE = 60000;
-        var now = new Date();
-        var durationInMinutes = 1;
-        for (var i = 0; i < 30; i++) {
-            var now = new Date(now - (durationInMinutes * MS_PER_MINUTE));
-            _chart.unshift({ timestamp: getHM(now), syncs: 0 })
-        }
+        var _chartLength = 30;
         renderChart();
+
 
     </script>
 

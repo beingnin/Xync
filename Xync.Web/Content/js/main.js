@@ -21,14 +21,13 @@ var app = {
                     url: '/Home/GetErrors?page=' + page + '&count=' + count,
                     method: 'GET',
                     dataType: 'html',
-                    beforeSend: function () { $('#btnRefreshErrors i').addClass('fa-spin'); },
-                    complete: function () { setTimeout(function () { $('#btnRefreshErrors i').removeClass('fa-spin');},500) },
                     success: (data) => {
                         if (page == 0) {
                             $('#errorsContainer').html('');
                         }
                         $('#errorsContainer').append(data);
                         //$('#btnLoadMoreEvents').data('page', page).data('count', count);
+                        renderChart();
 
                     },
                     error: function (err, xhr) {
@@ -45,7 +44,6 @@ var app = {
                     dataType: 'html',
                     success: (data) => {
                         $('#mappingsContainer').html(data);
-
                     },
                     error: function (err, xhr) {
                         app.message.error('Error', 'Sorrys');

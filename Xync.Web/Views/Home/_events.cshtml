@@ -4,7 +4,7 @@
     for (int i = 0; i < Model.Count; i++)
     {
         var error = Model[i];
-        <tr class="@(error.MessageType==Xync.Utils.Message.MessageType.Error?"tr-danger":"tr-success")">
+        <tr data-title="@error.Title" data-time-ticks-utc="@error.CreatedDateTime.Subtract(new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc)).TotalMilliseconds" data-message="@error.Message" class="@(error.MessageType==Xync.Utils.Message.MessageType.Error?"tr-danger":"tr-success")">
             <td title="@error.Id">@((Convert.ToInt32(ViewBag.ErrorCount) * (Convert.ToInt32(ViewBag.ErrorPage)) + 1) + i)</td>
             <td title="@error.CreatedDateTime.ToString("dd-MMM-yyyy hh:mm")">@error.Title</td>
             <td title="@error.Type">
