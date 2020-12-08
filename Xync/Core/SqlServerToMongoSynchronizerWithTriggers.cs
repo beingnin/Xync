@@ -140,6 +140,11 @@ namespace Xync.Core
                                         var keyAttribute = (IRelationalAttribute)tableType.GetMethod("GetKey").Invoke(table, null);
                                         foreach (var col in dt.Columns)
                                         {
+                                            if (table.Change == Change.Delete)
+                                            {
+                                                keyAttribute.Value = row["__$id"];
+                                                break;
+                                            }
                                             var column = col.ToString();
                                             if (!column.StartsWith("__$"))
                                             {
