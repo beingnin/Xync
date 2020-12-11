@@ -20,13 +20,13 @@ namespace Xync.Utils
         public string Source { get; set; }
         public string Type { get; set; }
         public Message.MessageType MessageType { get; set; }
-        public DateTime CreatedDateTime {   get; set; }
+        public DateTime CreatedDateTime { get; set; }
         string _host;
         public string Host
         {
             get
             {
-                return _host= Environment.MachineName;
+                return _host = Environment.MachineName;
             }
             set
             {

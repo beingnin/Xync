@@ -175,6 +175,21 @@ namespace Xync.Utils
                 return default(long);
             }
         }
+        public static  long DeleteErrorSync(string id)
+        {
+            try
+            {
+                var db = _client.GetDatabase(Constants.NoSqlDB);
+                var collection = db.GetCollection<Event>("XYNC_Messages");
+                var filter = Builders<Event>.Filter.Eq(x => x.Id, ObjectId.Parse(id));
+                var result = collection.DeleteOne(filter);
+                return result.DeletedCount;
+            }
+            catch (Exception ex)
+            {
+                return default(long);
+            }
+        }
         public static async Task<IList<Event>> GetEvents(int page, int count)
         {
             var db = _client.GetDatabase(Constants.NoSqlDB);
@@ -182,7 +197,18 @@ namespace Xync.Utils
             var query = (from _error in collection
                          orderby _error.Id descending
                          select _error).Skip(page * count).Take(count);
-            return await query.ToListAsync();
+            var result = await query.ToListAsync();
+            return result;
+        }
+        public static  IList<Event> GetEventsSync(int page, int count)
+        {
+            var db = _client.GetDatabase(Constants.NoSqlDB);
+            var collection = db.GetCollection<Event>("XYNC_Messages").AsQueryable();
+            var query = (from _error in collection
+                         orderby _error.Id descending
+                         select _error).Skip(page * count).Take(count);
+            var result = query.ToList();
+            return result;
         }
         static void ToFile(Exception ex)
         {
