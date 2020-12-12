@@ -12,7 +12,8 @@
         Title="Xync | Development" 
         GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
         ResizeMode="CanResizeWithGrip"
-        ShowIconOnTitleBar="True"                 
+        ShowIconOnTitleBar="True"
+        Loaded="MetroWindow_Loaded"
         TitleCharacterCasing="Normal">
 
     <mah:MetroWindow.Resources>
@@ -22,7 +23,7 @@
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
             <WrapPanel x:Name="x_logo_wrapper">
-                <Button>
+                <Button Padding="2">
                     <iconPacks:PackIconModern Width="22"
                                   Height="22"
                                   Kind="Cloud" />
@@ -33,7 +34,7 @@
 
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
-            <Button Click="ToggleProgress"  Content="About">
+            <Button  Content="About">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -51,7 +52,7 @@
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
 
-    <Grid Margin="25 25 0 25">
+    <Grid Margin="25 25 0 0" >
         <!--  rows & columns  -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -62,7 +63,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
-        
+
         <!--content-->
         <mah:MetroHeader Content="What's going on"
                          Foreground="DeepSkyBlue"
@@ -74,10 +75,11 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
-            
+
             <!--content-->
             <DataGrid x:Name="x_events_data_grid"
                   Grid.Row="0"
+                  Foreground="LightGray"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   CanUserReorderColumns="False"
@@ -96,37 +98,64 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTemplateColumn Width="125" Header="Message">
+
+                    <DataGridTemplateColumn Width="125" >
                         <DataGridTemplateColumn.CellTemplate>
 
                             <DataTemplate>
                                 <ToolBar>
-                                    <Button Foreground="Red"
-                                        Click="DeleteMessage">
+                                    <Button Foreground="Red" 
+                                            ToolTip="Delete this event"
+                                            Click="DeleteMessage">
                                         <iconPacks:PackIconModern Kind="Delete"/>
                                     </Button>
                                     <Button Foreground="DeepSkyBlue"
+                                            ToolTip="Copy stack trace"
                                             Click="CopyToClipBoard"
                                             Visibility="{Binding MessageType, Converter={StaticResource IsAnErrorConverter}}">
-                                        
+
                                         <iconPacks:PackIconModern Kind="PageCopy"/>
                                     </Button>
                                 </ToolBar>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn>
 
-                    </DataGridTextColumn>
+                        <DataGridTemplateColumn.Header>
+                            <StackPanel  Orientation="Horizontal"  
+                                         HorizontalAlignment="Center">
+                                <Menu Foreground="GhostWhite"  ToolTip="Refresh Events">
+                                    <MenuItem Click="RefreshEvents">
+                                        <MenuItem.Header>
+                                            <iconPacks:BoxIcons Kind="RegularRefresh"/>
+                                        </MenuItem.Header>
+                                    </MenuItem>
+                                </Menu>
+                                <Menu Foreground="GhostWhite" >
+                                    <MenuItem>
+                                        <MenuItem.Header>
+                                            <iconPacks:Codicons Kind="ThreeBars"/>
+                                        </MenuItem.Header>
+                                        <MenuItem Header="Delete all events" Click="DeleteAllEvents"/>
+                                        <MenuItem Header="Delete all messages" Click="DeleteAllMessages"/>
+                                        <MenuItem Header="Delete all errors" Click="DeleteAllErrors"/>
+                                    </MenuItem>
+                                </Menu>
+                            </StackPanel>
+                        </DataGridTemplateColumn.Header>
+                    </DataGridTemplateColumn>
+
                 </DataGrid.Columns>
                 <!--<Button Grid.Column="0"
                 Grid.Row="2"
                 Content="Load More"/>-->
             </DataGrid>
-            <Button  Content="Load More"
+            <Button x:Name="x_load_more_btn"  Content="Load More"
                      Click="LoadMoreEvents"
                      Foreground="DeepSkyBlue"
-                     Grid.Row="1"/>
+                     BorderBrush="Transparent"                     
+                     Background="Transparent"
+                     Grid.Row="1">
+            </Button>
         </Grid>
 
 
@@ -134,8 +163,9 @@
                          Foreground="DeepSkyBlue"
                          Grid.Column="1"
                          Grid.Row="0"/>
-        <DataGrid ItemsSource="{Binding Mappings}"
+        <DataGrid x:Name="x_mappings_grid"
                   Grid.Row="1"
+                  Foreground="LightGray"
                   Grid.Column="1"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
@@ -145,9 +175,50 @@
                   CanUserSortColumns="False"  
                   AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn/>
+                <DataGridTextColumn Header="Schema" Binding="{Binding Schema}"/>
+                <DataGridTextColumn x:Name="x_mappings_grid_table_cell" Header="Table" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Collection" Binding="{Binding Collection}"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding DNT}"/>
+                <DataGridTemplateColumn Width="100">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate>
+                            <Menu Background="Transparent"  
+                                  Foreground="DeepSkyBlue" 
+                                  HorizontalAlignment="Center">
+                                <MenuItem  Header="Actions">
+                                    <MenuItem Click="GetCounts" Foreground="GhostWhite" Header="Get Counts"/>
+                                    <MenuItem Foreground="GhostWhite" Header="Stop"/>
+                                    <MenuItem Foreground="GhostWhite" Header="Restart"/>
+                                    <Separator/>
+                                    <MenuItem Foreground="IndianRed" Header="Migrate"/>
+                                    <MenuItem Foreground="IndianRed" Header="Migrate last 1000"/>
+                                </MenuItem>
+                            </Menu>
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                    <DataGridTemplateColumn.Header>
+                        <StackPanel  Orientation="Horizontal"  
+                                         HorizontalAlignment="Right">
+                            
+                            <Menu Foreground="GhostWhite" >
+                                <MenuItem>
+                                    <MenuItem.Header>
+                                        <iconPacks:Codicons Kind="ThreeBars"/>
+                                    </MenuItem.Header>
+                                    <MenuItem Header="Get all counts" />
+                                    <MenuItem Header="Disable" />
+                                    <MenuItem Header="Initialize" />
+                                    <MenuItem Header="Re-initialize" />
+                                </MenuItem>
+                            </Menu>
+                        </StackPanel>
+                    </DataGridTemplateColumn.Header>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+
 
     </Grid>
 </mah:MetroWindow>

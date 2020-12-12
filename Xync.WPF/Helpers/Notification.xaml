@@ -8,7 +8,7 @@
     <Grid RenderTransformOrigin="0,1" >
 
         <!-- Notification area -->
-        <Border BorderThickness="1" Background="Beige" BorderBrush="Black" CornerRadius="10">
+        <Border BorderThickness="1" Background="SteelBlue" BorderBrush="Black" CornerRadius="10">
             <StackPanel Margin="20">
                 <TextBlock x:Name="x_message_box" TextWrapping="Wrap" Margin="5">
           <!--<Bold>Notification data</Bold><LineBreak /><LineBreak />
