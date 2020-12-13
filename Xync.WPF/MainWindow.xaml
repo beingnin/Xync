@@ -13,28 +13,33 @@
         GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
         ResizeMode="CanResizeWithGrip"
         ShowIconOnTitleBar="True"
-        Loaded="MetroWindow_Loaded"
+        Loaded="MetroWindow_Loaded"          
         TitleCharacterCasing="Normal">
 
     <mah:MetroWindow.Resources>
         <local:IsAnErrorConverter x:Key="IsAnErrorConverter"></local:IsAnErrorConverter>
+        <local:DNTtoOnlineConverter  x:Key="DNTtoOnlineConverter"></local:DNTtoOnlineConverter>
+        <local:DNTtoColorConverter  x:Key="DNTtoColorConverter"></local:DNTtoColorConverter>
+        <local:DNTtoHideButtonsConverter  x:Key="DNTtoHideButtonsConverter"></local:DNTtoHideButtonsConverter>
+        <local:DNTtoShowButtonsConverter  x:Key="DNTtoShowButtonsConverter"></local:DNTtoShowButtonsConverter>
     </mah:MetroWindow.Resources>
 
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
             <WrapPanel x:Name="x_logo_wrapper">
-                <Button Padding="2">
+                <Button Padding="3">
                     <iconPacks:PackIconModern Width="22"
                                   Height="22"
                                   Kind="Cloud" />
                 </Button>
+                
             </WrapPanel>
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
 
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
-            <Button  Content="About">
+            <Button Click="ShowAbout" Content="About">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -44,7 +49,7 @@
                                         Kind="BookPerspectiveHelp" />
                             <TextBlock Margin="4 0 0 0"
                          VerticalAlignment="Center"
-                         Text="{Binding}" />
+                         Text="{Binding}" />                            
                         </StackPanel>
                     </DataTemplate>
                 </Button.ContentTemplate>
@@ -52,6 +57,27 @@
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
 
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout  Header="About" Name="x_about_flyout" IsOpen="False" Position="Right" Width="300">
+                <Grid Margin="25 50 0 0">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Grid.Row="0">
+                        <mah:MetroHeader DockPanel.Dock="Left" Content="Map direction"/>
+                        <Label DockPanel.Dock="Right" Content="sql server-->mongodb"/>
+                    </DockPanel>
+
+                </Grid>
+                
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
+    
     <Grid Margin="25 25 0 0" >
         <!--  rows & columns  -->
         <Grid.ColumnDefinitions>
@@ -79,6 +105,8 @@
             <!--content-->
             <DataGrid x:Name="x_events_data_grid"
                   Grid.Row="0"
+                  Style="{StaticResource MahApps.Styles.DataGrid.Azure}"    
+                  IsReadOnly="True"
                   Foreground="LightGray"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
@@ -165,6 +193,8 @@
                          Grid.Row="0"/>
         <DataGrid x:Name="x_mappings_grid"
                   Grid.Row="1"
+                  Style="{StaticResource MahApps.Styles.DataGrid.Azure}"  
+                  IsReadOnly="True"
                   Foreground="LightGray"
                   Grid.Column="1"
                   CanUserAddRows="False"
@@ -176,10 +206,39 @@
                   AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Schema" Binding="{Binding Schema}"/>
-                <DataGridTextColumn x:Name="x_mappings_grid_table_cell" Header="Table" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Collection" Binding="{Binding Collection}"/>
-                <DataGridTextColumn Header="Status" Binding="{Binding DNT}"/>
-                <DataGridTemplateColumn Width="100">
+                <DataGridTemplateColumn Header="Table" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <mah:Badged BadgePlacementMode="TopLeft" 
+                                        BadgeForeground="Black"
+                                        BadgeBackground="Yellow" >
+                                <TextBlock  Text="{Binding Name}"></TextBlock>
+                            </mah:Badged>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Collection" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <mah:Badged BadgePlacementMode="TopLeft" 
+                                        BadgeForeground="Black"
+                                        BadgeBackground="Red">
+                                <TextBlock  Text="{Binding Collection}"></TextBlock>
+                            </mah:Badged>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Status">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Foreground="{Binding DNT,Converter={StaticResource DNTtoColorConverter}}"
+                                    Text="{Binding DNT, Converter={StaticResource DNTtoOnlineConverter}}">
+
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="100" >
                     <DataGridTemplateColumn.CellTemplate >
                         <DataTemplate>
                             <Menu Background="Transparent"  
@@ -187,11 +246,23 @@
                                   HorizontalAlignment="Center">
                                 <MenuItem  Header="Actions">
                                     <MenuItem Click="GetCounts" Foreground="GhostWhite" Header="Get Counts"/>
-                                    <MenuItem Foreground="GhostWhite" Header="Stop"/>
-                                    <MenuItem Foreground="GhostWhite" Header="Restart"/>
-                                    <Separator/>
-                                    <MenuItem Foreground="IndianRed" Header="Migrate"/>
-                                    <MenuItem Foreground="IndianRed" Header="Migrate last 1000"/>
+                                    
+                                    <MenuItem Click="Stop" Foreground="GhostWhite" Header="Stop"
+                                              Visibility="{Binding DNT,Converter={StaticResource DNTtoHideButtonsConverter}}"/>
+                                    <MenuItem Click="Start" Foreground="GhostWhite" Header="Start" 
+                                              Visibility="{Binding DNT,Converter={StaticResource DNTtoShowButtonsConverter}}"/>
+                                    <MenuItem Click="Restart" Foreground="GhostWhite" Header="Restart"
+                                              Visibility="{Binding DNT,Converter={StaticResource DNTtoHideButtonsConverter}}"/>
+
+                                    <MenuItem Click="StopTracking"  Foreground="GhostWhite" Header="Stop Tracking"
+                                              Visibility="{Binding DNT,Converter={StaticResource DNTtoHideButtonsConverter}}"/>
+                                    
+                                    <Separator Visibility="{Binding DNT,Converter={StaticResource DNTtoHideButtonsConverter}}"/>
+                                    
+                                    <MenuItem Click="Migrate" Foreground="IndianRed" Header="Migrate"
+                                              Visibility="{Binding DNT,Converter={StaticResource DNTtoHideButtonsConverter}}"/>
+                                    <MenuItem Click="MigrateLast1000" Foreground="IndianRed" Header="Migrate last n records"
+                                              Visibility="{Binding DNT,Converter={StaticResource DNTtoHideButtonsConverter}}"/>
                                 </MenuItem>
                             </Menu>
 
@@ -201,16 +272,22 @@
                     <DataGridTemplateColumn.Header>
                         <StackPanel  Orientation="Horizontal"  
                                          HorizontalAlignment="Right">
-                            
+                            <Menu Foreground="GhostWhite"  ToolTip="Refresh mappings">
+                                <MenuItem Click="RefreshMappings">
+                                    <MenuItem.Header>
+                                        <iconPacks:BoxIcons Kind="RegularRefresh"/>
+                                    </MenuItem.Header>
+                                </MenuItem>
+                            </Menu>
                             <Menu Foreground="GhostWhite" >
                                 <MenuItem>
                                     <MenuItem.Header>
                                         <iconPacks:Codicons Kind="ThreeBars"/>
                                     </MenuItem.Header>
                                     <MenuItem Header="Get all counts" />
-                                    <MenuItem Header="Disable" />
-                                    <MenuItem Header="Initialize" />
-                                    <MenuItem Header="Re-initialize" />
+                                    <MenuItem Click="DisableXync" Header="Disable" />
+                                    <MenuItem Click="EnableXync" Header="Initialize" />
+                                    <MenuItem Click="ReEnableXync" Header="Re-initialize" />
                                 </MenuItem>
                             </Menu>
                         </StackPanel>

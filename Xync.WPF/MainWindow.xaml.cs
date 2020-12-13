@@ -1,8 +1,11 @@
 ﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using MahApps.Metro.IconPacks;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -21,17 +24,21 @@ namespace Xync.WPF
     public partial class MainWindow : MetroWindow
     {
         private ISynchronizer _synchronizer = null;
+        bool IsAboutDetialOpen = false;
+        private ISetup _setup = null;
         private Stopwatch stopwatch = new Stopwatch();
         private XyncState xyncState;
         private int page = 0;
         private int pageSize = 20;
         List<Event> Events = null;
-        public IList<ITable> Mappings = null;
+        IList<ITable> Mappings = null;
         public MainWindow()
         {
+
             var startup = new Startup();
             startup.SetupConstants();
             _synchronizer = InjectionResolver.Resolve<ISynchronizer>(ImplementationType.PureTriggers);
+            _setup = InjectionResolver.Resolve<ISetup>(ImplementationType.PureTriggers);
             Mappings = startup.SetupMappings();
             this.Events = GetEvents().ToList();
             InitializeComponent();
@@ -210,11 +217,120 @@ namespace Xync.WPF
         {
             var menu = (MenuItem)sender;
             var dataContext = (ITable)menu.DataContext;
-            dynamic counts = await _synchronizer.GetCounts(dataContext.Name, dataContext.Schema, dataContext.Collection);
-            var column = x_mappings_grid.Columns[1];
-            var row = x_mappings_grid.ItemContainerGenerator.ContainerFromItem(dataContext);
-            var cell = column.GetCellContent(row);
-            
+
+            var task = _synchronizer.GetCounts(dataContext.Name, dataContext.Schema, dataContext.Collection);
+
+            var tColumn = x_mappings_grid.Columns[1];
+            var cColumn = x_mappings_grid.Columns[2];
+            var row = (DataGridRow)x_mappings_grid.ItemContainerGenerator.ContainerFromItem(dataContext);
+            var tCell = (ContentPresenter)tColumn.GetCellContent(row);
+            var cCell = (ContentPresenter)cColumn.GetCellContent(row);
+            var counts = ((dynamic)await task);
+            int records = (int)counts.Records;
+            int documents = (int)counts.Documents;
+            Brush a = null, b = null;
+            if (records == documents)
+            {
+                a = b = new SolidColorBrush(Colors.DeepSkyBlue);
+            }
+            else if (records > documents)
+            {
+                a = new SolidColorBrush(Colors.Yellow);
+                b = new SolidColorBrush(Colors.Red);
+            }
+            else
+            {
+                a = new SolidColorBrush(Colors.Red);
+                b = new SolidColorBrush(Colors.Yellow);
+            }
+
+            var tb = tCell.FindChild<Badged>();
+            var cb = cCell.FindChild<Badged>();
+            tb.Badge = records;
+            tb.BadgeBackground = a;
+            cb.Badge = documents;
+            cb.BadgeBackground = b;
+        }
+
+        private async void Stop(object sender, RoutedEventArgs e)
+        {
+            var menu = (MenuItem)sender;
+            var dataContext = (ITable)menu.DataContext;
+            var success = await _setup.DisableOnTable(dataContext.Name, dataContext.Schema);
+            RefreshEvents(null, null);
+            RefreshMappings(null, null);
+        }
+        private async void Start(object sender, RoutedEventArgs e)
+        {
+            var menu = (MenuItem)sender;
+            var dataContext = (ITable)menu.DataContext;
+            var success = await _setup.EnableOnTable(dataContext.Name, dataContext.Schema);
+            RefreshEvents(null, null);
+            RefreshMappings(null, null);
+        }
+        private async void Restart(object sender, RoutedEventArgs e)
+        {
+            var menu = (MenuItem)sender;
+            var dataContext = (ITable)menu.DataContext;
+            var success = await _setup.ReEnableOnTable(dataContext.Name, dataContext.Schema);
+            RefreshEvents(null, null);
+            RefreshMappings(null, null);
+        }
+        private void StopTracking(object sender, RoutedEventArgs e)
+        {
+            var menu = (MenuItem)sender;
+            var dataContext = (ITable)menu.DataContext;
+            var success = _synchronizer.StopTracking(dataContext.Name, dataContext.Schema, dataContext.Collection);
+            RefreshMappings(null, null);
+        }
+        private async void Migrate(object sender, RoutedEventArgs e)
+        {
+            var menu = (MenuItem)sender;
+            var dataContext = (ITable)menu.DataContext;
+            var success = await _synchronizer.Migrate(dataContext.Name, dataContext.Schema);
+            RefreshEvents(null, null);
+        }
+        private async void MigrateLast1000(object sender, RoutedEventArgs e)
+        {
+
+            var number = await this.ShowInputAsync("Please provide the last number of rows to migrate",
+           "The given number of rows, which were added as the latest will be migrated from sql to mongo",
+           new MetroDialogSettings { AnimateShow = true,
+                                     AffirmativeButtonText="Migrate" ,
+                                     OwnerCanCloseWithDialog=false });
+
+            var menu = (MenuItem)sender;
+            var dataContext = (ITable)menu.DataContext;
+            if (int.TryParse(number, out int rows))
+            {
+                var success = await _synchronizer.Migrate(dataContext.Name, dataContext.Schema, rows);
+                RefreshEvents(null, null);
+            }
+        }
+        private void RefreshMappings(object sender, RoutedEventArgs e)
+        {
+            x_mappings_grid.Items.Refresh();
+        }
+
+        private async void DisableXync(object sender, RoutedEventArgs e)
+        {
+            await _setup.DisableOnDB();
+            RefreshEvents(null, null);
+        }
+        private async void EnableXync(object sender, RoutedEventArgs e)
+        {
+            await _setup.Initialize();
+            RefreshEvents(null, null);
+        }
+        private async void ReEnableXync(object sender, RoutedEventArgs e)
+        {
+            await _setup.ReInitialize();
+            RefreshEvents(null, null);
+        }
+
+        private void ShowAbout(object sender, RoutedEventArgs e)
+        {
+            x_about_flyout.IsOpen = true;
         }
     }
 
