@@ -117,8 +117,20 @@
                   AutoGenerateColumns="False"
                   ItemsSource="{Binding Events}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding CreatedDateTime}"  Header="Timestamp"/>
-                    <DataGridTextColumn Width="*"  Binding="{Binding Title}" Header="Title"/>
+                    <DataGridTextColumn Binding="{Binding CreatedDateTime}"  Header="Timestamp">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.ToolTip" Value="{Binding Id}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn  Width="*"  Binding="{Binding Title}" Header="Title">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.ToolTip" Value="{Binding Host}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Width="2*" Binding="{Binding Message}" Header="Message">
                         <DataGridTextColumn.ElementStyle>
                             <Style>

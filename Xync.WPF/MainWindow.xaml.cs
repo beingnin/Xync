@@ -24,7 +24,6 @@ namespace Xync.WPF
     public partial class MainWindow : MetroWindow
     {
         private ISynchronizer _synchronizer = null;
-        bool IsAboutDetialOpen = false;
         private ISetup _setup = null;
         private Stopwatch stopwatch = new Stopwatch();
         private XyncState xyncState;
