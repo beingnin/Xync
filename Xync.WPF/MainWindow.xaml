@@ -32,7 +32,7 @@
                                   Height="22"
                                   Kind="Cloud" />
                 </Button>
-                
+
             </WrapPanel>
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
@@ -49,7 +49,7 @@
                                         Kind="BookPerspectiveHelp" />
                             <TextBlock Margin="4 0 0 0"
                          VerticalAlignment="Center"
-                         Text="{Binding}" />                            
+                         Text="{Binding}" />
                         </StackPanel>
                     </DataTemplate>
                 </Button.ContentTemplate>
@@ -162,9 +162,9 @@
                                             ToolTip="Copy connection string" 
                                             BorderBrush="Transparent"
                                             Foreground="DeepSkyBlue">
-                                        <Button.ContentTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
                                                 <TextBlock Margin="4 0 0 0"
                                                                    VerticalAlignment="Center"
                                                                    Text="RDBMS con   " />
@@ -172,12 +172,12 @@
                                         Height="11"
                                         VerticalAlignment="Center"
                                         Kind="PageCopy"  />
-                                                    
-                                                </StackPanel>
 
-                                            </DataTemplate>
-                                        </Button.ContentTemplate>
-                                    </Button>
+                                            </StackPanel>
+
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
 
                                 <Label Grid.Row="4" Grid.Column="1" Foreground="WhiteSmoke">
                                     <Label.Content>
@@ -191,7 +191,7 @@
                                     </Label.Content>
                                 </Label>
 
-                                <Label Grid.Row="5" Grid.Column="1" Foreground="WhiteSmoke"> 
+                                <Label Grid.Row="5" Grid.Column="1" Foreground="WhiteSmoke">
                                     <Label.Content>
                                         <TextBlock Text="RDBMS --> NoSql"/>
                                     </Label.Content>
@@ -219,15 +219,15 @@
                     </DockPanel>
 
                 </Grid>
-                
+
             </mah:Flyout>
         </mah:FlyoutsControl>
     </mah:MetroWindow.Flyouts>
-    
+
     <Grid Margin="25 25 0 0" >
         <!--  rows & columns  -->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1.5*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -364,26 +364,29 @@
                   AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Schema" Binding="{Binding Schema}"/>
-                <DataGridTemplateColumn Header="Table" >
+                <DataGridTemplateColumn Header="Table" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <mah:Badged BadgePlacementMode="TopLeft" 
                                         BadgeForeground="Black"
                                         BadgeBackground="Yellow" >
-                                <TextBlock  Text="{Binding Name}"></TextBlock>
+                                <TextBlock ToolTip="{Binding Name}" Text="{Binding Name}"></TextBlock>
                             </mah:Badged>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Collection" >
+                <DataGridTemplateColumn Width="*" Header="Collection" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
+
                             <mah:Badged BadgePlacementMode="TopLeft" 
                                         BadgeForeground="Black"
                                         BadgeBackground="Red">
-                                <TextBlock  Text="{Binding Collection}"></TextBlock>
+                                <TextBlock ToolTip="{Binding Name}" Text="{Binding Collection}">
+                                </TextBlock>
                             </mah:Badged>
                         </DataTemplate>
+
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Status">
@@ -404,7 +407,7 @@
                                   HorizontalAlignment="Center">
                                 <MenuItem  Header="Actions">
                                     <MenuItem Click="GetCounts" Foreground="GhostWhite" Header="Get Counts"/>
-                                    
+
                                     <MenuItem Click="Stop" Foreground="GhostWhite" Header="Stop"
                                               Visibility="{Binding DNT,Converter={StaticResource DNTtoHideButtonsConverter}}"/>
                                     <MenuItem Click="Start" Foreground="GhostWhite" Header="Start" 
@@ -414,9 +417,9 @@
 
                                     <MenuItem Click="StopTracking"  Foreground="GhostWhite" Header="Stop Tracking"
                                               Visibility="{Binding DNT,Converter={StaticResource DNTtoHideButtonsConverter}}"/>
-                                    
+
                                     <Separator Visibility="{Binding DNT,Converter={StaticResource DNTtoHideButtonsConverter}}"/>
-                                    
+
                                     <MenuItem Click="Migrate" Foreground="IndianRed" Header="Migrate"
                                               Visibility="{Binding DNT,Converter={StaticResource DNTtoHideButtonsConverter}}"/>
                                     <MenuItem Click="MigrateLast1000" Foreground="IndianRed" Header="Migrate last n records"
