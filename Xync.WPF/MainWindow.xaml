@@ -59,7 +59,7 @@
 
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
-            <mah:Flyout  Header="About" Name="x_about_flyout" IsOpen="False" Position="Right" Width="300">
+            <mah:Flyout  Header="Xync" Name="x_about_flyout" IsOpen="False" Position="Right" Width="500">
                 <Grid Margin="25 50 0 0">
 
                     <Grid.RowDefinitions>
@@ -67,9 +67,155 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <DockPanel Grid.Row="0">
-                        <mah:MetroHeader DockPanel.Dock="Left" Content="Map direction"/>
-                        <Label DockPanel.Dock="Right" Content="sql server-->mongodb"/>
+                    <DockPanel Grid.Row="1">
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="0" Foreground="DeepSkyBlue">
+                                    <Label.Content>
+                                        <TextBlock Text="Particulars"/>
+                                    </Label.Content>
+                                </Label>
+                                <Label Grid.Row="0" Grid.Column="1" Foreground="DeepSkyBlue">
+                                    <Label.Content>
+                                        <TextBlock Text="Value"/>
+                                    </Label.Content>
+                                </Label>
+
+
+                                <Label Grid.Row="1" Grid.Column="0" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock Text="RDMS"/>
+                                    </Label.Content>
+                                </Label>
+                                <Label Grid.Row="1" Grid.Column="1" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock Text="MS-Sql"/>
+                                    </Label.Content>
+                                </Label>
+
+                                <Label Grid.Row="2" Grid.Column="0" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock Text="NO-SQL"/>
+                                    </Label.Content>
+                                </Label>
+                                <Label Grid.Row="2" Grid.Column="1" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock Text="Mongo-DB"/>
+                                    </Label.Content>
+                                </Label>
+
+                                <Button Grid.Column="0"
+                                            Name="x_copy_nosql_con_btn"
+                                            Margin="0 0 0 5"
+                                            Click="x_copy_nosql_con_btn_Click"
+                                            Grid.Row="3" 
+                                            ToolTip="Copy connection string"
+                                            BorderBrush="Transparent"
+                                            Foreground="DeepSkyBlue">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="4 0 0 0"
+                                                                   VerticalAlignment="Center"
+                                                                   Text="NO-SQL con   " />
+                                                <iconPacks:PackIconModern Width="11"
+                                        Height="11"
+                                        VerticalAlignment="Center"
+                                        Kind="PageCopy"  />
+
+                                            </StackPanel>
+
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+                                <Label Grid.Row="3" Grid.Column="1" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock  ToolTip="{Binding NOSQLCon}" Text="{Binding NOSQLCon}"/>
+                                    </Label.Content>
+                                </Label>
+
+                                <Button Grid.Column="0" 
+                                            Grid.Row="4"
+                                            Click="x_copy_rdbms_con_btn_Click"
+                                            Name="x_copy_rdbms_con_btn"
+                                            ToolTip="Copy connection string" 
+                                            BorderBrush="Transparent"
+                                            Foreground="DeepSkyBlue">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="4 0 0 0"
+                                                                   VerticalAlignment="Center"
+                                                                   Text="RDBMS con   " />
+                                                <iconPacks:PackIconModern Width="11"
+                                        Height="11"
+                                        VerticalAlignment="Center"
+                                        Kind="PageCopy"  />
+                                                    
+                                                </StackPanel>
+
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                <Label Grid.Row="4" Grid.Column="1" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock ToolTip="{Binding RDBMSCon}" Text="{Binding RDBMSCon}"/>
+                                    </Label.Content>
+                                </Label>
+
+                                <Label Grid.Row="5" Grid.Column="0" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock Text="Direction"/>
+                                    </Label.Content>
+                                </Label>
+
+                                <Label Grid.Row="5" Grid.Column="1" Foreground="WhiteSmoke"> 
+                                    <Label.Content>
+                                        <TextBlock Text="RDBMS --> NoSql"/>
+                                    </Label.Content>
+                                </Label>
+
+                                <Label Grid.Row="6" Grid.Column="0" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock Text="Polling Interval"/>
+                                    </Label.Content>
+                                </Label>
+
+                                <Label Grid.Row="6" Grid.Column="1" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock Text="{Binding PollingInterval}"/>
+                                    </Label.Content>
+                                </Label>
+                            </Grid>
+                        </Grid>
+                    </DockPanel>
+
+                    <DockPanel Grid.Row="0" >
+                        <Image 
+                            Source="http://www.nirix.com/wp-content/uploads/2015/03/Blog-header.jpg"
+                            Stretch="Uniform"    ></Image>
                     </DockPanel>
 
                 </Grid>

@@ -31,15 +31,25 @@ namespace Xync.WPF
         private int pageSize = 20;
         List<Event> Events = null;
         IList<ITable> Mappings = null;
+        public string RDBMSCon { get; set; }
+        public string NOSQLCon { get; set; }
+        public string Environment { get; set; }
+        public double PollingInterval { get; set; }
         public MainWindow()
         {
 
             var startup = new Startup();
             startup.SetupConstants();
+            NOSQLCon = Constants.NoSqlConnection;
+            RDBMSCon = Constants.RdbmsConnection;
+            PollingInterval = Constants.PollingInterval;
+            Environment = Constants.Environment;
+
             _synchronizer = InjectionResolver.Resolve<ISynchronizer>(ImplementationType.PureTriggers);
             _setup = InjectionResolver.Resolve<ISetup>(ImplementationType.PureTriggers);
             Mappings = startup.SetupMappings();
             this.Events = GetEvents().ToList();
+            this.DataContext = this;
             InitializeComponent();
             this.Title = $"Xync | {Constants.Environment}";
             x_events_data_grid.ItemsSource = this.Events;
@@ -294,9 +304,12 @@ namespace Xync.WPF
 
             var number = await this.ShowInputAsync("Please provide the last number of rows to migrate",
            "The given number of rows, which were added as the latest will be migrated from sql to mongo",
-           new MetroDialogSettings { AnimateShow = true,
-                                     AffirmativeButtonText="Migrate" ,
-                                     OwnerCanCloseWithDialog=false });
+           new MetroDialogSettings
+           {
+               AnimateShow = true,
+               AffirmativeButtonText = "Migrate",
+               OwnerCanCloseWithDialog = false
+           });
 
             var menu = (MenuItem)sender;
             var dataContext = (ITable)menu.DataContext;
@@ -330,6 +343,19 @@ namespace Xync.WPF
         private void ShowAbout(object sender, RoutedEventArgs e)
         {
             x_about_flyout.IsOpen = true;
+        }
+
+        private void x_copy_rdbms_con_btn_Click(object sender, RoutedEventArgs e)
+        {
+
+            Clipboard.SetText(this.RDBMSCon);
+            Notification.ShowNotification("Attention!", "RDBMS connection used for the instance has been copied to the clip board");
+        }
+
+        private void x_copy_nosql_con_btn_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(this.NOSQLCon);
+            Notification.ShowNotification("Attention!", "No-SQL connection used for the instance has been copied to the clip board");
         }
     }
 
