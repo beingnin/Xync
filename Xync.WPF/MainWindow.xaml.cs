@@ -34,6 +34,7 @@ namespace Xync.WPF
         public string RDBMSCon { get; set; }
         public string NOSQLCon { get; set; }
         public string Environment { get; set; }
+        public int? BatchSize { get; set; }
         public double PollingInterval { get; set; }
         public MainWindow()
         {
@@ -44,6 +45,7 @@ namespace Xync.WPF
             RDBMSCon = Constants.RdbmsConnection;
             PollingInterval = Constants.PollingInterval;
             Environment = Constants.Environment;
+            BatchSize = Constants.BatchSize;
 
             _synchronizer = InjectionResolver.Resolve<ISynchronizer>(ImplementationType.PureTriggers);
             _setup = InjectionResolver.Resolve<ISetup>(ImplementationType.PureTriggers);

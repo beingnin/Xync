@@ -26,6 +26,8 @@ namespace Xync.Utils
         {
             get
             {
+                if(!string.IsNullOrWhiteSpace(_host))
+                    return _host;
                 return _host = Environment.MachineName;
             }
             set

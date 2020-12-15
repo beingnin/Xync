@@ -60,7 +60,7 @@
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
             <mah:Flyout  Header="Xync" Name="x_about_flyout" IsOpen="False" Position="Right" Width="500">
-                <Grid Margin="25 50 0 0">
+                <Grid Margin="25 0 0 0">
 
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -82,6 +82,8 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
                                     <RowDefinition Height="30"/>
                                     <RowDefinition Height="30"/>
                                     <RowDefinition Height="30"/>
@@ -206,6 +208,30 @@
                                 <Label Grid.Row="6" Grid.Column="1" Foreground="WhiteSmoke">
                                     <Label.Content>
                                         <TextBlock Text="{Binding PollingInterval}"/>
+                                    </Label.Content>
+                                </Label>
+
+                                <Label Grid.Row="7" Grid.Column="0" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock Text="Batch Size"/>
+                                    </Label.Content>
+                                </Label>
+
+                                <Label Grid.Row="7" Grid.Column="1" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock Text="{Binding BatchSize}"/>
+                                    </Label.Content>
+                                </Label>
+
+                                <Label Grid.Row="8" Grid.Column="0" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock Text="Environment"/>
+                                    </Label.Content>
+                                </Label>
+
+                                <Label Grid.Row="8" Grid.Column="1" Foreground="WhiteSmoke">
+                                    <Label.Content>
+                                        <TextBlock Text="{Binding Environment}"/>
                                     </Label.Content>
                                 </Label>
                             </Grid>

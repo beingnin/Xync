@@ -20,6 +20,7 @@ namespace Xync.WPF
             Constants.NoSqlDB = "SPSA_MongoDevLocal";
             Constants.PollingInterval = 3000;
             Constants.Environment = "Staging Server";
+            Constants.BatchSize = 2;
 
 
         }

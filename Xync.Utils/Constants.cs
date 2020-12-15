@@ -45,5 +45,6 @@ namespace Xync.Utils
         public static string Schema = "XYNC";
         public static double PollingInterval = 5000;
         public static string Environment = string.Empty;
+        public static int? BatchSize;
     }
 }
